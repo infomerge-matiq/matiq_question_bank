@@ -1,3 +1,7 @@
+question_validator.aux
+question_validator.log
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
