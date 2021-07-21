@@ -2,7 +2,7 @@
 
 To run this code you will need python, and some additional libraries: pdflatex, num2words, roman.
 
-Also, you will need to install MikTeX. pdflatex uses this program compiles the LaTeX code into a pdf.
+Also, you will need to install MikTeX. pdflatex uses this program to compile the LaTeX code into a pdf.
 
 Overleaf is a very useful tool to compile LaTeX code in your browser. It also has a lot of information about LaTeX in general.
 

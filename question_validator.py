@@ -10,17 +10,8 @@ from functions import *
 
 # Insert your question here.
 def my_question(year, difficulty):
-    units = random.choice([["m", "km"], ["cm", "m"], ["cm", "mm"],
-                           ["g", "kg"], ["ml", "l"]])
-    unit1, unit2 = random.sample(units, 2)
-    number = random.randint(1, 1000) / 10
-    question = f"What is ${number:g}\\,${unit1} in {unit2}?"
-    result = convert_measurement(number, unit1, unit2)
-    rounded = float(f"{result:f}")
-    if rounded.is_integer():
-        answer = dollar(f"{int(rounded)}\\,") + unit2
-    else:
-        answer = f'${float(f"{rounded:g}")}\\,$' + unit2
+    question = ""
+    answer = ""
     return [question, answer]
 
 
