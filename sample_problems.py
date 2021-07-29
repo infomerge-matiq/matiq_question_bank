@@ -9,7 +9,7 @@ def addition(year, difficulty):
     n = random.randint(0, 2)
     x = [a, b, a + b]
     answer = x[n]
-    x[n] = "\\square"
+    x[n] = "$\\square$"
     return [str(x[0]) + " + " + str(x[1]) + " = " + str(x[2]), str(answer)]
 
 
@@ -21,7 +21,7 @@ def subtraction(year, difficulty):
     n = random.randint(0, 2)
     x = [a + b, a, b]
     answer = x[n]
-    x[n] = "\\square"
+    x[n] = "$\\square$"
     return [str(x[0]) + " - " + str(x[1]) + " = " + str(x[2]), str(answer)]
 
 
@@ -33,7 +33,7 @@ def multiplication(year, difficulty):
     b = random.randint(lower, upper)
     x = [a, b, a * b]
     answer = x[n]
-    x[n] = "\\square"
+    x[n] = "$\\square$"
     return [str(x[0]) + " \\times " + str(x[1]) + " = " + str(x[2]),
             str(answer)]
 
@@ -46,7 +46,7 @@ def division(year, difficulty):
     b = random.randint(lower, upper)
     x = [a * b, a, b]
     answer = x[n]
-    x[n] = "\\square"
+    x[n] = "$\\square$"
     return [str(x[0]) + " \\div " + str(x[1]) + " = " + str(x[2]), str(answer)]
 
 
