@@ -38,5 +38,5 @@ tex = re.sub(r"%%%(.*)%%%", replace_text.replace("\\", "\\\\"), tex,
              flags = re.DOTALL)
 with open(my_dir, "w") as file:
     file.write(tex)
-os.system("pdflatex " + my_dir)
+os.system(f"pdflatex -quiet {my_dir}")
 os.startfile("question_validator.pdf")
