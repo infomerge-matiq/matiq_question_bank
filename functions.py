@@ -1,4 +1,28 @@
-import random
+"""
+MIT License
+
+Copyright (c) 2021 Ali Sever
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+"""
+from random import shuffle
+from string import ascii_uppercase
 
 
 def multiple_choice(question: str, choices: list[str], correct: str,
@@ -10,8 +34,8 @@ def multiple_choice(question: str, choices: list[str], correct: str,
         layout = "onepar"
     choices_list = []
     if reorder:
-        random.shuffle(choices)
-    letter = "ABCDEFGHIJ"[choices.index(correct)]
+        shuffle(choices)
+    letter = ascii_uppercase[choices.index(correct)]
     for choice in choices:
         choices_list.append(f"\\choice {choice}\n")
     full_question = "".join(
@@ -29,18 +53,16 @@ def ordinal(n):
                                    * (n % 10 < 4) * n % 10::4])
 
 
-def is_prime(n):
-    if isinstance(n, int) and n > 0:
-        if n == 1:
-            return False
+def is_prime(n: int):
+    if n <= 1:
+        return False
+    else:
         i = 2
         while i * i <= n:
             if n % i == 0:
                 return False
             i += 1
         return True
-    else:
-        raise ValueError
 
 
 def nth_prime(n):
@@ -64,10 +86,7 @@ def prime_factors(n):
     return [x for x in factors(n) if is_prime(x)]
 
 
-def gcd(m, n, *args):
-    for arg in (m, n) + args:
-        if not isinstance(arg, int):
-            return ValueError
+def gcd(m: int, n: int, *args: int):
     if args:
         return gcd(*(gcd(m, n),) + args)
     m, n = abs(m), abs(n)
@@ -81,20 +100,28 @@ def gcd(m, n, *args):
         return gcd(n, m % n)
 
 
-def fraction_simplify(a, b):
+def frac_simplify(a, b):
     return a // gcd(a, b), b // gcd(a, b)
+
+
+def latex_frac(a, b):
+    return f"\\frac{{{a}}}{{{b}}}"
+
+
+def latex_frac_simplify(a, b):
+    return latex_frac(*frac_simplify(a, b))
 
 
 def fraction_addition(a, b, c, d):
     numerator = a * d + b * c
     denominator = b * d
-    return fraction_simplify(numerator, denominator)
+    return frac_simplify(numerator, denominator)
 
 
 def fraction_subtraction(a, b, c, d):
     numerator = a * d - b * c
     denominator = b * d
-    return fraction_simplify(numerator, denominator)
+    return frac_simplify(numerator, denominator)
 
 
 def valid_metric(unit):
