@@ -1,6 +1,7 @@
-question_validator.aux
-question_validator.log
-question_validator.pdf
+latex_files/validator.tex
+output/validator.aux
+output/validator.log
+output/validator.pdf
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -1,4 +1,6 @@
-from functions import *
+import random
+
+import functions as mq
 
 
 def addition(year, difficulty):
@@ -55,4 +57,4 @@ def factorisation(year, difficulty):
     upper = 2 ** (year + difficulty + 1)
     num = random.randint(lower, upper)
     return ["$Find the prime factors of $" + str(num) + ".",
-            str(prime_factors(num))]
+            str(mq.prime_factors(num))]
