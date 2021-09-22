@@ -8,7 +8,7 @@ from num2words import num2words
 from random import shuffle
 import names
 
-import personalised_tests.core.math_functions as mq
+import python_code.functions as mq
 
 
 # NUMBER AND PLACE VALUE_______
@@ -2077,7 +2077,7 @@ def me_6(difficulty):
         hour_1 = (time_in[0] + 1)
     else:
         hour_1 = (time_in[0] - 1)
-    choice1 = mq.time_2_words(hour_1 % 12, time_in[1])
+    choice1 = mq.time_to_words(hour_1 % 12, time_in[1])
 
     if time_in[1] == 0:
         difference = random.choice([1, -1])
@@ -2087,10 +2087,10 @@ def me_6(difficulty):
         time_2 = [(time_in[0] + difference), (time_in[1] + 30) % 60]
     else:
         time_2 = [hours[1], minutes[2]]
-    choice2 = mq.time_2_words(time_2[0], time_2[1])
-    choice3 = mq.time_2_words(time_in[1], time_in[0])
+    choice2 = mq.time_to_words(time_2[0], time_2[1])
+    choice3 = mq.time_to_words(time_in[1], time_in[0])
 
-    answer = mq.time_2_words(time_in[0], time_in[1])
+    answer = mq.time_to_words(time_in[0], time_in[1])
     choices.extend([choice1, choice2, choice3, answer])
     return mq.multiple_choice(question, choices, answer)
 
@@ -2116,7 +2116,7 @@ def me_7(difficulty):
     else:
         morn_eve = 'at night'
 
-    question = f'What is {mq.time_2_words(time_in[0], time_in[1])} ' \
+    question = f'What is {mq.time_to_words(time_in[0], time_in[1])} ' \
                f'{morn_eve} in {clock_format} format.'
     choices = []
     time_out = time(time_in[0], time_in[1])
@@ -2166,12 +2166,12 @@ def me_8(difficulty):
     hour_out = floor(delta / (60 * 60) % 24)
     min_out = floor((delta % (60 * 60)) / 60)
     answer = random.choice([time(hour_out, min_out).strftime("%H:%M"),
-                            mq.time_2_words(hour_out, min_out)
+                            mq.time_to_words(hour_out, min_out)
                             ])
 
     words_or_number = random.choice([
         [time1, num2words(minutes_add)],
-        [mq.time_2_words(h1, m1), minutes_add],
+        [mq.time_to_words(h1, m1), minutes_add],
         [time1, minutes_add]
     ])
     choices = []
@@ -2180,13 +2180,13 @@ def me_8(difficulty):
     for i in range(3):
         m_2 = random.choice([mins_sample_1[i], mins_sample_2[i]])
         choice2 = random.choice([time(hour_out, m_2 % 60).strftime("%H:%M"),
-                                 mq.time_2_words(hour_out, m_2 % 60)
+                                 mq.time_to_words(hour_out, m_2 % 60)
                                  ])
         choices.append(choice2)
     ch1 = random.choice([(hour_out + 1) % 24, (hour_out - 1) % 24])
     cm1 = random.randint(0, 59)
     choice1 = random.choice([time(ch1, cm1).strftime("%H:%M"),
-                             mq.time_2_words(ch1, cm1)
+                             mq.time_to_words(ch1, cm1)
                              ])
     choices = choices + [choice1, answer]
     question = f"The time is {words_or_number[0]}, " \
@@ -2249,9 +2249,9 @@ def me_10(difficulty):
     time_format = time_24hr.strftime("%H:%M")
     n = random.choices([0, 1, 2], weights=(1, 4, 2), k=1)
     n = n[0]
-    num_or_words = [[mq.time_2_words(time_in[0], time_in[1]), morn_eve[0]],
+    num_or_words = [[mq.time_to_words(time_in[0], time_in[1]), morn_eve[0]],
                     [time_format, ''],
-                    [mq.time_2_words(time_in[0], time_in[1]), morn_eve[0]]
+                    [mq.time_to_words(time_in[0], time_in[1]), morn_eve[0]]
                     ][n]
     question = f"John looks at his clock, " \
                f"it is {num_or_words[0]} {num_or_words[1]}. "
@@ -2275,7 +2275,7 @@ def me_11(difficulty):
     choice = random.choice([['In 12 hour format',
                              time(hour, minute).strftime("%H:%M")
                              ],
-                            ['Using words', mq.time_2_words(hour, minute)]
+                            ['Using words', mq.time_to_words(hour, minute)]
                             ])
     question = f"{choice[0]}, write down the time shown on the clock.\n\n " \
                f"\\begin{{center}}\n {mq.analogue_clock(hour, minute)}" \
@@ -2298,7 +2298,7 @@ def me_12(difficulty):
                 minute[j] = (minute[k] + 13) % 60
 
     time_in = random.choice([
-        mq.time_2_words(hour, minute[0]),
+        mq.time_to_words(hour, minute[0]),
         time(hour, minute[0]).strftime("%I:%M")
     ])
 
@@ -2343,7 +2343,7 @@ def me_13(difficulty):
     hour = random.randint(0, 11)
     minute = ((20-5*difficulty) * random.randint(0, 11)) % 60
     time_in = random.choice([time(hour, minute).strftime("%H:%M"),
-                             mq.time_2_words(hour, minute)]
+                             mq.time_to_words(hour, minute)]
                             )
     blank_clock = "\\begin{center}\n\\begin{tikzpicture}" \
                   "[line cap=rect,line width=3pt]\n \\filldraw [fill=white]" \
@@ -2383,7 +2383,7 @@ def me_14(difficulty):
         ["in 12 hour format", result.strftime("%I:%M")],
         [
             "using words",
-            mq.time_2_words(
+            mq.time_to_words(
                 hour_in+floor((minute_in+time_elapsed)/60),
                 (minute_in+time_elapsed) % 60)
         ]
