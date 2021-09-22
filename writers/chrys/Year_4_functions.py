@@ -2,64 +2,53 @@ import random
 from num2words import num2words
 
 
-def timeunitconverter(unit_in, unit_out, number):
+def time_unit_converter(unit_in, unit_out, number):
     """how many unit_in in number unit_out, e.g. how many weeks in a month"""
     if unit_out in ['Months', 'months', 'month', 'Month'] and \
             unit_in in ['year', 'years', 'Year', 'Years']:
         return [number * 12, ' months']
 
-    elif unit_out in ['Weeks', 'weeks', 'week', 'Week'] and \
-            unit_in in ['year', 'years', 'Year', 'Years']:
-        return [number * 52, 'weeks']
-    elif unit_out in ['Weeks', 'weeks', 'week', 'Week'] and \
-            unit_in in ['Months', 'months', 'month', 'Month']:
-        return [number * 4, ' weeks']
+    elif unit_out in ['Weeks', 'weeks', 'week', 'Week']:
+        if unit_in in ['year', 'years', 'Year', 'Years']:
+            return [number * 52, 'weeks']
+        elif unit_in in ['Months', 'months', 'month', 'Month']:
+            return [number * 4, ' weeks']
 
-    elif unit_out in ['Days', 'days', 'day', 'Day'] and \
-            unit_in in ['year', 'years', 'Year', 'Years']:
-        return [number * 365, ' days']
-    elif unit_out in ['Days', 'days', 'day', 'Day'] and \
-            unit_in in ['Months', 'months', 'month', 'Month']:
-        return [number * 7 * 4, ' days']
-    elif unit_out in ['Days', 'days', 'day', 'Day'] and \
-            unit_in in ['Weeks', 'weeks', 'week', 'Week']:
-        return [number * 7, ' days']
+    elif unit_out in ['Days', 'days', 'day', 'Day']:
+        if unit_in in ['year', 'years', 'Year', 'Years']:
+            return [number * 365, ' days']
+        elif unit_in in ['Months', 'months', 'month', 'Month']:
+            return [number * 7 * 4, ' days']
+        elif unit_in in ['Weeks', 'weeks', 'week', 'Week']:
+            return [number * 7, ' days']
 
-    elif unit_out in ['Hours', 'hours', 'hour', 'Hour'] and\
-            unit_in in ['Days', 'days', 'day', 'Day']:
-        return [number * 24, ' hours']
-    elif unit_out in ['Hours', 'hours', 'hour', 'Hour'] and \
-            unit_in in ['Weeks', 'weeks', 'week', 'Week']:
-        return [number * 24 * 7, ' hours']
-    elif unit_out in ['Hours', 'hours', 'hour', 'Hour'] and \
-            unit_in in ['Months', 'months', 'month', 'Month']:
-        return [number * 24 * 7 * 4, ' hours']
+    elif unit_out in ['Hours', 'hours', 'hour', 'Hour']:
+        if unit_in in ['Days', 'days', 'day', 'Day']:
+            return [number * 24, ' hours']
+        elif unit_in in ['Weeks', 'weeks', 'week', 'Week']:
+            return [number * 24 * 7, ' hours']
+        elif unit_in in ['Months', 'months', 'month', 'Month']:
+            return [number * 24 * 7 * 4, ' hours']
 
-    elif unit_out in ['Minutes', 'minutes', 'minute', 'Minute'] and \
-            unit_in in ['Hours', 'hours', 'hour', 'Hour']:
-        return [number * 60, ' minutes']
-    elif unit_out in ['Minutes', 'minutes', 'minute', 'Minute'] and \
-            unit_in in ['Days', 'days', 'day', 'Day']:
-        return [number * 60 * 24, ' minutes']
-    elif unit_out in ['Minutes', 'minutes', 'minute', 'Minute'] and \
-            unit_in in ['Weeks', 'weeks', 'week', 'Week']:
-        return [number * 60 * 24 * 7, ' minutes']
-    elif unit_out in ['Minutes', 'minutes', 'minute', 'Minute'] and \
-            unit_in in ['Months', 'months', 'month', 'Month']:
-        return [number * 60 * 24 * 7 * 4, ' minutes']
+    elif unit_out in ['Minutes', 'minutes', 'minute', 'Minute']:
+        if unit_in in ['Hours', 'hours', 'hour', 'Hour']:
+            return [number * 60, ' minutes']
+        elif unit_out in unit_in in ['Days', 'days', 'day', 'Day']:
+            return [number * 60 * 24, ' minutes']
+        elif unit_in in ['Weeks', 'weeks', 'week', 'Week']:
+            return [number * 60 * 24 * 7, ' minutes']
+        elif unit_in in ['Months', 'months', 'month', 'Month']:
+            return [number * 60 * 24 * 7 * 4, ' minutes']
 
-    elif unit_out in ['Seconds', 'seconds', 'second', 'Second'] and \
-            unit_in in ['Minutes', 'minutes', 'minute', 'Minute']:
-        return [number * 60, ' seconds']
-    elif unit_out in ['Seconds', 'seconds', 'second', 'Second'] and \
-            unit_in in ['Hours', 'hours', 'hour', 'Hour']:
-        return [number * 60 * 60, ' seconds']
-    elif unit_out in ['Seconds', 'seconds', 'second', 'Second'] and \
-            unit_in in ['Days', 'days', 'day', 'Day']:
-        return [number * 60 * 60 * 24, ' seconds']
-    elif unit_out in ['Seconds', 'seconds', 'second', 'Second'] and \
-            unit_in in ['Weeks', 'weeks', 'week', 'Week']:
-        return [number * 60 * 60 * 24 * 7, ' seconds']
+    elif unit_out in ['Seconds', 'seconds', 'second', 'Second']:
+        if unit_in in ['Minutes', 'minutes', 'minute', 'Minute']:
+            return [number * 60, ' seconds']
+        elif unit_in in ['Hours', 'hours', 'hour', 'Hour']:
+            return [number * 60 * 60, ' seconds']
+        elif unit_in in ['Days', 'days', 'day', 'Day']:
+            return [number * 60 * 60 * 24, ' seconds']
+        elif unit_in in ['Weeks', 'weeks', 'week', 'Week']:
+            return [number * 60 * 60 * 24 * 7, ' seconds']
 
 
 def time_2_words(hour_in, minute_in):
