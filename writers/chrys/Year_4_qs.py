@@ -85,7 +85,7 @@ def pv_3(difficulty):
 
 
 def pv_4(difficulty):
-    """Identify place of a digit in a given number"""
+    """Identify place of a digit in a given number."""
     places = ["Ones place",
               "Tens place",
               "Hundreds place",
