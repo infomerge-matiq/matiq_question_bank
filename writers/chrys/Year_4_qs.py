@@ -1866,6 +1866,46 @@ def fr_20(difficulty):
     return [question, answer]
 
 
+def fr_21(difficulty):
+    """Worded subtraction problem. Subtracting 2 fractions from 1."""
+    b = random.randint(2 + difficulty, 9 + difficulty)
+    a_1 = random.randint(1, b - 2)
+    a_2 = random.randint(1, b - a_1 - 1)
+    fracs = [f"${mq.latex_frac(a_1, b)}$", f"${mq.latex_frac(a_2, b)}$"]
+
+    n = random.randint(0, 2)
+    item = ["tank of petrol", "pizza", "pocket money"][n]
+    verb = ['used', 'eaten', 'spent'][n]
+
+    i = random.randint(0, 1)
+    name_1 = names.get_first_name(gender=["male", "female"][i])
+    name_2 = names.get_first_name(gender=["male", "female"][(i + 1) % 2])
+    pronoun = [["He", "he", "his"], ["She", "she", "her"]][i]
+
+    question = [
+        f"{name_1} has a full {item} in {pronoun[2]} car before {pronoun[1]} "
+        f"leaves for work. {pronoun[0]} uses up {fracs[0]} of a tank on the "
+        f"journey to work. On the way back, {pronoun[1]} uses up another "
+        f"{fracs[1]} of the tank.",
+
+        f"{name_1} and {name_2} are sharing a {item}. {name_1} eats {fracs[0]}"
+        f" of the pizza and {name_2} eats {fracs[1]} of it.",
+
+        f"{name_1} is given some {item} for the weekend. "
+        f"{pronoun[0]} spends {fracs[0]} of the money on Saturday "
+        f"and spends {fracs[1]} of the money on Sunday. "
+        ][n]
+
+    k = random.randint(0, 1)
+    question += [
+        f" What fraction of the {item} is left?",
+        f" In total, what fraction of the {item} has been {verb}?"
+    ][k]
+    result = [b - a_1 - a_2, a_1 + a_2][k]
+    answer = f"${mq.latex_frac(result, b)}$"
+    return [question, answer]
+
+
 # MONEY QUESTIONS______________________
 
 
