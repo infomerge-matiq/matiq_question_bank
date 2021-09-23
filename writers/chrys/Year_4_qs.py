@@ -8,7 +8,7 @@ from num2words import num2words
 from random import shuffle
 import names
 
-import python_code.functions as mq
+import matiq_question_bank.python_code.functions as mq
 
 
 # NUMBER AND PLACE VALUE_______
@@ -1899,12 +1899,136 @@ def fr_21(difficulty):
     k = random.randint(0, 1)
     question += [
         f" What fraction of the {item} is left?",
-        f" In total, what fraction of the {item} has been {verb}?"
+        f" In total, what fraction of the {item} had been {verb}?"
     ][k]
     result = [b - a_1 - a_2, a_1 + a_2][k]
     answer = f"${mq.latex_frac(result, b)}$"
     return [question, answer]
 
+
+def fr_22(difficulty):
+    """Worded subtraction problem. Difference of two fractions."""
+    b = random.randint(2 + difficulty, 9 + difficulty)
+    a_1 = random.randint(ceil(b / 2), b - 1)
+    a_2 = random.randint(1, a_1 - 1)
+    fracs = [f"${mq.latex_frac(a_1, b)}$", f"${mq.latex_frac(a_2, b)}$"]
+
+    n = random.randint(0, 3)
+    item = ["tank of fuel", "carton of milk", "questions", "marathon"][n]
+    verb = ['used during the flight', 'used', 'correctly', 'completed'][n]
+
+    i = random.randint(0, 1)
+    gender = ["male", "female"]
+    name_1 = names.get_first_name(gender=gender[i])
+    name_2 = names.get_first_name(gender=gender[(i + 1) % 2])
+
+    question = [
+        f"An aeroplane is flying from London to New York. The plane began it's"
+        f" journey with {fracs[0]} of a {item}. "
+        f"By the end, it only had {fracs[1]} of a tank remaining.",
+
+        f"At the start of the day, {name_1} has {fracs[0]} of a {item}. By "
+        f"the end of the day, there is only {fracs[1]} of a carton left.",
+
+        f"{name_1} and {name_2} are doing a test. {name_1} {verb} solves "
+        f"{fracs[0]} of the {item}. {name_2} only answers {fracs[1]} of the "
+        f"{item} {verb}.",
+
+        f"{name_1} and {name_2} are running a {item}. "
+        f"After {round(4 * (a_1 / b))} hours, {name_1} has {verb} {fracs[0]}"
+        f" of the {item} whereas {name_2} has only {verb} {fracs[1]}."
+    ][n]
+
+    if n == 2 or n == 3:
+        question += [
+            f" What fraction of the questions did {name_1} "
+            f"{verb} answer more than {name_2}?",
+
+            f" How much more of the {item} has {name_1} "
+            f"{verb} compared to {name_2}. Write your answer as a fraction."
+        ][n % 2]
+    else:
+        question += f" What fraction of the {item} has been {verb}?"
+    answer = f"${mq.latex_frac(a_1 - a_2, b)}$"
+    return [question, answer]
+
+
+def fr_23(difficulty):
+    """Identify place of a digit in a decimal number."""
+    int_places = ["Ones", "Tens", "Hundreds"]
+    dec_places = ["Tenths", "Hundredths", "Thousandths"]
+
+    digits = random.sample(range(1, 9), difficulty * 2)
+    integer = int(''.join(map(str, [digits[i] for i in range(difficulty)])))
+    decimal = int(''.join(
+        map(str, [digits[i] for i in range(difficulty, 2 * difficulty)]))
+    )
+    n = '.'.join(map(str, [integer, decimal]))
+
+    k = random.randint(0, 1)
+    value = [integer, decimal][k]
+    d = random.randint(1, len(str(value)))
+    question = f"What place is the digit {int(str(value)[- d])} " \
+               f"in the number {mq.dollar(n)}?"
+    choices = []
+    for i in range(difficulty):
+        choices.append(int_places[i])
+    for j in reversed(range(difficulty)):
+        choices.append(dec_places[j])
+
+    answer = choices[(difficulty * k) + d - 1]
+    return mq.multiple_choice(question, choices, answer)
+
+
+def fr_24(difficulty):
+    """Identify fraction from number line."""
+    b = random.randint(1 + difficulty, 3 + 2 ** difficulty)
+    a = random.randint(1, b - 1)
+    length = 7
+    circle = "\\definecolor{ceruleanblue}{rgb}{0.16, 0.32, 0.75}" \
+             f"\\fill[fill = ceruleanblue] (({a} * {length}/{b},0) " \
+             "circle[radius=3pt]"
+    question = "What fraction is shown on the number line? "
+
+    if mq.gcd(b, a) != 1:
+        question += "Simplify your answer."
+        answer = f"${mq.latex_frac_simplify(a, b)}$"
+    else:
+        answer = f"${mq.latex_frac(a, b)}$"
+    question += f"\n\n {mq.num_line(b, False, circle, length=length)}"
+    return [question, answer]
+
+
+def fr_25(difficulty):
+    """Identifying fraction lengths on number line. Multiple choice."""
+    b = random.sample(range(3 + difficulty, 8 + 2 ** (difficulty-1)), k=2)
+    a = random.sample(range(1, b[0] - 1), k=2)
+    length = 6
+    values = [a[0] / b[0], a[1] / b[0]]
+
+    choices = []
+    for i in range(2):
+        start = random.randint(0, b[0] - a[i])
+        line = f"\\draw[line width = 2pt, color=red] " \
+               f"(({start} * {length}/{b[0]},0) -- " \
+               f"(({start + a[i]} * {length}/{b[0]},0);"
+        choices.append(
+            f"{mq.num_line(b[0], False, line, length=length)} \\vspace{{2em}}"
+        )
+    while len(choices) < 3:
+        c = random.randint(1, b[1] - 1)
+        if c/b[1] not in values:
+            start = random.randint(0, b[1] - c)
+            line = f"\\draw[line width = 2pt, color=red] " \
+                   f"(({start} * {length}/{b[1]},0) -- " \
+                   f"(({start + c} * {length}/{b[1]},0);"
+            choices.append(f"{mq.num_line(b[1], False, line, length=length)} "
+                           f"\\vspace{{2em}}")
+
+    question = "Which number line has a coloured segment of length " \
+               f"${mq.latex_frac(a[0],b[0])}$"
+    answer = choices[0]
+    return mq.multiple_choice(question, choices, answer)
 
 # MONEY QUESTIONS______________________
 
@@ -2055,7 +2179,7 @@ def me_5(difficulty):
 
     result = mq.time_unit_converter(unit_in, unit_out, 1)
     question = f"How many {unit_out} are there in {prefix} {unit_in}?"
-    answer = f"{result[0]} {result[1]}"
+    answer = str(result[0]) + result[1]
     return [question, answer]
 
 
