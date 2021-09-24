@@ -255,3 +255,36 @@ def analogue_clock(hour, minute):
            f"\\draw (0,0) -- ({hour_angle}:0.65cm);\n" \
            f"\\draw (0,0) -- ({minute_angle}:0.9cm);\n" \
            "\\end{tikzpicture}"
+
+
+def num_line(denominator, labelled, additional="", length=6):
+    n = denominator
+    if n > 9:
+        font = "\\large"
+    else:
+        font = "\\Large"
+
+    if labelled is True:
+        height = 3
+    else:
+        height = 5
+
+    model = f"\\begin{{tikzpicture}}[font={font}]" \
+            f"\\draw[line width = 1pt] (0,0) -- ({length},0); " \
+            f"\\foreach \\x in {{0,{length}}} " \
+            "\\draw[shift={\\x,0},color=black, line width = 1pt] " \
+            f"(0pt,{height + 1}pt) -- (0pt,-{height + 1}pt);" \
+            f"\\foreach \\x in {{1,...,{n-1}}}" \
+            f"\\draw[shift={{(\\x * {length}/{n},0)}},color=black] " \
+            f"(0pt,{height}pt) -- (0pt,-{height}pt) node[below] "
+
+    if labelled is True:
+        model += f"{{$\\frac{{\\x}}{{{n}}}$}};"
+    else:
+        model += ";"
+    model += "\\draw (0,-3pt) node[below]{$0$};" \
+             f"\\draw ({length},-3pt) node[below]{{$1$}};" \
+             "\\draw[line width = 1pt, color=black] " \
+             f"({length},{height+1}pt) -- ({length},-{height+1}pt);"
+    model += additional + "\\end{tikzpicture}"
+    return model
