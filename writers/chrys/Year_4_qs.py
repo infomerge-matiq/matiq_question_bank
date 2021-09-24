@@ -2582,7 +2582,7 @@ def sh_1(difficulty):
 
 
 def pd_1(difficulty):
-    """Guess the shape."""
+    """What type of transformation is occurring.."""
     size = 6
     n = random.randint(0, 2)
     name = [
