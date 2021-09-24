@@ -1,5 +1,6 @@
 import random
 import roman
+import statistics
 
 from datetime import time, datetime, timedelta
 from math import floor, ceil
@@ -2026,7 +2027,7 @@ def fr_25(difficulty):
                            f"\\vspace{{2em}}")
 
     question = "Which number line has a coloured segment of length " \
-               f"${mq.latex_frac(a[0],b[0])}$"
+               f"${mq.latex_frac(a[0],b[0])}$?"
     answer = choices[0]
     return mq.multiple_choice(question, choices, answer)
 
@@ -2552,4 +2553,91 @@ def me_15(difficulty):
     times[n] = "\\makebox[0.025\\textwidth]{\\hrulefill}"
     times = ",\\ ".join(times)
     question = f"Fill in the missing time in the sequence: \n\n {times} "
+    return [question, answer]
+
+
+def sh_1(difficulty):
+    """Guess the shape, multiple choice."""
+    upper = [5, 7, 10][difficulty - 1]
+    n = random.randint(3, upper)
+    if n == 9:
+        n = n - 1
+    shapes_dict = {3: 'Triangle', 4: 'Square', 5: 'Pentagon',
+                   6: 'Hexagon', 7: 'Heptagon', 8: 'Octagon',
+                   9: 'Octagon', 10: 'Decagon'}
+    shape = "\\begin{center}\n\\begin{tikzpicture}\n\\node[regular polygon, " \
+            f"regular polygon sides={n}, minimum size=2cm, draw] at (0," \
+            "0) {};\n\\end{tikzpicture}\n\\end{center}"
+    question = "What is the name of the shape below?\n\n" \
+               + shape
+    choices = []
+    answer = shapes_dict[n]
+    choices.append(answer)
+
+    while len(choices) < 3:
+        k = random.randint(3, upper)
+        if shapes_dict[k] not in choices:
+            choices.append(shapes_dict[k])
+    return mq.multiple_choice(question, choices, answer)
+
+
+def pd_1(difficulty):
+    """Guess the shape."""
+    size = 6
+    n = random.randint(0, 2)
+    name = [
+        "isosceles triangle",
+        "regular polygon,regular polygon sides=5",
+        "circle split"
+    ][n]
+    rotate = [[0, 180], [270, 90], [45, 135]][n]
+
+    k = random.randint(0, 1)
+    shape = f"node[{name}, minimum size=1cm," \
+            f" rotate={rotate[k]}, draw, fill=green]"
+    reflection = f"node[{name}, minimum size=1cm," \
+                 f" rotate={rotate[(k + 1) % 2]}, draw, fill=green]"
+
+    lower_x = [[1, 4], [0.5, 3.5], [0.5, 3.5]][n]
+    upper_x = [[2, 5], [2.5, 4.5], [2.5, 4.5]][n]
+
+    x_0 = 0.5 * random.randint(lower_x[0] * 2, upper_x[0] * 2)
+    y_0 = 0.5 * random.randint(1, 5)
+
+    m = random.randint(0, 1)
+    if m == 1:
+        x_1 = size - x_0
+        y_1 = y_0
+    else:
+        x_1 = random.uniform(lower_x[1], upper_x[1])
+        y_1 = random.uniform(0.5, 2.5)
+
+    pic = f"\\begin{{tikzpicture}} \\usetikzlibrary{{shapes,snakes}} " \
+          f"\\draw[step=0.5,gray,thin] (0,0) grid ({size},3);" \
+          f"\\draw ({x_0},{y_0}) {shape} ;" \
+          f"\\draw ({x_1}, {y_1}) {[shape, reflection][m]} ;"
+
+    if difficulty == 1:
+        pic += "\\draw [ultra thick,red] (3,0) -- (3,3); "
+    pic += "\\end{tikzpicture}"
+
+    question = f"What transformation has occurred? \n\n {pic}"
+    choices = ["Translation", "Reflection"]
+    answer = choices[m]
+    return mq.multiple_choice(question, choices, answer)
+
+
+def st_1(difficulty):
+    """Mean of a group of numbers."""
+    upper = 10 ** difficulty - 1 - 800 * round(difficulty / 10 + 0.3)
+    nums = []
+    while len(nums) == 0:
+        k = random.randint(5, 10 - difficulty)
+        values = random.choices(range(0, upper), k=k)
+        if sum(values) % k == 0:
+            nums = values
+
+    sequence = ",\\ ".join(str(nums[i]) for i in range(len(nums)))
+    question = f"Find the mean of these numbers. \n\n {sequence}"
+    answer = f"{statistics.mean(nums)}"
     return [question, answer]
