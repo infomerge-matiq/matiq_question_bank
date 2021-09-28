@@ -24,6 +24,7 @@ SOFTWARE.
 from random import shuffle
 from string import ascii_uppercase
 from num2words import num2words
+from math import cos, sin, radians
 
 
 def multiple_choice(question: str, choices: list[str], correct: str,
@@ -287,4 +288,30 @@ def num_line(denominator, labelled, additional="", length=6):
              "\\draw[line width = 1pt, color=black] " \
              f"({length},{height+1}pt) -- ({length},-{height+1}pt);"
     model += additional + "\\end{tikzpicture}"
+    return model
+
+
+def angle_drawing(angle, radius=4, rotation=0):
+    x_0 = cos(radians(rotation)) * radius
+    y_0 = sin(radians(rotation)) * radius
+    if x_0 <= 0 and y_0 <= 0:
+        theta = 180 + angle
+    elif x_0 < 0 and y_0 >= 0:
+        theta = 90 + angle
+    elif x_0 >= 0 and y_0 < 0:
+        theta = 270 + angle
+    else:
+        theta = angle
+    x = cos(radians(theta + rotation)) * radius
+    y = sin(radians(theta + rotation)) * radius
+
+    model = "\\usetikzlibrary{angles,quotes}" \
+            " \\begin{tikzpicture}[> = stealth]" \
+            f"\\coordinate (a) at (0,0); " \
+            f"\\coordinate (b) at ({x},{y}); " \
+            f"\\coordinate (c) at ({x_0},{y_0});" \
+            "\\draw pic[draw,fill=blue,angle radius=1cm] {angle=c--a--b};" \
+            "\\draw[ultra thick,black, ->]  (a) -- node[above] {} (b);" \
+            "\\draw[ultra thick,black,->]  (a) -- node[above right] {} (c);" \
+            "\\end{tikzpicture}"
     return model
