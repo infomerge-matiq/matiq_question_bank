@@ -64,7 +64,7 @@ def pv_2(difficulty):
         answer = mq.dollar(y[n])
         y[n] = "$\\square$"
         question = f"Fill in the missing part of this equation: " \
-                   f"{y[0]}{y[3]}{y[1]}={y[2]}"
+                   f"{y[0]}{y[3]}{y[1]} $=$ {y[2]}"
     return [question, answer]
 
 
@@ -119,7 +119,7 @@ def pv_5(difficulty):
 
 def pv_6(difficulty):
     """Find the nth smallest or largest number in a sequence"""
-    limit = 3+difficulty
+    limit = 3 + difficulty
     k = random.randint(0, 1)
     size = ["smallest", "largest"]
 
@@ -129,7 +129,7 @@ def pv_6(difficulty):
     else:
         order = mq.ordinal(n)
 
-    numbers = random.sample(range(100, difficulty*5000), limit)
+    numbers = random.sample(range(100, difficulty * 5000), limit)
     question = f"Which of these numbers is the {order} {size[k]}?\n\n"
     question += ", ".join([mq.dollar(i) for i in numbers])
 
@@ -145,13 +145,10 @@ def pv_7(difficulty):
     """ Use table to find person with largest/smallest score"""
     n = random.randint(0, 1)
     size = ['least', 'most']
-    c2 = random.sample(range(100, 1000 + 10 ** (difficulty + 2)), 5)
-    c1 = []
-    for i in range(5):
-        c1.append(names.get_first_name())
+    col_2 = random.sample(range(100, 1000 + 10 ** (difficulty + 2)), 5)
     c = []
-    for k in range(0, len(c2)):
-        c.append([c1[k], c2[k]])
+    for i in range(len(col_2)):
+        c.append([names.get_first_name(), col_2[i]])
 
     table = "\\begin{center}\n\\begin{tabular}{||c c||}\n " \
             "\\hline \n Name & Score \\\\ [0.5ex]\n" \
@@ -164,8 +161,8 @@ def pv_7(difficulty):
     question = f"Some friends are playing a game. " \
                f"The table below shows each of their scores.\n\n{table}\n\n " \
                f"Who has the {size[n]} amount of points?"
-    choices = []
 
+    choices = []
     if n == 0:
         c.sort(key=lambda x: x[1])
     else:
@@ -179,23 +176,23 @@ def pv_7(difficulty):
 
 def pv_8(difficulty):
     """ Use table to nth highest/smallest value. """
-    n, m = random.randint(0, 1), random.randint(0, 1)
-    size = ['smallest', 'highest']
-    c2 = random.sample(range(10 ** (difficulty + 1) - (difficulty - 1) * 200,
-                             2000 + 10 ** (difficulty + 2)), k=5)
-    c1 = [['Athletics', 'Swimming', 'Badminton', 'Cycling', 'Volleyball'],
-          ['Mountain Heights', 'Hilly Green', 'Rivertown', 'Rocky Beach',
-           'Cloudy Valley']
-          ]
+    n = random.randint(0, 1)
+    m = random.randint(0, 1)
+    size = ['smallest', 'highest'][n]
+    values = random.sample(
+        range(10 ** (difficulty + 1) - (difficulty - 1) * 200,
+              2000 + 10 ** (difficulty + 2)), k=5)
+    name = [
+        ['Athletics', 'Swimming', 'Badminton', 'Cycling', 'Volleyball'],
+        ['Mountain Heights', 'Hilly Green', 'Rivertown',
+         'Rocky Beach', 'Cloudy Valley']
+    ]
     c = []
-    for k in range(0, len(c2)):
-        c.append([c1[m][k], c2[k]])
+    for k in range(len(values)):
+        c.append([name[m][k], values[k]])
 
-    i = random.randint(2, len(c2) - 2)
-    if i == 1:
-        order = ''
-    else:
-        order = mq.ordinal(i)
+    i = random.randint(2, len(values) - 2)
+    order = mq.ordinal(i)
 
     table = "\\begin{center}\n\\begin{tabular}{||c c||}\n \\hline\n " \
             f"{['Sport', 'Town'][m]} & {['Attendance', 'Population'][m]} " \
@@ -210,18 +207,18 @@ def pv_8(difficulty):
     question = [f"A sports competition is happening. "
                 f"The table below shows the attendance for each event. \n\n "
                 f"{table} \n\n What sport had the "
-                f"{order} {size[n]} attendance?",
+                f"{order} {size} attendance?",
                 f"The table below shows the populations "
                 f"for some towns. \n\n  {table}\n\n"
-                f"What town has the {order} {size[n]} population?"
+                f"What town has the {order} {size} population?"
                 ][m]
     choices = []
-    for j in range(0, len(c)):
+    for j in range(len(c)):
         choices.append(c[j][0])
 
     if n == 0:
         c.sort(key=lambda x: x[1])
-    elif n == 1:
+    else:
         c.sort(key=lambda x: x[1], reverse=True)
     answer = c[i - 1][0]
     return mq.multiple_choice(question, choices, answer)
@@ -242,16 +239,19 @@ def pv_9(difficulty):
     return [question, answer]
 
 
+# noinspection PyTypeChecker
 def pv_10(difficulty):
     """Pick the sign to complete the inequality"""
-    x = random.randint(10 ** (difficulty-1), 5 * 10 ** difficulty)
-    y = random.randint(10 ** (difficulty-1), 5 * 10 ** difficulty)
+    lower = 10 ** (difficulty-1)
+    upper = 5 * 10 ** difficulty
+    a = random.choices(lower, upper)
+    b = random.randint(lower, upper)
     question = "Choose the sign that correctly completes the statement. \n\n" \
-               f"\\begin{{center}} {x} $\\square$ {y} \\end{{center}}"
+               f"\\begin{{center}} {a} $\\square$ {b} \\end{{center}}"
     choices = ["$<$", "$=$", "$>$"]
-    if x > y:
+    if a > b:
         answer = choices[2]
-    elif x < y:
+    elif a < b:
         answer = choices[0]
     else:
         answer = choices[1]
@@ -302,8 +302,8 @@ def pv_13(difficulty):
                + mq.dollar(no_2) + " $-$ " \
                + "{\\fboxsep0pt\\fbox{\\rule{2em}{0pt}\\rule{0pt}{2.2ex}}} " \
                  "\\end{center}"
-    less = random.sample(range(no_2-no_1+1, no_2), k=4)
-    more = random.sample(range(0, no_2-no_1-1), k=4)
+    less = random.sample(range(no_2 - no_1 + 1, no_2), k=4)
+    more = random.sample(range(0, no_2 - no_1 - 1), k=4)
     choices = [mq.dollar(less[0]), mq.dollar(more[0]), mq.dollar(no_2-no_1)]
 
     if sign == signs[0]:
@@ -323,47 +323,40 @@ def pv_13(difficulty):
 
 def pv_14(difficulty):
     """filling in each square to break down number into powers of ten."""
-    upper = 10**(difficulty+2)-1
-    n = random.randint(100, upper)
+    upper = 10 ** (difficulty + 2) - 1
+    lower = 10 ** (difficulty + 1)
+    n = random.randint(lower, upper)
+    places = ["ones", "tens", "hundreds", "thousands", "ten-thousands"]
+    y = []
+    results = []
+    for i in reversed(range(2 + difficulty)):
+        y.append(f"$\\square$ {places[i]}")
+        results.append(f"{mq.dollar({int(str(n)[- (i + 1)])})} {places[i]}")
+    values = " $+$\\ ".join(y)
+    answer = " $+$\\ ".join(results)
 
-    y = "$\\square$hundreds $+$ $\\square$tens $+$ $\\square$ones"
-    result = f"{mq.dollar({int(str(n)[- 3])})} hundreds " \
-             f"$+$ {mq.dollar({int(str(n)[- 2])})} tens " \
-             f"$+$ {mq.dollar({int(str(n)[- 1])})} ones"
-    if 1000 <= n < 10000:
-        x = "$\\square$thousands $+$ " + y
-        answer = f" {mq.dollar({int(str(n)[- 4])})} thousands $+$ " + result
-    elif n >= 10000:
-        x = "$\\square$ten thousands $+$ $\\square$thousands $+$ " + y
-        answer = f" {mq.dollar({int(str(n)[- 5])})} ten-thousands " \
-                 f"$+$ {mq.dollar({int(str(n)[- 4])})} thousands $+$ " + result
-    else:
-        x = y
-        answer = result
     question = f"Break down the number {num2words(n)} " \
-               f"by filling in the gaps. \n\n {mq.dollar(n)}$=$ {x} "
+               f"by filling in the gaps. \n\n {mq.dollar(n)}$=$ {values} "
     return [question, answer]
 
 
 def pv_15(difficulty):
     """Breaking down number into thousands, tens ect. filling in each part"""
-    upper = 10**(difficulty+2)-1
+    upper = 10 ** (difficulty + 2) - 1
     n = random.randint(100, upper)
     suffix = ["ones", "tens", "hundreds", "thousands", "ten-thousands"]
 
     x = ""
     for i in range(1, len(str(n))):
         j = len(str(n)) - i
-        if int(str(n)[-(j+1)]) == 0:
-            x += ""
-        else:
-            x += f"\\mbox{{{mq.dollar({int(str(n)[-(j+1)])})}" \
+        if int(str(n)[-(j + 1)]) != 0:
+            x += f"\\mbox{{{mq.dollar({int(str(n)[-(j + 1)])})}" \
                  f" {suffix[j]}}} $+$ "
     x += f"\\mbox{{{mq.dollar({int(str(n)[- 1])})} {suffix[0]}}}"
 
     answer = mq.dollar(n)
     square = ''
-    for i in range(len(answer)-2):
+    for i in range(len(answer) - 2):
         square += "{\\fboxsep0pt\\fbox{\\rule{0.9em}{0pt}\\rule{0pt}{2.4ex}}}"
 
     question = f"Find the number that completes the statement. " \
@@ -375,8 +368,8 @@ def pv_15(difficulty):
 
 def as_1(difficulty):
     """addition of numbers up to 4 digits, using columnar method"""
-    lower = 2*(400*difficulty - 200)
-    upper = 2000*difficulty
+    lower = 2 * (400 * difficulty - 200)
+    upper = 2000 * difficulty
     a = random.randint(lower, upper)
     b = random.randint(lower, upper)
     question = r"\hspace{2cm}{\LARGE$\begin{array}{r}" + str(b) + \
@@ -388,9 +381,9 @@ def as_1(difficulty):
 
 def as_2(difficulty):
     """fill in missing value to balance equation"""
-    lower = 250*(difficulty-1)+50
-    upper = 400*(difficulty-1) + 100
-    sums = random.randint(lower+10, upper)
+    lower = 250 * (difficulty - 1) + 50
+    upper = 400 * (difficulty - 1) + 100
+    sums = random.randint(lower + 10, upper)
     nums = random.sample(range(21, lower), k=2)
 
     n = random.randint(0, 2)
@@ -2038,14 +2031,15 @@ def me_1(difficulty):
     """Money Problem question, subtracting a value from a starting amount"""
     y0 = random.randint(2, round(0.5 * difficulty) + 5)
     if difficulty == 2:
-        x = round(random.uniform(0.1 * y0, 2 * y0 / 3), 1)
+        d_p = 1
     else:
-        x = round(random.uniform(0.1 * y0, 2 * y0 / 3), 2)
-
-    question = f"Mary has \\pounds {y0:.2f} in pocket money. " \
+        d_p = 2
+    x = round(random.uniform(0.1 * y0, 2 * y0 / 3), d_p)
+    question = f"{names.get_first_name(gender='female')} has " \
+               f"\\pounds {y0:.2f} in pocket money. " \
                f"She spends \\pounds {x:.2f}. " \
-               f"How much money does she have left?"
-    answer = f"\\pounds {round(y0-x,2):.2f}"
+               f"How much money does she have left over?"
+    answer = f"\\pounds {round(y0 - x, 2):.2f}"
     return [question, answer]
 
 # CLOCK QUESTIONS______________________
@@ -2057,11 +2051,11 @@ def me_2(difficulty):
                        weights=(1.5, difficulty), k=1)[0]
     m = random.randint(0, 59)
     n = random.randint(0, 1)
-    t = [time(h, m).strftime("%H:%M"),
-         time(h, m).strftime("%I:%M %p")
-         ]
-    question = f"Convert {t[n]}."
-    question += [" into 12 hour format", " into 24 hour format"][n]
+    t = [
+        time(h, m).strftime("%H:%M"),
+        time(h, m).strftime("%I:%M %p")
+    ]
+    question = f"Convert {t[n]} into {['12', '24'][n]} hour format."
     answer = t[(n+1) % 2]
     return [question, answer]
 
@@ -2099,10 +2093,8 @@ def me_4(difficulty):
                               'drawing', 'gardening'])
 
     n = random.randint(0, 1)
-    name = [
-        names.get_first_name(gender="male"),
-        names.get_first_name(gender="female")
-    ][n]
+    gender = ["male", "female"]
+    name = names.get_first_name(gender=gender)
     hour_start = random.randint(5, 22)
     if difficulty == 3:
         min_start = (20 - 5 * difficulty) * random.randint(0, 11)
@@ -2223,53 +2215,49 @@ def me_6(difficulty):
 def me_7(difficulty):
     """"Multiple choice, converting time in words to a 12hr or 24hr clock"""
     minutes = random.sample(range(0, 59), 5)
-    hours = random.choices([
-        random.sample(range(1, 11), 2),
-        random.sample(range(12, 23), 2)
-    ],
-        weights=(1, difficulty), k=1)[0]
-
-    time_in = [hours[0], minutes[0]]
+    hour = random.choices([random.randint(1, 11), random.randint(12, 23)],
+                          weights=(1, difficulty), k=1
+                          )[0]
     n = random.randint(0, 1)
     clock_format = ['24 hour', '12 hour'][n]
-    if 0 < time_in[0] < 12:
+    if 0 < hour < 12:
         morn_eve = 'in the morning'
-    elif 12 <= time_in[0] < 17:
+    elif 12 <= hour < 17:
         morn_eve = 'in the afternoon'
-    elif 17 < time_in[0] < 21:
+    elif 17 < hour < 21:
         morn_eve = 'in the evening'
     else:
         morn_eve = 'at night'
 
-    question = f'What is {mq.time_to_words(time_in[0], time_in[1])} ' \
+    question = f'What is {mq.time_to_words(hour, minutes[0])} ' \
                f'{morn_eve} in {clock_format} format.'
     choices = []
-    time_out = time(time_in[0], time_in[1])
+    time_out = time(hour, minutes[0])
 
     for i in range(1, 3):
         choice1 = [
-            (time(time_in[0], minutes[i])).strftime("%H:%M"),
-            (time(time_in[0], minutes[i])).strftime("%I:%M %p")
+            (time(hour, minutes[i])).strftime("%H:%M"),
+            (time(hour, minutes[i])).strftime("%I:%M %p")
         ][n]
         choices.append(choice1)
 
     if minutes[0] > 30:
-        choice2 = time(time_in[0] + 1, 60 - minutes[0])
+        choice2 = time(hour + 1, 60 - minutes[0])
     elif minutes[0] == 30 or minutes[0] == 0:
-        choice2 = time(time_in[0] + 1, minutes[4])
+        choice2 = time(hour + 1, minutes[4])
     else:
-        choice2 = time(time_in[0], 60 - minutes[0])
+        choice2 = time(hour, 60 - minutes[0])
     choice2 = [choice2.strftime("%H:%M"), choice2.strftime("%I:%M %p")][n]
 
+    h_3 = (round(minutes[0] * 0.2)) % [24, 12][n]
+    m_3 = ((hour % 12) * 5) % 60
     choice3 = [
-        (time((round(minutes[0] * 0.2)) % 24,
-              ((hours[0] % 12) * 5) % 60)).strftime("%H:%M"),
-        (time((round(minutes[0] * 0.2)) % 12,
-              (hours[0] * 5) % 60)).strftime("%I:%M %p")
+        time(h_3, m_3).strftime("%H:%M"),
+        time(h_3, m_3).strftime("%I:%M %p")
     ][n]
 
     answer = [time_out.strftime("%H:%M"), time_out.strftime("%I:%M %p")][n]
-    choices = choices + [choice2, choice3, answer]
+    choices.extend([choice2, choice3, answer])
     return mq.multiple_choice(question, choices, answer)
 
 
@@ -2322,9 +2310,8 @@ def me_8(difficulty):
 def me_9(difficulty):
     """elapsed time problem, mixture of 12hr, 24hr and worded format."""
     n = random.randint(0, 1)
-    name = random.choice([['Mary', 'Julia', 'Christina'],
-                          ['Tom', 'Jack', 'Benjamin', 'Joseph']
-                          ][n])
+    gender = ['Female', 'Male'][n]
+    name = random.choice([names.get_first_name(gender=gender[n])])
     sport = random.choice(['runs', 'jogs', 'swims', 'does gymnastics',
                            'plays basketball', 'plays table tennis'])
 
@@ -2467,9 +2454,10 @@ def me_13(difficulty):
     """Draw on clock to get time"""
     hour = random.randint(0, 11)
     minute = ((20-5*difficulty) * random.randint(0, 11)) % 60
-    time_in = random.choice([time(hour, minute).strftime("%H:%M"),
-                             mq.time_to_words(hour, minute)]
-                            )
+    time_in = random.choice([
+        time(hour, minute).strftime("%H:%M"),
+        mq.time_to_words(hour, minute)
+    ])
     blank_clock = "\\begin{center}\n\\begin{tikzpicture}" \
                   "[line cap=rect,line width=3pt]\n \\filldraw [fill=white]" \
                   " (0,0) circle [radius=1.3cm];\n" \
@@ -2524,7 +2512,7 @@ def me_14(difficulty):
 
 def me_15(difficulty):
     """ Time sequence question where student fills missing time. """
-    h_0 = random.randint(0, 23)   # starting hour and minute
+    h_0 = random.randint(0, 23)
     m_0 = ((20 - 5 * difficulty) * random.randint(0, 11)) % 60
     t_0 = datetime(year=2021, month=6, day=20, hour=h_0, minute=m_0)
 
@@ -2541,12 +2529,11 @@ def me_15(difficulty):
     times = []
     k = random.randint(0, 1)
     for i in range(5):
-        times_formats = [(t_0
-                          + timedelta(minutes=i * step[0])).strftime("%H:%M"),
-                         (t_0
-                          + timedelta(minutes=i * step[0])).strftime("%I:%M")
-                         ]
-        times.append(times_formats[k])
+        times_formats = [
+            (t_0 + timedelta(minutes=i * step[0])).strftime("%H:%M"),
+            (t_0 + timedelta(minutes=i * step[0])).strftime("%I:%M")
+        ][k]
+        times.append(times_formats)
 
     n = random.randint(0, 4)
     answer = times[n]
