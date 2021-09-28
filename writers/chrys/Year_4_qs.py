@@ -69,7 +69,7 @@ def pv_2(difficulty):
 
 
 def pv_3(difficulty):
-    """Rounding to nearest power of 10"""
+    """Rounding to nearest power of 10."""
     lower = 1000 - 250 * difficulty
     upper = 4000 * difficulty - 3000
     no_start = random.randint(lower, upper)
