@@ -134,14 +134,10 @@ def num_line(denominator, labelled, additional="", length=6):
     return model
 
 
-def angle(angle, radius, rotation=0):
-    angle = 90
-    rotation = 270
-    radius = 4
-
+def angle_drawing(angle, radius=4, rotation=0):
     x_0 = cos(radians(rotation)) * radius
     y_0 = sin(radians(rotation)) * radius
-    if x_0 <=0 and y_0 <= 0:
+    if x_0 <= 0 and y_0 <= 0:
         theta = 180 + angle
     elif x_0 < 0 and y_0 >= 0:
         theta = 90 + angle
