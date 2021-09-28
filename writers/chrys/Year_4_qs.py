@@ -150,14 +150,16 @@ def pv_7(difficulty):
     for i in range(len(col_2)):
         c.append([names.get_first_name(), col_2[i]])
 
-    table = "\\begin{center}\n\\begin{tabular}{||c c||}\n " \
-            "\\hline \n Name & Score \\\\ [0.5ex]\n" \
-            f"\\hline\\hline \n {c[0][0]} & {c[0][1]} \\\\ \n " \
-            f"\\hline \n  {c[1][0]} & {c[1][1]}  \\\\ \n \\hline \n " \
-            f"{c[2][0]} & {c[2][1]} \\\\ \n " \
-            f"\\hline \n  {c[3][0]} & {c[3][1]}  \\\\ \n \\hline \n " \
-            f" {c[4][0]} & {c[4][1]}  \\\\ " \
-            "[1ex]\n \\hline \n \\end{tabular}\n \\end{center}"
+    table = r'''
+    \begin{center} \begin{tabular}{||c c||} 
+    \hline  Name & Score \\ [0.5ex] 
+    \hline \hline  %s & %s \\  
+    \hline  %s & %s \\  \hline  %s & %s \\  
+    \hline  %s & %s \\  \hline  %s & %s \\ [1ex]  \hline  
+    \end{tabular} 
+    \end{center}"
+    ''' % (c[0][0], c[0][1], c[1][0], c[1][1], c[2][0],
+           c[2][1], c[3][0], c[3][1], c[4][0], c[4][1])
     question = f"Some friends are playing a game. " \
                f"The table below shows each of their scores.\n\n{table}\n\n " \
                f"Who has the {size[n]} amount of points?"
@@ -194,16 +196,18 @@ def pv_8(difficulty):
     i = random.randint(2, len(values) - 2)
     order = mq.ordinal(i)
 
-    table = "\\begin{center}\n\\begin{tabular}{||c c||}\n \\hline\n " \
-            f"{['Sport', 'Town'][m]} & {['Attendance', 'Population'][m]} " \
-            f"\\\\ [0.5ex]\n \\hline\\hline \n  " \
-            f"{c[0][0]} & {c[0][1]} \\\\ \n \\hline \n" \
-            f"{c[1][0]} & {c[1][1]}  \\\\ \n \\hline \n " \
-            f"{c[2][0]} & {c[2][1]} \\\\ \n \\hline \n " \
-            f"{c[3][0]} & {c[3][1]}  \\\\ \n \\hline \n " \
-            f"{c[4][0]} & {c[4][1]}  \\\\ " \
-            "[1ex]\n \\hline \n \\end{tabular}\n \\end{center}"
-
+    table = r'''
+    \begin{center} \begin{tabular}{||c c||} 
+    \hline %s & %s \\ [0.5ex] \hline 
+    \hline %s & %s \\ \hline %s & %s \\
+    \hline %s & %s \\ \hline %s & %s \\ 
+    \hline %s & %s \\ [1ex] \hline 
+    \end{tabular} \end{center}
+    ''' % (
+        ['Sport', 'Town'][m], ['Attendance', 'Population'][m],
+        c[0][0], c[0][1], c[1][0], c[1][1], c[2][0],
+        c[2][1], c[3][0], c[3][1], c[4][0], c[4][1]
+    )
     question = [f"A sports competition is happening. "
                 f"The table below shows the attendance for each event. \n\n "
                 f"{table} \n\n What sport had the "
@@ -265,9 +269,11 @@ def pv_11(difficulty):
     no_3 = random.randint(0, numbers[0])
 
     question = "Choose the sign that correctly completes the statement. \n\n" \
-               f"\\begin{{center}} {numbers[0]} $+$ {numbers[1]} " \
-               f"$-$ {no_3} $\\square$ " \
-               f"{numbers[2]} $+$ {numbers[3]} \\end{{center}}"
+               + r''' 
+               \begin{center} 
+               %d $+$ %d $-$ %d $\square$ %d $+$ %d 
+               \end{center} 
+               ''' % (numbers[0], numbers[1], no_3, numbers[2], numbers[3])
 
     choices = ["$<$", "$=$", "$>$"]
     x = numbers[0] + numbers[1] - no_3
@@ -298,10 +304,12 @@ def pv_13(difficulty):
     signs = [" $<$ ", " $=$ ", " $>$ "]
     sign = random.choice([" $<$ ", " $=$ ", " $>$ "])
     question = "Choose the number that makes this statement true. \n\n" \
-               f"\\begin{{center}}" + mq.dollar(no_1) + sign \
-               + mq.dollar(no_2) + " $-$ " \
-               + "{\\fboxsep0pt\\fbox{\\rule{2em}{0pt}\\rule{0pt}{2.2ex}}} " \
-                 "\\end{center}"
+               r''' 
+               \begin{center}
+               %s %s  %s $-$ 
+               \fboxsep0pt\fbox{\rule{2em}{0pt}\rule{0pt}{2.2ex}}
+               \end{center}
+                 ''' % (mq.dollar(no_1), sign, mq.dollar(no_2))
     less = random.sample(range(no_2 - no_1 + 1, no_2), k=4)
     more = random.sample(range(0, no_2 - no_1 - 1), k=4)
     choices = [mq.dollar(less[0]), mq.dollar(more[0]), mq.dollar(no_2-no_1)]
@@ -2007,7 +2015,7 @@ def fr_25(difficulty):
                f"(({start} * {length}/{b[0]},0) -- " \
                f"(({start + a[i]} * {length}/{b[0]},0);"
         choices.append(
-            f"{mq.num_line(b[0], False, line, length=length)} \\vspace{{2em}}"
+            f"{mq.num_line(b[0], line, length)} \\vspace{{2em}}"
         )
     while len(choices) < 3:
         c = random.randint(1, b[1] - 1)
@@ -2016,7 +2024,7 @@ def fr_25(difficulty):
             line = f"\\draw[line width = 2pt, color=red] " \
                    f"(({start} * {length}/{b[1]},0) -- " \
                    f"(({start + c} * {length}/{b[1]},0);"
-            choices.append(f"{mq.num_line(b[1], False, line, length=length)} "
+            choices.append(f"{mq.num_line(b[1], line, length)} "
                            f"\\vspace{{2em}}")
 
     question = "Which number line has a coloured segment of length " \
@@ -2458,17 +2466,18 @@ def me_13(difficulty):
         time(hour, minute).strftime("%H:%M"),
         mq.time_to_words(hour, minute)
     ])
-    blank_clock = "\\begin{center}\n\\begin{tikzpicture}" \
-                  "[line cap=rect,line width=3pt]\n \\filldraw [fill=white]" \
-                  " (0,0) circle [radius=1.3cm];\n" \
-                  "\\foreach \\angle [count=\\xi] in {60,30,...,-270}\n" \
-                  "{\n  \\draw[line width=1pt] " \
-                  "(\\angle:1.15cm) -- (\\angle:1.3cm);\n " \
-                  "\\node[font=\\large] at (\\angle:0.9cm)" \
-                  "{\\textsf{\\xi}};\n}\n \\foreach " \
-                  "\\angle in {0,90,180,270}\n \\draw[line width=1.5pt] " \
-                  "(\\angle:1.1cm) -- (\\angle:1.3cm);\n" \
-                  "\\end{tikzpicture}\n\\end{center}"
+    blank_clock = r'''
+    \begin{center} 
+    \begin{tikzpicture} [line cap=rect,line width=3pt]
+    \filldraw [fill=white] (0,0) circle [radius=1.3cm]; 
+    \foreach \angle [count=\xi] in {60,30,...,-270} 
+      { \draw[line width=1pt] (\angle:1.15cm) -- (\angle:1.3cm);
+      \node[font=\large] at (\angle:0.9cm) {\textsf{\xi}};}
+    \foreach \angle in {0,90,180,270}
+      \draw[line width=1.5pt] (\angle:1.1cm) -- (\angle:1.3cm);
+    \end{tikzpicture}
+    \end{center}
+    '''
     question = f"Draw the time {time_in} on the clock.\n\n {blank_clock}"
     answer = mq.analogue_clock(hour, minute)
     return [question, answer]

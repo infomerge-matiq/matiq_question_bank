@@ -88,73 +88,43 @@ def time_to_words(hour_in, minute_in):
 def analogue_clock(hour, minute):
     hour_angle = (90 - 30 * (hour % 12)) % 360 - 0.5 * minute
     minute_angle = (90 - 6 * minute) % 360
-    return "\\begin{tikzpicture}[line cap=rect,line width=3pt]\n" \
-           "\\filldraw [fill=white] (0,0) circle [radius=1.3cm];\n" \
-           " \\foreach \\angle [count=\\xi] in {60,30,...,-270}\n" \
-           "{\n  \\draw[line width=1pt] " \
-           "(\\angle:1.15cm) -- (\\angle:1.3cm);\n" \
-           "\\node[font=\\large] at (\\angle:0.9cm) {\\textsf{\\xi}};\n}\n" \
-           "\\foreach \\angle in {0,90,180,270}\n  " \
-           "\\draw[line width=1.5pt] (\\angle:1.1cm) -- (\\angle:1.3cm);\n" \
-           f"\\draw (0,0) -- ({hour_angle}:0.65cm);\n" \
-           f"\\draw (0,0) -- ({minute_angle}:0.9cm);\n" \
-           "\\end{tikzpicture}"
+    clock = r'''
+    \begin{center}
+    \begin{tikzpicture}[line cap=rect, line width=3pt]
+    \filldraw [fill=white] (0,0) circle [radius=1.3cm];
+    \foreach \angle [count=\xi] in {60,30,...,-270}
+      {
+        \draw[line width=1pt] (\angle:1.15cm) -- (\angle:1.3cm);
+        \node[font=\large] at (\angle:0.9cm) {\textsf{\xi}};
+      }
+    \foreach \angle in {0,90,180,270}
+    \draw[line width=1.5pt] (\angle:1.1cm) -- (\angle:1.3cm);
+    \draw (0,0) -- (%f:0.65cm);
+    \draw (0,0) -- (%f:0.9cm);
+    \end{tikzpicture}
+    \end{center}
+    ''' % (hour_angle, minute_angle)
+    return clock
 
 
-def num_line(denominator, labelled, additional="", length=6):
-    n = denominator
-    if n > 9:
-        font = "\\large"
-    else:
-        font = "\\Large"
-
+def num_line(denominator, additional="", length=6, labelled=False):
     if labelled is True:
-        height = 3
+        label = r' node[below] {$\frac{\x}{' + str(denominator) + r'}$}'
     else:
-        height = 5
+        label = ''
+    model = r'''
+    \begin{tikzpicture}[font=\Large]
+      \draw[line width = 1pt] (0,0) -- (%f,0);
+      \foreach \x in {0,%f}
+        {\draw [shift={(\x, 0)}, color=black, line width = 1pt] 
+        (0pt,6pt) -- (0pt,-6pt);}
+      \foreach \x in {1,...,%d} 
+        {\draw [shift={(\x * %f/%d,0)}, color=black] (0pt,5pt) -- (0pt,-5pt) %s;}
+      \draw (0, -6pt) node[below]{0};
+      \draw (%f, -6pt) node[below]{1};
+    %s
+    \end{tikzpicture}
+    ''' % (length, length, denominator - 1, length, denominator, label, length,
+           additional)
 
-    model = f"\\begin{{tikzpicture}}[font={font}]" \
-            f"\\draw[line width = 1pt] (0,0) -- ({length},0); " \
-            f"\\foreach \\x in {{0,{length}}} " \
-            "\\draw[shift={\\x,0},color=black, line width = 1pt] " \
-            f"(0pt,{height + 1}pt) -- (0pt,-{height + 1}pt);" \
-            f"\\foreach \\x in {{1,...,{n-1}}}" \
-            f"\\draw[shift={{(\\x * {length}/{n},0)}},color=black] " \
-            f"(0pt,{height}pt) -- (0pt,-{height}pt) node[below] "
-
-    if labelled is True:
-        model += f"{{$\\frac{{\\x}}{{{n}}}$}};"
-    else:
-        model += ";"
-    model += "\\draw (0,-3pt) node[below]{$0$};" \
-             f"\\draw ({length},-3pt) node[below]{{$1$}};" \
-             "\\draw[line width = 1pt, color=black] " \
-             f"({length},{height+1}pt) -- ({length},-{height+1}pt);"
-    model += additional + "\\end{tikzpicture}"
-    return model
-
-
-def angle_drawing(angle, radius=4, rotation=0):
-    x_0 = cos(radians(rotation)) * radius
-    y_0 = sin(radians(rotation)) * radius
-    if x_0 <= 0 and y_0 <= 0:
-        theta = 180 + angle
-    elif x_0 < 0 and y_0 >= 0:
-        theta = 90 + angle
-    elif x_0 >= 0 and y_0 < 0:
-        theta = 270 + angle
-    else:
-        theta = angle
-    x = cos(radians(theta + rotation)) * radius
-    y = sin(radians(theta + rotation)) * radius
-
-    model = "\\usetikzlibrary{angles,quotes}" \
-            " \\begin{tikzpicture}[> = stealth]" \
-            f"\\coordinate (a) at (0,0); " \
-            f"\\coordinate (b) at ({x},{y}); " \
-            f"\\coordinate (c) at ({x_0},{y_0});" \
-            "\\draw pic[draw,fill=blue,angle radius=1cm] {angle=c--a--b};" \
-            "\\draw[ultra thick,black, ->]  (a) -- node[above] {} (b);" \
-            "\\draw[ultra thick,black,->]  (a) -- node[above right] {} (c);" \
-            "\\end{tikzpicture}"
     return model
