@@ -24,7 +24,6 @@ SOFTWARE.
 from random import shuffle
 from string import ascii_uppercase
 from num2words import num2words
-from math import cos, sin, radians
 
 
 def multiple_choice(question: str, choices: list[str], correct: str,
@@ -245,17 +244,23 @@ def time_to_words(hour_in, minute_in):
 def analogue_clock(hour, minute):
     hour_angle = (90 - 30 * (hour % 12)) % 360 - 0.5 * minute
     minute_angle = (90 - 6 * minute) % 360
-    return "\\begin{tikzpicture}[line cap=rect,line width=3pt]\n" \
-           "\\filldraw [fill=white] (0,0) circle [radius=1.3cm];\n" \
-           " \\foreach \\angle [count=\\xi] in {60,30,...,-270}\n" \
-           "{\n  \\draw[line width=1pt] " \
-           "(\\angle:1.15cm) -- (\\angle:1.3cm);\n" \
-           "\\node[font=\\large] at (\\angle:0.9cm) {\\textsf{\\xi}};\n}\n" \
-           "\\foreach \\angle in {0,90,180,270}\n  " \
-           "\\draw[line width=1.5pt] (\\angle:1.1cm) -- (\\angle:1.3cm);\n" \
-           f"\\draw (0,0) -- ({hour_angle}:0.65cm);\n" \
-           f"\\draw (0,0) -- ({minute_angle}:0.9cm);\n" \
-           "\\end{tikzpicture}"
+    clock = r'''
+    \begin{center}
+    \begin{tikzpicture}[line cap=rect, line width=3pt]
+    \filldraw [fill=white] (0,0) circle [radius=1.3cm];
+    \foreach \angle [count=\xi] in {60,30,...,-270}
+      {
+        \draw[line width=1pt] (\angle:1.15cm) -- (\angle:1.3cm);
+        \node[font=\large] at (\angle:0.9cm) {\textsf{\xi}};
+      }
+    \foreach \angle in {0,90,180,270}
+    \draw[line width=1.5pt] (\angle:1.1cm) -- (\angle:1.3cm);
+    \draw (0,0) -- (%f:0.65cm);
+    \draw (0,0) -- (%f:0.9cm);
+    \end{tikzpicture}
+    \end{center}
+    ''' % (hour_angle, minute_angle)
+    return clock
 
 
 def num_line(denominator, additional="", length=6):
@@ -277,7 +282,6 @@ def num_line(denominator, additional="", length=6):
 
 
 def angle_drawing(x_angle, y_angle=0, radius=4, shaded_radius=1):
-
     model = r'''
       \begin{tikzpicture}
       \draw
@@ -288,5 +292,5 @@ def angle_drawing(x_angle, y_angle=0, radius=4, shaded_radius=1):
           angle radius=%fcm]
       {angle=c--b--a};
       \end{tikzpicture}
-    '''
-    return model % (x_angle, radius, y_angle, radius, shaded_radius)
+    ''' % (x_angle, radius, y_angle, radius, shaded_radius)
+    return model
