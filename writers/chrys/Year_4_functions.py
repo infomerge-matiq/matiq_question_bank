@@ -1,5 +1,6 @@
 import random
 from num2words import num2words
+from math import cos, sin, radians
 
 
 def time_unit_converter(unit_in, unit_out, number):
@@ -51,7 +52,7 @@ def time_unit_converter(unit_in, unit_out, number):
             return [number * 60 * 60 * 24 * 7, ' seconds']
 
 
-def time_2_words(hour_in, minute_in):
+def time_to_words(hour_in, minute_in):
     if hour_in % 12 == 0:
         hour_out = 'twelve'
     else:
@@ -130,4 +131,34 @@ def num_line(denominator, labelled, additional="", length=6):
              "\\draw[line width = 1pt, color=black] " \
              f"({length},{height+1}pt) -- ({length},-{height+1}pt);"
     model += additional + "\\end{tikzpicture}"
+    return model
+
+
+def angle(angle, radius, rotation=0):
+    angle = 90
+    rotation = 270
+    radius = 4
+
+    x_0 = cos(radians(rotation)) * radius
+    y_0 = sin(radians(rotation)) * radius
+    if x_0 <=0 and y_0 <= 0:
+        theta = 180 + angle
+    elif x_0 < 0 and y_0 >= 0:
+        theta = 90 + angle
+    elif x_0 >= 0 and y_0 < 0:
+        theta = 270 + angle
+    else:
+        theta = angle
+    x = cos(radians(theta + rotation)) * radius
+    y = sin(radians(theta + rotation)) * radius
+
+    model = "\\usetikzlibrary{angles,quotes}" \
+            " \\begin{tikzpicture}[> = stealth]" \
+            f"\\coordinate (a) at (0,0); " \
+            f"\\coordinate (b) at ({x},{y}); " \
+            f"\\coordinate (c) at ({x_0},{y_0});" \
+            "\\draw pic[draw,fill=blue,angle radius=1cm] {angle=c--a--b};" \
+            "\\draw[ultra thick,black, ->]  (a) -- node[above] {} (b);" \
+            "\\draw[ultra thick,black,->]  (a) -- node[above right] {} (c);" \
+            "\\end{tikzpicture}"
     return model
