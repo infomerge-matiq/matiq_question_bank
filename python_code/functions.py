@@ -263,7 +263,11 @@ def analogue_clock(hour, minute):
     return clock
 
 
-def num_line(denominator, additional="", length=6):
+def num_line(denominator, additional="", length=6, labelled=False):
+    if labelled is True:
+        label = r' node[below] {$\frac{\x}{' + str(denominator) + r'}$}'
+    else:
+        label = ''
     model = r'''
     \begin{tikzpicture}[font=\Large]
       \draw[line width = 1pt] (0,0) -- (%f,0);
@@ -271,13 +275,14 @@ def num_line(denominator, additional="", length=6):
         {\draw [shift={(\x, 0)}, color=black, line width = 1pt] 
         (0pt,6pt) -- (0pt,-6pt);}
       \foreach \x in {1,...,%d} 
-        {\draw [shift={(\x * %f/%d,0)}, color=black] (0pt,5pt) -- (0pt,-5pt);}
+        {\draw [shift={(\x * %f/%d,0)}, color=black] (0pt,5pt) -- (0pt,-5pt) %s;}
       \draw (0, -6pt) node[below]{0};
       \draw (%f, -6pt) node[below]{1};
     %s
     \end{tikzpicture}
-    ''' % (length, length, denominator - 1, length, denominator, length,
+    ''' % (length, length, denominator - 1, length, denominator, label, length,
            additional)
+
     return model
 
 
