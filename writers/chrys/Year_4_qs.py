@@ -1979,17 +1979,17 @@ def fr_24(difficulty):
     b = random.randint(1 + difficulty, 3 + 2 ** difficulty)
     a = random.randint(1, b - 1)
     length = 7
-    circle = "\\definecolor{ceruleanblue}{rgb}{0.16, 0.32, 0.75}" \
-             f"\\fill[fill = ceruleanblue] (({a} * {length}/{b},0) " \
-             "circle[radius=3pt]"
-    question = "What fraction is shown on the number line? "
-
+    # circle = "\\definecolor{ceruleanblue}{rgb}{0.16, 0.32, 0.75}" \
+    #          f"\\fill[fill = ceruleanblue] (({a} * {length}/{b},0) " \
+    #          "circle[radius=3pt]"
+    marker = r'''\fill [shift={(%d * %f/%d, 7pt)}, color=red] (0,0) -- 
+    (0.2cm, 0.4cm) -- (-0.2cm, 0.4cm) -- cycle;
+    ''' % (a, length, b)
+    question = "What fraction is shown on the number line?"
     if mq.gcd(b, a) != 1:
-        question += "Simplify your answer."
-        answer = f"${mq.latex_frac_simplify(a, b)}$"
-    else:
-        answer = f"${mq.latex_frac(a, b)}$"
-    question += f"\n\n {mq.num_line(b, False, circle, length=length)}"
+        question += " Simplify your answer."
+    answer = f"${mq.latex_frac_simplify(a, b)}$"
+    question += "\n\n" + mq.num_line(b, marker, length=length)
     return [question, answer]
 
 

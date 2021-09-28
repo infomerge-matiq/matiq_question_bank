@@ -258,36 +258,21 @@ def analogue_clock(hour, minute):
            "\\end{tikzpicture}"
 
 
-def num_line(denominator, labelled, additional="", length=6):
-    n = denominator
-    if n > 9:
-        font = "\\large"
-    else:
-        font = "\\Large"
-
-    if labelled is True:
-        height = 3
-    else:
-        height = 5
-
-    model = f"\\begin{{tikzpicture}}[font={font}]" \
-            f"\\draw[line width = 1pt] (0,0) -- ({length},0); " \
-            f"\\foreach \\x in {{0,{length}}} " \
-            "\\draw[shift={\\x,0},color=black, line width = 1pt] " \
-            f"(0pt,{height + 1}pt) -- (0pt,-{height + 1}pt);" \
-            f"\\foreach \\x in {{1,...,{n-1}}}" \
-            f"\\draw[shift={{(\\x * {length}/{n},0)}},color=black] " \
-            f"(0pt,{height}pt) -- (0pt,-{height}pt) node[below] "
-
-    if labelled is True:
-        model += f"{{$\\frac{{\\x}}{{{n}}}$}};"
-    else:
-        model += ";"
-    model += "\\draw (0,-3pt) node[below]{$0$};" \
-             f"\\draw ({length},-3pt) node[below]{{$1$}};" \
-             "\\draw[line width = 1pt, color=black] " \
-             f"({length},{height+1}pt) -- ({length},-{height+1}pt);"
-    model += additional + "\\end{tikzpicture}"
+def num_line(denominator, additional="", length=6):
+    model = r'''
+    \begin{tikzpicture}[font=\Large]
+      \draw[line width = 1pt] (0,0) -- (%f,0);
+      \foreach \x in {0,%f}
+        {\draw [shift={(\x, 0)}, color=black, line width = 1pt] 
+        (0pt,6pt) -- (0pt,-6pt);}
+      \foreach \x in {1,...,%d} 
+        {\draw [shift={(\x * %f/%d,0)}, color=black] (0pt,5pt) -- (0pt,-5pt);}
+      \draw (0, -6pt) node[below]{0};
+      \draw (%f, -6pt) node[below]{1};
+    %s
+    \end{tikzpicture}
+    ''' % (length, length, denominator - 1, length, denominator, length,
+           additional)
     return model
 
 
