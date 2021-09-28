@@ -9,7 +9,7 @@ from num2words import num2words
 from random import shuffle
 import names
 
-import python_code.functions as mq
+import matiq_question_bank.python_code.functions as mq
 
 
 # NUMBER AND PLACE VALUE_______
