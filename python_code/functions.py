@@ -194,7 +194,7 @@ def time_unit_converter(unit_in, unit_out, number):
     elif unit_out in ['Minutes', 'minutes', 'minute', 'Minute']:
         if unit_in in ['Hours', 'hours', 'hour', 'Hour']:
             return [number * 60, ' minutes']
-        elif unit_out in unit_in in ['Days', 'days', 'day', 'Day']:
+        elif unit_in in ['Days', 'days', 'day', 'Day']:
             return [number * 60 * 24, ' minutes']
         elif unit_in in ['Weeks', 'weeks', 'week', 'Week']:
             return [number * 60 * 24 * 7, ' minutes']
