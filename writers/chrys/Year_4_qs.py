@@ -9,7 +9,7 @@ from num2words import num2words
 from random import shuffle
 import names
 
-import python_code.functions as mq
+import matiq as mq
 
 
 # NUMBER AND PLACE VALUE_______
@@ -30,7 +30,7 @@ def pv_1(difficulty):
     if i == 0:
         n = random.randint(0, 1)
         answer = numbers[n]
-        numbers[n] = "\\makebox[1em\\textwidth]{\\hrulefill}"
+        numbers[n] = "\\makebox[1em]{\\hrulefill}"
     else:
         numbers.append("\\fillin[][1em]")
         answer = mq.dollar(step * (k + 1))
@@ -411,7 +411,7 @@ def as_2(difficulty):
 
     k = random.randint(0, 3)
     answer = mq.dollar(values[k])
-    values[k] = "\\makebox[2.5em\\textwidth]{\\hrulefill}"
+    values[k] = "\\makebox[2.5em]{\\hrulefill}"
     question = f"Find the number that makes the equation true." \
                f"\n\n {values[0]} {sign[0]} {(values[1])} " \
                f"$=$ {values[2]} {sign[1]} {values[3]}"
@@ -445,7 +445,7 @@ def as_4(difficulty):
     x = random.sample(range(lower, upper), k=2)
     n, k = random.randint(0, 1), random.randint(0, 1)
     nums = [[x[1], x[0] + x[1]][n], x[0]]
-    result = [mq.dollar(nums[1] + nums[0]), mq.dollar(x[1])][n]
+    result = [nums[1] + nums[0], x[1]][n]
     answer = str(nums[k])
     nums[k] = ''
     for i in range(len(answer)):
@@ -453,7 +453,7 @@ def as_4(difficulty):
     question = "Fill in the missing number. \n\n " \
                r"\hspace{2cm}{\LARGE$\begin{array}{r}" + str(nums[0]) + \
                r"\\\underline{" + ['+', '-'][n] + r"\ " + str(nums[1]) + r"}"\
-               + r"\\\underline{" + result + r"} \end{array}$}" \
+               + r"\\\underline{" + str(result) + r"} \end{array}$}" \
                + "\\vspace{1ex}"
     return [question, answer]
 
@@ -500,24 +500,28 @@ def as_6(difficulty):
     rule = [[no_plus, 'add'], [no_minus, 'minus']][n]
     col_2 = [i+rule[0] for i in col_1]
 
-    table = "\\begin{center}\n\\begin{tabular}{||c  |  c||}\n " \
-            "\\hline\n Input & Output \\\\ [0.4ex]\n" \
-            f"\\hline\\hline \n  {col_1[0]} & {col_2[0]} \\\\ \n " \
-            f"\\hline \n  {col_1[1]} &   \\\\ \n \\hline \n " \
-            f"{col_1[2]} &  \\\\ \n \\hline \n  {col_1[3]} &   " \
-            f"\\\\ \n \\hline \n {col_1[4]} &   \\\\ " \
-            "[1ex]\n \\hline \n \\end{tabular}\n \\end{center}"
+    table = r'''
+    \begin{center} \begin{tabular}{||c  |  c||}
+    \hline Input & Output \\ [0.4ex] \hline
+    \hline %s & %s \\ \hline %s &    \\ 
+    \hline %s &    \\ \hline %s &    \\ 
+    \hline %s &    \\ [1ex] \hline 
+    \end{tabular} \end{center}"
+    ''' % (col_1[0], col_2[0], col_1[1], col_1[2], col_1[3], col_1[4])
     question = f"Use the rule to complete the table. \n\n " \
                f"Rule: {rule[1]} {abs(rule[0])} \n\n {table}"
 
-    answer = "\n\\begin{tabular}{||c  |  c||}\n " \
-             "\\hline\n Input & Output \\\\ [0.4ex]\n \\hline\\hline \n  " \
-             f"{col_1[0]} & {col_2[0]} \\\\ \n \\hline \n  " \
-             f"{col_1[1]} & \\textbf{{{col_2[1]}}} \\\\ \n \\hline \n " \
-             f"{col_1[2]} & \\textbf{{{col_2[2]}}} \\\\ \n \\hline \n " \
-             f"{col_1[3]} & \\textbf{{{col_2[3]}}} \\\\ \n \\hline \n " \
-             f"{col_1[4]} & \\textbf{{{col_2[4]}}}  \\\\ " \
-             "[1ex]\n \\hline \n \\end{tabular}\n"
+    answer = r'''
+    "\begin{tabular}{||c  |  c||}
+    \hline Input & Output \\ [0.4ex] \hline 
+    \hline %s & %s \\ 
+    \hline %s & \textbf{%s} \\ 
+    \hline %s & \textbf{%s} \\ 
+    \hline %s & \textbf{%s} \\ 
+    \hline %s & \textbf{%s} \\ [1ex] \hline 
+    \end{tabular}
+    ''' % (col_1[0], col_2[0], col_1[1], col_2[1], col_1[2],
+           col_2[2], col_1[3], col_2[3], col_1[4], col_2[4])
     return [question, answer]
 
 
@@ -549,8 +553,8 @@ def as_7(difficulty):
                f"$=$ {results[0]} is {odd_even[0]} \n\n"
     for i in range(1, 4):
         question += f"{num_1[i]} {sign[i]} {num_2[i]} $=$ " \
-                    "\\makebox[2.5em\\textwidth]{\\hrulefill} is " \
-                    "\\makebox[2.5em\\textwidth]{\\hrulefill} \n\n"
+                    "\\makebox[2.5em]{\\hrulefill} is " \
+                    "\\makebox[2.5em]{\\hrulefill} \n\n"
         answer += f"{results[i]} is {odd_even[i]} \n\n"
     return [question, answer]
 
@@ -588,13 +592,15 @@ def as_9(difficulty):
     answer = mq.dollar(col_2[n])
     col_2[n] = ""
 
-    table = "\\begin{center}\n\\begin{tabular}{||c  |  c||}\n " \
-            "\\hline\n Airline & Passengers \\\\ [0.4ex]\n \\hline\\hline \n" \
-            f"{col_1[0]} & {col_2[0]} \\\\ \n \\hline \n" \
-            f"{col_1[1]} & {col_2[1]}  \\\\ \n \\hline \n" \
-            f"{col_1[2]} & {col_2[2]} \\\\ \n \\hline \n" \
-            f"\\textbf{{Total}} &  \\textbf{{{total}}} \\\\ " \
-            "[1ex]\n \\hline \n \\end{tabular}\n \\end{center}"
+    table = r'''
+    \begin{center} \begin{tabular}{||c  |  c||}
+    \hline Airline & Passengers \\ [0.4ex] \hline 
+    \hline %s & %s \\ 
+    \hline %s & %s \\ 
+    \hline %s & %s \\ 
+    \hline \textbf{Total} & \textbf{%s} \\ [1ex] \hline 
+    \end{tabular} \end{center}
+    ''' % (col_1[0], col_2[0], col_1[1], col_2[1], col_1[2], col_2[2], total)
 
     question = f"Here is some information about the amount of passengers who" \
                f" flew with some airlines. \n\n {table} \n\n Using the " \
@@ -612,7 +618,7 @@ def as_10(difficulty):
     if difficulty == 1:
         for i in range(5):
             question += f"{sums * (10 ** i)} " \
-                        f"$-$ \\makebox[2.5em\\textwidth]{{\\hrulefill}} " \
+                        "$-$ \\makebox[2.5em]{\\hrulefill} " \
                         f"$=$ {nums[1] * (10 ** i)} \n\n"
             answer += f"{sums * (10 ** i)} $-$ {nums[0] * (10 ** i)} " \
                       f"$=$ {nums[1] * (10 ** i)} \n\n"
@@ -628,7 +634,7 @@ def as_10(difficulty):
                       f"$=$ {values[j][2]}\n\n"
 
             n = random.randint(0, 2)
-            values[j][n] = f"\\makebox[2.5em\\textwidth]{{\\hrulefill}}"
+            values[j][n] = "\\makebox[2.5em]{\\hrulefill}"
             question += f"{values[j][0]} $-$ {values[j][1]} " \
                         f"$=$ {values[j][2]}\n\n"
     return [question, answer]
@@ -654,11 +660,15 @@ def as_11(difficulty):
               str(nums[2]) + "\\hspace{0.09em}"
               ]
     k = random.sample([0, 1], k=2)
-    question = "Find the missing digit. \n\n" + \
-               r"\hspace{2cm}{\LARGE$\begin{array}{r}" + values[k[0]] + \
-               r"\\\underline{+\ " + values[k[1]] + r"}" \
-               + r"\\\underline{\ \ \ " + str(values[2]) + r"}\end{array}$}" \
-               + "\\ \\" + r"\\vspace{1.2ex}"
+    question = "Find the missing digit. \n\n" \
+               + r'''
+               \hspace{2cm}{\LARGE$\begin{array}{r}  
+               %s \\
+               \underline{+\  %s } \\
+               \underline{\ \ \ %s }
+               \end{array}$} \ \
+               \vspace{1.2ex}
+               ''' % (values[k[0]], values[k[1]], values[2])
     return [question, answer]
 
 
@@ -807,23 +817,20 @@ def md_6(difficulty):
         box = [
             'r',
             f"& {hundreds} \\hspace{{{1.4}em}} ",
-            f"& \\tikz \\fill [amber] (0,0) rectangle (1.5em, 1.2);"
+            r'& \tikz \fill [yellow] (0,0) rectangle (1.5em, 1.2);'
         ]
         size = [0.8, 0.4]
     else:
         box = ['', '', '']
         size = [1.5, 1]
 
-    model = f"\\definecolor{{ceruleanblue}}{{rgb}}{{0.16, 0.32, 0.75}}" \
-            f"\\definecolor{{amaranth}}{{rgb}}{{0.9, 0.17, 0.31}}" \
-            f"\\definecolor{{amber}}{{rgb}}{{1.0, 0.75, 0.0}}" \
-            f"{{\\arraycolsep=2pt" \
-            f"\\LARGE$\\begin{{array}}{{rrr{box[0]}}}\n\n $\\times$ " \
-            f"{box[1]} & {tens} \\hspace{{{size[0]}em}} " \
-            f"& {ones} \\hspace{{{size[1]}em}} & {x} " \
-            f"& \\tikz \\fill [amaranth] (0,0) rectangle (4em, 1.2);" \
-            f"& \\tikz \\fill [ceruleanblue] (0,0) rectangle (2.5em, 1.2); " \
-            f"{box[2]} \\end{{array}}$ }}\\ "
+    model = r'''
+    {\arraycolsep=2pt \LARGE$ \begin{array}{rrr%s} 
+      $$\times$$ %s & %s \hspace{%sem} & %s \hspace{%sem} \\  %s 
+      & \tikz \fill [red] (0,0) rectangle (4em, 1.2);
+      & \tikz \fill [cyan] (0,0) rectangle (2.5em, 1.2); %s \\
+    \end{array}$ }
+    ''' % (box[0], box[1], tens, size[0], ones, size[1], x, box[2])
 
     question = f"Use the model to solve {mq.dollar(x)}" \
                f" $\\times$ {mq.dollar(y)}." \
@@ -877,8 +884,8 @@ def md_8(difficulty):
     question = "Choose the two numbers from the list that complete the" \
                f" multiplication. \n\n \\begin{{center}} {choices}" \
                "\\end{center} \n\n" \
-               " \\begin{{center}} \\makebox[0.04\\textwidth]{\\hrulefill}" \
-               " \\times \\hspace{0.1em} \\makebox[0.04\\textwidth]" \
+               " \\begin{center} \\makebox[0.04pt]{\\hrulefill}" \
+               " $\\times$ \\hspace{0.1em} \\makebox[0.04\\textwidth]" \
                f"{{\\hrulefill}} = {str(num)}" \
                "\\end{center}"
     answer = ",\\ ".join([str(a), str(b)])
@@ -902,7 +909,7 @@ def md_10(difficulty):
     b = random.randint(2 + difficulty, 9 + difficulty)
     n = random.randint(0, 1)
     values = [[a, b, a * b], [a * b, a, b]][n]
-    sign = ["\\times", "\\div"][n]
+    sign = ["$\\times$", "$\\div$"][n]
 
     k = random.randint(0, 1)
     answer = str(values[k])
@@ -1048,7 +1055,7 @@ def md_16(difficulty):
                   f"$=$ {values[j][2]}\n\n"
 
         n = [random.randint(1, 2), random.choice([0, 2])][k]
-        values[j][n] = f"\\makebox[2.5em\\textwidth]{{\\hrulefill}}"
+        values[j][n] = "\\makebox[2.5em]{\\hrulefill}"
         question += f"{values[j][0]} {operator} {values[j][1]} " \
                     f"$=$ {values[j][2]}\n\n"
     return [question, answer]
@@ -1155,7 +1162,7 @@ def md_21(difficulty):
     question = "Choose the two numbers from the list that complete the" \
                f" statement. \n\n \\begin{{center}} {choices}" \
                "\\end{center} \n\n" \
-               " \\begin{{center}} \\makebox[0.04\\textwidth]{\\hrulefill}" \
+               " \\begin{center} \\makebox[0.04\\textwidth]{\\hrulefill}" \
                " $\\div$ \\hspace{0.1em} \\makebox[0.04\\textwidth]" \
                f"{{\\hrulefill}} = {str(b)}" \
                "\\end{center}"
@@ -1287,9 +1294,9 @@ def md_26(difficulty):
     if difficulty == 3:
         rectangle = [
             'r',
-            f"& {box} \\hspace{{{1.1}em}} ",
-            f"& \\colorbox{{amber}}{{\\makebox(1.5em, 1.2cm)"
-            f"{{\\textcolor{{black}}{ones * x}}}}}"
+            f"& {box} \\hspace{{{1}em}} ",
+            f"& \\colorbox{{yellow}}"
+            f"{{\\makebox(40,34){{\\textcolor{{black}}{{{ones * x}}} }}}}"
         ]
         size = [0.5, 0]
         values = [100 * x, tens * x, 100 + tens + ones]
@@ -1305,10 +1312,8 @@ def md_26(difficulty):
             f"\\LARGE$\\begin{{array}}{{rrr{rectangle[0]}}}\n\n " \
             f"{rectangle[1]} & {box} \\hspace{{{size[0]}em}} " \
             f"& {box} \\hspace{{{size[1]}em}} & {x} " \
-            f"& \\colorbox{{amaranth}}{{\\makebox(4em, 1.2cm)" \
-            f"{{\\textcolor{{black}}{values[0]}}}}}" \
-            f"& \\colorbox{{ceruleanblue}}{{\\makebox(2.5em, 1.2cm)" \
-            f"{{\\textcolor{{black}}{values[1]}}}}}" \
+            f"&\\colorbox{{red}}{{\\makebox(59,34){{\\textcolor{{black}}{{{values[0]}}} }}}}" \
+            f"&\\colorbox{{blue}}{{\\makebox(55,34){{\\textcolor{{black}}{{{values[1]}}} }}}}" \
             f"{rectangle[2]} \\end{{array}}$ }}\\ "
 
     question = f"Use the model to solve {x * values[2]} $\\div$ {x}." \
@@ -1620,7 +1625,7 @@ def fr_13(difficulty):
     else:
         size = [1.2 - 0.1 * (n - 10), 2]
 
-    colour = random.choice(["ceruleanblue", "amaranth", "amber"])
+    colour = random.choice(["red", "cyan", "yellow"])
     for i in range(m):
         shaded_boxes += f"& \\tikz \\draw [fill={colour}] (0,0) " \
                         f"rectangle ({size[0]}em, {size[1]}em);"
@@ -1630,10 +1635,7 @@ def fr_13(difficulty):
     for k in range(n):
         r += "r"
 
-    box = f"\\definecolor{{ceruleanblue}}{{rgb}}{{0.16, 0.32, 0.75}}" \
-          f"\\definecolor{{amaranth}}{{rgb}}{{0.9, 0.17, 0.31}}" \
-          f"\\definecolor{{amber}}{{rgb}}{{1.0, 0.75, 0.0}}" \
-          f"{{\\arraycolsep=0" \
+    box = f"{{\\arraycolsep=0pt" \
           f"\\LARGE$\\begin{{array}}{{r{r}}}\n\n " \
           f"{shaded_boxes} {white_boxes}" \
           f" \\end{{array}}$ }}  \\ "
@@ -1706,36 +1708,38 @@ def fr_15(difficulty):
 
     order = []
     for i in range(a_1):
-        circle = "\\tikz \\node[circle,minimum size=1.5em," \
-                 "draw=ceruleanblue,fill=ceruleanblue] (c) &"
+        circle = "\\tikz \\node[circle, text opacity=0, minimum size=1.5em," \
+                 "draw=blue,fill=blue] (c) {};"
         order.append(circle)
     for j in range(a_2):
-        square = "\\tikz \\node[square, minimum size=1.5em," \
-                 "draw=amaranth,fill=amaranth] (S) &"
+        square = "\\tikz \\node[regular polygon, regular polygon sides=4, text opacity=0, " \
+                 "minimum size=2em, draw=red,fill=red] (S) {}; "
         order.append(square)
     for n in range(a_3):
-        triangle = "\\tikz \\node[isosceles triangle, minimum size=1.5em," \
-                   "rotate=90,draw=amber,fill=amber] (T) &"
+        triangle = "\\tikz \\node[isosceles triangle, minimum size=1.5em, text opacity=0," \
+                   "rotate=90,draw=yellow,fill=yellow] (T) {}; "
         order.append(triangle)
     shuffle(order)
 
     r = ""
-    shapes = ""
+    shapes = []
     if b <= 6 and b % 2 == 1:
         columns = b
+        shapes_1 = '&'.join(map(str, [order[i] for i in range(columns)]))
+        shapes = shapes_1
     else:
         columns = ceil(b / 2)
+        shapes_1 = '&'.join(map(str, [order[i] for i in range(columns-1)]))
+        shapes_2 = '&'.join(map(str, [order[i] for i in range(columns, len(order))]))
+        shapes = shapes_1 + "\\\\" + shapes_2
     for m in range(columns):
         r += "r"
-    for i in range(len(order)):
-        shapes += order[i]
 
-    model = f"\\definecolor{{ceruleanblue}}{{rgb}}{{0.16, 0.32, 0.75}} " \
-            f"\\definecolor{{amaranth}}{{rgb}}{{0.9, 0.17, 0.31}}" \
-            f"\\definecolor{{amber}}{{rgb}}{{1.0, 0.75, 0.0}}" \
-            f" {{\\arraycolsep=2" \
-            f"\\begin{{center}}\\LARGE$\\begin{{array}}{{{r}}}\n\n {shapes} " \
-            f" \\end{{array}}$ }} \\end{{center}}  "
+
+
+    model = f"\\begin{{center}}{{\\arraycolsep=2pt" \
+            f"\\LARGE$\\begin{{array}}{{{r}}}{shapes}" \
+            f"\\end{{array}} $ }}\\end{{center}}"
     question = f"What fraction of the shapes are {shape_names}? " \
 
     if mq.gcd([a_1, a_2, a_3][k], b) != 1 and difficulty > 1:
@@ -1743,7 +1747,7 @@ def fr_15(difficulty):
         answer = f"${mq.latex_frac_simplify([a_1, a_2, a_3][k], b)}$"
     else:
         answer = f"${mq.latex_frac([a_1, a_2, a_3][k], b)}$"
-    question += f"\n\n {model}"
+    question += f"\n\n{model}"
     return [question, answer]
 
 
@@ -2587,9 +2591,9 @@ def pd_1(difficulty):
 
     k = random.randint(0, 1)
     shape = f"node[{name}, minimum size=1cm," \
-            f" rotate={rotate[k]}, draw, fill=green]"
+            f" rotate={rotate[k]}, draw, fill=green] {{}}"
     reflection = f"node[{name}, minimum size=1cm," \
-                 f" rotate={rotate[(k + 1) % 2]}, draw, fill=green]"
+                 f" rotate={rotate[(k + 1) % 2]}, draw, fill=green] {{}}"
 
     lower_x = [[1, 4], [0.5, 3.5], [0.5, 3.5]][n]
     upper_x = [[2, 5], [2.5, 4.5], [2.5, 4.5]][n]
