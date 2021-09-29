@@ -264,8 +264,8 @@ def analogue_clock(hour, minute):
 
 
 def num_line(denominator, additional="", length=6, labelled=False):
-    if labelled is True:
-        label = r' node[below] {$\frac{\x}{' + str(denominator) + r'}$}'
+    if labelled:
+        label = r' node[below] {$\frac{\x}{%d}$}' % denominator
     else:
         label = ''
     model = r'''
@@ -275,7 +275,8 @@ def num_line(denominator, additional="", length=6, labelled=False):
         {\draw [shift={(\x, 0)}, color=black, line width = 1pt] 
         (0pt,6pt) -- (0pt,-6pt);}
       \foreach \x in {1,...,%d} 
-        {\draw [shift={(\x * %f/%d,0)}, color=black] (0pt,5pt) -- (0pt,-5pt) %s;}
+        {\draw [shift={(\x * %f/%d,0)}, color=black] 
+          (0pt,5pt) -- (0pt,-5pt) %s;}
       \draw (0, -6pt) node[below]{0};
       \draw (%f, -6pt) node[below]{1};
     %s
