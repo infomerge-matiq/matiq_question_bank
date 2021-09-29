@@ -23,7 +23,6 @@ SOFTWARE.
 """
 from random import shuffle
 from string import ascii_uppercase
-from num2words import num2words
 
 
 def multiple_choice(question: str, choices: list[str], correct: str,
@@ -32,25 +31,25 @@ def multiple_choice(question: str, choices: list[str], correct: str,
     a multiple choice question and the answer"""
     layout = ""
     if onepar:
-        layout = "onepar"
+        layout = 'onepar'
     choices_list = []
     if reorder:
         shuffle(choices)
     letter = ascii_uppercase[choices.index(correct)]
     for choice in choices:
-        choices_list.append(f"\\choice {choice}\n")
-    full_question = "".join(
-        [question, f"\n\n\\begin{{{layout}choices}}\n"] +
-        choices_list + [f"\\end{{{layout}choices}}"])
-    return [full_question, f"{letter}. {correct}"]
+        choices_list.append(f'\\choice {choice}\n')
+    full_question = ''.join(
+        [question, f'\n\n\\begin{{{layout}choices}}\n'] +
+        choices_list + [f'\\end{{{layout}choices}}'])
+    return [full_question, f'{letter}. {correct}']
 
 
 def dollar(x):
-    return "$" + str(x) + "$"
+    return '$' + str(x) + '$'
 
 
 def ordinal(n):
-    return "%d%s" % (n, "tsnrhtdd"[(n // 10 % 10 != 1)
+    return '%d%s' % (n, 'tsnrhtdd'[(n // 10 % 10 != 1)
                                    * (n % 10 < 4) * n % 10::4])
 
 
@@ -106,7 +105,7 @@ def frac_simplify(a, b):
 
 
 def latex_frac(a, b):
-    return f"\\frac{{{a}}}{{{b}}}"
+    return r'\frac{%s}{%s}' % (str(a), str(b))
 
 
 def latex_frac_simplify(a, b):
@@ -126,14 +125,14 @@ def fraction_subtraction(a, b, c, d):
 
 
 def valid_metric(unit):
-    prefixes = ["m", "c", "d", "", "da", "h", "k"]
-    base_units = ["m", "g", "l"]
+    prefixes = ['m', 'c', 'd', '', 'da', 'h', 'k']
+    base_units = ['m', 'g', 'l']
     return all([unit[-1] in base_units, unit[0:-1] in prefixes])
 
 
 def convert_measurement(number, unit_in, unit_out):
-    prefixes = {"m": 0.001, "c": 0.01, "d": 0.1, "": 1, "da": 10,
-                "h": 100, "k": 1000}
+    prefixes = {'m': 0.001, 'c': 0.01, 'd': 0.1, '': 1, 'da': 10,
+                'h': 100, 'k': 1000}
     for unit in [unit_in, unit_out]:
         if not valid_metric(unit):
             raise NameError(f"{unit} is not a valid unit.")
@@ -144,101 +143,89 @@ def convert_measurement(number, unit_in, unit_out):
 
 
 def convert_imperial(unit_in, unit_out, number=1):
-    if unit_in in ["inch", "inches"]:
-        return convert_measurement(number * 2.5, "cm", unit_out)
-    elif unit_in in ["lb", "lbs", "pounds"]:
-        return convert_measurement(number / 2.2, "kg", unit_out)
-    elif unit_in in ["pint", "pints"]:
-        return convert_measurement(number * 568, "ml", unit_out)
-    elif unit_in in ["mile", "miles"]:
-        return convert_measurement(number * 1.6, "km", unit_out)
-    elif unit_out in ["inch", "inches"]:
-        return convert_measurement(number / 2.5, unit_in, "cm")
-    elif unit_out in ["lb", "lbs", "pounds"]:
-        return convert_measurement(number * 2.2, unit_in, "kg")
-    elif unit_out in ["pint", "pints"]:
-        return convert_measurement(number / 568, unit_in, "ml")
-    elif unit_out in ["mile", "miles"]:
-        return convert_measurement(number / 1.6, unit_in, "km")
+    if unit_in in ['inch', 'inches']:
+        return convert_measurement(number * 2.5, 'cm', unit_out)
+    elif unit_in in ['lb', 'lbs', 'pounds']:
+        return convert_measurement(number / 2.2, 'kg', unit_out)
+    elif unit_in in ['pint', 'pints']:
+        return convert_measurement(number * 568, 'ml', unit_out)
+    elif unit_in in ['mile', 'miles']:
+        return convert_measurement(number * 1.6, 'km', unit_out)
+    elif unit_out in ['inch', 'inches']:
+        return convert_measurement(number / 2.5, unit_in, 'cm')
+    elif unit_out in ['lb', 'lbs', 'pounds']:
+        return convert_measurement(number * 2.2, unit_in, 'kg')
+    elif unit_out in ['pint', 'pints']:
+        return convert_measurement(number / 568, unit_in, 'ml')
+    elif unit_out in ['mile', 'miles']:
+        return convert_measurement(number / 1.6, unit_in, 'km')
     else:
         raise NameError("Given units are invalid.")
 
 
-def time_unit_converter(unit_in, unit_out, number):
-    if unit_out in ['Months', 'months', 'month', 'Month'] and \
-            unit_in in ['year', 'years', 'Year', 'Years']:
-        return [number * 12, ' months']
+def time_unit_converter(number, unit_in, unit_out):
+    def unit_reader(arg: str):
+        units = ['second', 'minute', 'hour', 'day', 'week', 'month', 'year']
+        for unit in units:
+            if unit in arg.lower():
+                return unit
+        else:
+            raise ValueError("Invalid unit: ", arg)
 
-    elif unit_out in ['Weeks', 'weeks', 'week', 'Week']:
-        if unit_in in ['year', 'years', 'Year', 'Years']:
-            return [number * 52, 'weeks']
-        elif unit_in in ['Months', 'months', 'month', 'Month']:
-            return [number * 4, ' weeks']
+    unit_in = unit_reader(unit_in)
+    unit_out = unit_reader(unit_out)
 
-    elif unit_out in ['Days', 'days', 'day', 'Day']:
-        if unit_in in ['year', 'years', 'Year', 'Years']:
-            return [number * 365, ' days']
-        elif unit_in in ['Months', 'months', 'month', 'Month']:
-            return [number * 7 * 4, ' days']
-        elif unit_in in ['Weeks', 'weeks', 'week', 'Week']:
-            return [number * 7, ' days']
-
-    elif unit_out in ['Hours', 'hours', 'hour', 'Hour']:
-        if unit_in in ['Days', 'days', 'day', 'Day']:
-            return [number * 24, ' hours']
-        elif unit_in in ['Weeks', 'weeks', 'week', 'Week']:
-            return [number * 24 * 7, ' hours']
-        elif unit_in in ['Months', 'months', 'month', 'Month']:
-            return [number * 24 * 7 * 4, ' hours']
-
-    elif unit_out in ['Minutes', 'minutes', 'minute', 'Minute']:
-        if unit_in in ['Hours', 'hours', 'hour', 'Hour']:
-            return [number * 60, ' minutes']
-        elif unit_in in ['Days', 'days', 'day', 'Day']:
-            return [number * 60 * 24, ' minutes']
-        elif unit_in in ['Weeks', 'weeks', 'week', 'Week']:
-            return [number * 60 * 24 * 7, ' minutes']
-        elif unit_in in ['Months', 'months', 'month', 'Month']:
-            return [number * 60 * 24 * 7 * 4, ' minutes']
-
-    elif unit_out in ['Seconds', 'seconds', 'second', 'Second']:
-        if unit_in in ['Minutes', 'minutes', 'minute', 'Minute']:
-            return [number * 60, ' seconds']
-        elif unit_in in ['Hours', 'hours', 'hour', 'Hour']:
-            return [number * 60 * 60, ' seconds']
-        elif unit_in in ['Days', 'days', 'day', 'Day']:
-            return [number * 60 * 60 * 24, ' seconds']
-        elif unit_in in ['Weeks', 'weeks', 'week', 'Week']:
-            return [number * 60 * 60 * 24 * 7, ' seconds']
-
-
-def time_to_words(hour_in, minute_in):
-    if hour_in % 12 == 0:
-        hour_out = 'twelve'
+    if unit_in == 'year':
+        if unit_out == 'month':
+            number = number * 12
+        elif unit_out == 'week':
+            number = number * 52
+        elif unit_out == 'day':
+            number = number * 365
+        else:
+            raise ValueError("Conversion between inputs not valid.")
+    elif unit_in == 'month':
+        if unit_out == 'year':
+            number = number / 12
+        else:
+            raise ValueError("Conversion between inputs not valid.")
     else:
-        hour_out = num2words(hour_in % 12)
+        if unit_in == 'week' and unit_out == 'year':
+            number = number / 52
+        elif unit_in == 'day' and unit_out == 'year':
+            number = number / 365
+        elif unit_out in ['month', 'year']:
+            raise ValueError("Conversion between inputs not valid.")
+        else:
+            ratios = {'second': 1, 'minute': 60, 'hour': 3600, 'day': 86400,
+                      'week': 604800}
+            number = number * ratios[unit_in] / ratios[unit_out]
+    if number != 1:
+        unit_out += "s"
+    return f"{number if number % 1 else int(number)} {unit_out}"
 
-    if 0 < minute_in <= 30:
-        prefix = ' past '
-        if minute_in == 30:
-            minute_out = 'half'
-        elif minute_in == 15:
-            minute_out = 'quarter'
-        else:
-            minute_out = num2words(minute_in)
-    elif minute_in == 0:
-        return hour_out + " o'clock"
+
+def time_to_words(h: int, m: int):
+    if h not in range(0, 13):
+        raise ValueError("Hour invalid.")
+    nums = ['twelve', 'one', 'two', 'three', 'four',
+            'five', 'six', 'seven', 'eight', 'nine',
+            'ten', 'eleven', 'twelve', 'thirteen',
+            'fourteen', 'quarter', 'sixteen',
+            'seventeen', 'eighteen', 'nineteen',
+            'twenty', 'twenty one', 'twenty two',
+            'twenty three', 'twenty four',
+            'twenty five', 'twenty six', 'twenty seven',
+            'twenty eight', 'twenty nine', 'half']
+
+    if m == 0:
+        return f"{nums[h]} o'clock"
+    elif 0 < m <= 30:
+        return f"{nums[m]} past {nums[h]}"
+    elif 30 < m < 60:
+        return f"{nums[60 - m]} to {nums[h % 12 + 1]}"
     else:
-        prefix = ' to '
-        if (hour_in + 1) % 12 == 0:
-            hour_out = 'twelve'
-        else:
-            hour_out = num2words((hour_in + 1) % 12)
-        if minute_in == 45:
-            minute_out = 'quarter'
-        else:
-            minute_out = num2words(60 - minute_in)
-    return minute_out + prefix + hour_out
+        raise ValueError("Minute invalid.")
 
 
 def analogue_clock(hour, minute):
