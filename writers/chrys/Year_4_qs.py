@@ -248,7 +248,7 @@ def pv_10(difficulty):
     """Pick the sign to complete the inequality"""
     lower = 10 ** (difficulty-1)
     upper = 5 * 10 ** difficulty
-    a = random.choices(lower, upper)
+    a = random.randint(lower, upper)
     b = random.randint(lower, upper)
     question = "Choose the sign that correctly completes the statement. \n\n" \
                f"\\begin{{center}} {a} $\\square$ {b} \\end{{center}}"
