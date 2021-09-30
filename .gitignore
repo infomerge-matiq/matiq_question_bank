@@ -1,5 +1,8 @@
 .idea/
+output/
 latex_files/validator.tex
+latex_files/all_test.tex
+latex_files/all_answers.tex
 output/validator.aux
 output/validator.log
 output/validator.pdf
