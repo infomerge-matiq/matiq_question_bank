@@ -2565,7 +2565,7 @@ def me_13(difficulty):
 
 
 def me_14(difficulty):
-    """Elapsed time question using analogue clock. Chrys."""
+    """Elapsed time question using analogue clock. Chrys. """
     hour_in = random.randint(0, 11)
     minute_in = ((20-5*difficulty) * random.randint(0, 11)) % 60
 
