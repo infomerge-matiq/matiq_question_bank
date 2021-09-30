@@ -15,7 +15,9 @@ import matiq as mq
 # NUMBER AND PLACE VALUE_______
 
 def pv_1(difficulty):
-    """Choice of fill in missing or find the next number in a sequence"""
+    """
+    Choice of fill in missing or find the next number in a sequence. Chrys
+    """
     if difficulty == 1:
         step = random.choice([4 + random.randint(0, 5), 25, 100, 1000])
     else:
@@ -43,7 +45,10 @@ def pv_1(difficulty):
 
 
 def pv_2(difficulty):
-    """Choice of 3 questions involving the addition and subtraction of 1000"""
+    """
+    Choice of 3 questions involving the addition and subtraction of 1000.
+    Chrys.
+    """
     lower = round(1000/difficulty)
     upper = 8000+1000*difficulty
     x = random.randint(lower, upper)
@@ -69,7 +74,7 @@ def pv_2(difficulty):
 
 
 def pv_3(difficulty):
-    """Rounding to nearest power of 10."""
+    """Rounding to nearest power of 10. Chrys."""
     lower = 1000 - 250 * difficulty
     upper = 4000 * difficulty - 3000
     no_start = random.randint(lower, upper)
@@ -86,7 +91,7 @@ def pv_3(difficulty):
 
 
 def pv_4(difficulty):
-    """Identify place of a digit in a given number."""
+    """Identify place of a digit in a given number. Chrys."""
     places = ["Ones place",
               "Tens place",
               "Hundreds place",
@@ -107,7 +112,7 @@ def pv_4(difficulty):
 
 
 def pv_5(difficulty):
-    """Identify value of the digit in a given position in a number"""
+    """Identify value of the digit in a given position in a number. Chrys."""
     places = ["ones", "tens", "hundreds", "thousands", "ten thousands"]
     n = random.randint(10 ** (difficulty + 1), 10 ** (difficulty + 2))
     d = random.randint(1 + round(difficulty / 3), len(str(n)))
@@ -118,7 +123,7 @@ def pv_5(difficulty):
 
 
 def pv_6(difficulty):
-    """Find the nth smallest or largest number in a sequence"""
+    """Find the nth smallest or largest number in a sequence. Chrys."""
     limit = 3 + difficulty
     k = random.randint(0, 1)
     size = ["smallest", "largest"]
@@ -142,7 +147,7 @@ def pv_6(difficulty):
 
 
 def pv_7(difficulty):
-    """ Use table to find person with largest/smallest score"""
+    """ Use table to find person with largest/smallest score. Chrys."""
     n = random.randint(0, 1)
     size = ['least', 'most']
     col_2 = random.sample(range(100, 1000 + 10 ** (difficulty + 2)), 5)
@@ -177,7 +182,7 @@ def pv_7(difficulty):
 
 
 def pv_8(difficulty):
-    """ Use table to nth highest/smallest value. """
+    """ Use table to nth highest/smallest value. Chrys."""
     n = random.randint(0, 1)
     m = random.randint(0, 1)
     size = ['smallest', 'highest'][n]
@@ -229,7 +234,7 @@ def pv_8(difficulty):
 
 
 def pv_9(difficulty):
-    """arranging integers in ascending or descending order"""
+    """arranging integers in ascending or descending order. Chrys."""
     lower = 10 - 10*difficulty
     upper = 2 * 10 ** (difficulty+1)
     integers = random.sample(range(lower, upper), 6)
@@ -245,7 +250,7 @@ def pv_9(difficulty):
 
 # noinspection PyTypeChecker
 def pv_10(difficulty):
-    """Pick the sign to complete the inequality"""
+    """Pick the sign to complete the inequality. Chrys."""
     lower = 10 ** (difficulty-1)
     upper = 5 * 10 ** difficulty
     a = random.randint(lower, upper)
@@ -263,7 +268,7 @@ def pv_10(difficulty):
 
 
 def pv_11(difficulty):
-    """Inequalities which include addition and subtraction."""
+    """Inequalities which include addition and subtraction. Chrys."""
     upper = 2**(3+difficulty)
     numbers = random.sample(range(2, upper), 4)
     no_3 = random.randint(0, numbers[0])
@@ -287,7 +292,8 @@ def pv_11(difficulty):
     return mq.multiple_choice(question, choices, answer)
 
 
-def pv_12(difficulty):  # Taken from Year 5 qs and joined two qs into one
+def pv_12(difficulty):
+    """Roman Numerals to number and vice versa. Chrys."""
     n = random.randint(1, difficulty * 100)
     k = random.randint(0, 1)
     question = [f"What is {n} in Roman numerals?",
@@ -297,7 +303,9 @@ def pv_12(difficulty):  # Taken from Year 5 qs and joined two qs into one
 
 
 def pv_13(difficulty):
-    """Inequalities where student fills missing num to make statement true."""
+    """
+    Inequalities where student fills missing num to make statement true. Chrys.
+    """
     upper = 2**(4+difficulty)
     no_1 = random.randint(5, upper)
     no_2 = random.randint(no_1 + 10, 2*upper)
@@ -330,7 +338,9 @@ def pv_13(difficulty):
 
 
 def pv_14(difficulty):
-    """filling in each square to break down number into powers of ten."""
+    """
+    Filling in each square to break down number into powers of ten. Chrys.
+    """
     upper = 10 ** (difficulty + 2) - 1
     lower = 10 ** (difficulty + 1)
     n = random.randint(lower, upper)
@@ -349,7 +359,9 @@ def pv_14(difficulty):
 
 
 def pv_15(difficulty):
-    """Breaking down number into thousands, tens ect. filling in each part"""
+    """
+    Breaking down number into thousands, tens ect. filling in each part. Chrys.
+    """
     upper = 10 ** (difficulty + 2) - 1
     n = random.randint(100, upper)
     suffix = ["ones", "tens", "hundreds", "thousands", "ten-thousands"]
@@ -375,7 +387,7 @@ def pv_15(difficulty):
 
 
 def as_1(difficulty):
-    """addition of numbers up to 4 digits, using columnar method"""
+    """Addition of numbers up to 4 digits, using columnar method. Chrys."""
     lower = 2 * (400 * difficulty - 200)
     upper = 2000 * difficulty
     a = random.randint(lower, upper)
@@ -388,7 +400,7 @@ def as_1(difficulty):
 
 
 def as_2(difficulty):
-    """fill in missing value to balance equation"""
+    """Fill in missing value to balance equation. Chrys."""
     lower = 250 * (difficulty - 1) + 50
     upper = 400 * (difficulty - 1) + 100
     sums = random.randint(lower + 10, upper)
@@ -419,7 +431,7 @@ def as_2(difficulty):
 
 
 def as_3(difficulty):
-    """addition and subtraction using words"""
+    """Addition and subtraction using words. Chrys."""
     lower = 250 * (difficulty-1) + 50
     upper = 400 * (difficulty-1) + 100
     num = random.sample(range(lower, upper), k=2)
@@ -439,7 +451,9 @@ def as_3(difficulty):
 
 
 def as_4(difficulty):
-    """fill in missing number in columnar method for addition & subtraction"""
+    """
+    Fill in missing number in columnar method for addition & subtraction. Chrys
+    """
     lower = 200 * difficulty - 150
     upper = 300 * difficulty
     x = random.sample(range(lower, upper), k=2)
@@ -449,17 +463,21 @@ def as_4(difficulty):
     answer = str(nums[k])
     nums[k] = ''
     for i in range(len(answer)):
-        nums[k] += "{\\fboxsep0pt\\fbox{\\rule{0.5em}{0pt}\\rule{0pt}{2ex}}}"
-    question = "Fill in the missing number. \n\n " \
-               r"\hspace{2cm}{\LARGE$\begin{array}{r}" + str(nums[0]) + \
-               r"\\\underline{" + ['+', '-'][n] + r"\ " + str(nums[1]) + r"}"\
-               + r"\\\underline{" + str(result) + r"} \end{array}$}" \
-               + "\\vspace{1ex}"
+        nums[k] += r'{\fboxsep0pt\fbox{\rule{0.5em}{0pt}\rule{0pt}{2ex}}}'
+    question = r'''
+    Fill in the missing number. \newline
+    \hspace{2cm}{\LARGE$\begin{array}{r} 
+    %s \\ \underline{ %s \ %s } \\ \underline{ %s } 
+    \end{array}$} 
+    \vspace{1ex}
+    ''' % (nums[0], ['+', '-'][n], str(nums[1]), str(result))
     return [question, answer]
 
 
 def as_5(difficulty):
-    """add/subtract 3 numbers with up to 3 digits, using columnar method"""
+    """
+    Add/subtract 3 numbers with up to 3 digits, using columnar method. Chrys.
+    """
     k = random.randint(0, 1)
     n = random.randint(0, 1)
     no_1 = [[random.randint(1, 9), random.randint(10, 99)][n],
@@ -474,16 +492,19 @@ def as_5(difficulty):
              ][n],
             no_1 + no_3 + random.randint(100 * difficulty, 200 * difficulty)
             ][k]
-    question = r"\hspace{2cm}{\LARGE$\begin{array}{r}" \
-               + str(no_2) + r"\\\ " + str(no_1) \
-               + r"\\\underline{" + ["+", "-"][k] + r"\ " + str(no_3) +\
-               r"} \end{array}$} \\ \\" + "\\vspace{1.2ex}"
+    question = r'''
+    \hspace{2cm}{\LARGE$\begin{array}{r}
+    %s \\\ %s \ %s  \\
+    \underline{ %s \ %s} 
+    \end{array}$} \\ \\
+    \vspace{1.2ex}
+    ''' % (no_2,  ["+", "-"][k], no_1, ["+", "-"][k], no_3)
     answer = [mq.dollar(no_1 + no_2 + no_3), mq.dollar(no_2 - no_3 - no_1)][k]
     return [question, answer]
 
 
 def as_6(difficulty):
-    """complete table using addition and subtraction rules"""
+    """Complete table using addition and subtraction rules. Chrys."""
     lower = 100 + (10 ** difficulty)
     upper = 500 * (2 ** difficulty)
     nums = random.sample(range(lower, upper), k=5)
@@ -526,7 +547,9 @@ def as_6(difficulty):
 
 
 def as_7(difficulty):
-    """Find answer to addition/subtraction question and state if odd/even"""
+    """
+    Find answer to addition/subtraction question and state if odd/even. Chrys.
+    """
     lower = 10 * difficulty
     upper = 60 * difficulty
     num_1 = random.sample(range(lower, upper), k=4)
@@ -560,7 +583,7 @@ def as_7(difficulty):
 
 
 def as_8(difficulty):
-    """Worded addition problem"""
+    """Worded addition problem. Chrys."""
     lower = 100 + (200 * (difficulty - 1))
     upper = 300 + (200 * (difficulty - 1))
     nums = [random.randint(round((lower+upper)/2), upper)]
@@ -576,7 +599,9 @@ def as_8(difficulty):
 
 
 def as_9(difficulty):
-    """find missing value in table by deducting other values from total"""
+    """
+    Find missing value in table by deducting other values from total. Chrys.
+    """
     lower = 50 + (100 * (difficulty - 1))
     upper = 180 + (100 * (difficulty - 1))
 
@@ -609,7 +634,7 @@ def as_9(difficulty):
 
 
 def as_10(difficulty):
-    """Subtraction patterns"""
+    """Subtraction patterns. Chrys."""
     nums = random.sample(range(2*difficulty, 5*difficulty), k=2)
     sums = sum(nums)
 
@@ -641,7 +666,7 @@ def as_10(difficulty):
 
 
 def as_11(difficulty):
-    """Find the missing digit of a number in the columnar method"""
+    """Find the missing digit of a number in the columnar method. Chrys."""
     lower = 100 + (400 * (difficulty - 1))
     upper = 300 + (500 * (difficulty - 1))
     a = random.randint(lower, upper)
@@ -650,30 +675,31 @@ def as_11(difficulty):
     n = random.randint(0, 1)
     d = random.randint(1, len(str(nums[n])))
     answer = f"{int(str(nums[n])[d-1]): g}"
-    nums[n] = str(nums[n])[:d-1] \
-        + "\\hspace{0.05em}" \
-          "\\fboxsep0pt\\fbox{\\rule{1.05ex}{0pt}\\rule{0pt}{0.75em}}" \
-          "\\hspace{ 0.05em}" \
-        + str(nums[n])[d:]
-
-    values = [str(nums[n]) + "", str(nums[(n + 1) % 2]) + "\\hspace{0.09em}",
-              str(nums[2]) + "\\hspace{0.09em}"
-              ]
+    nums[n] = r'''
+    %s \hspace{0.05em} 
+    \fboxsep0pt\fbox{\rule{1.05ex}{0pt}\rule{0pt}{0.75em}}
+    \hspace{ 0.05em} %s 
+    ''' % (str(nums[n])[:d-1], str(nums[n])[d:])
+    values = [
+        str(nums[n]) + "",
+        str(nums[(n + 1) % 2]) + "\\hspace{0.09em}",
+        str(nums[2]) + "\\hspace{0.09em}"
+    ]
     k = random.sample([0, 1], k=2)
-    question = "Find the missing digit. \n\n" \
-               + r'''
-               \hspace{2cm}{\LARGE$\begin{array}{r}  
-               %s \\
-               \underline{+\  %s } \\
-               \underline{\ \ \ %s }
-               \end{array}$} \ \
-               \vspace{1.2ex}
-               ''' % (values[k[0]], values[k[1]], values[2])
+    question = r'''
+    Find the missing digit. \newline 
+    \hspace{2cm}{\LARGE$\begin{array}{r}  
+    %s \\ 
+    \underline{+\  %s } \\ 
+    \underline{\ \ \ %s }
+    \end{array}$} \ \
+    \vspace{1.2ex}
+    ''' % (values[k[0]], values[k[1]], values[2])
     return [question, answer]
 
 
 def as_12(difficulty):
-    """Subtraction over zero using columnar method"""
+    """Subtraction over zero using columnar method. Chrys."""
     a = 100 * random.randint(2, 9) * 10 ** (difficulty - 1)
     if difficulty < 3:
         b = random.randint(round(a / 2), round(a * 3 / 4))
@@ -686,15 +712,20 @@ def as_12(difficulty):
     if int(str(b)[-2]) == 0:
         b = b + 10
 
-    question = r"\hspace{2cm}{\LARGE$\begin{array}{r}" + str(a) + \
-               r"\\\underline{-" + str(b) + r"}\end{array}$} \\ \\" \
-               + "\\vspace{1.2ex}"
+    question = r'''
+    \hspace{2cm}{\LARGE$\begin{array}{r}
+    %s \\ \underline{- \ %s} 
+    \end{array}$} \\ \\" 
+    \vspace{1.2ex}
+    ''' % (a, b)
     answer = mq.dollar(a - b)
     return [question, answer]
 
 
 def as_13(difficulty):
-    """Worded subtraction problem where values are in word or number format."""
+    """
+    Worded subtraction problem where values are in word or number format. Chrys
+    """
     lower = 200 + 1000 * (difficulty - 1)
     upper = 1000 + 4000 * (difficulty - 1)
     x_1 = random.randint(lower, upper)
@@ -713,14 +744,19 @@ def as_13(difficulty):
 
 
 def as_14(difficulty):
-    """subtraction of numbers up to 4 digits, using columnar method"""
+    """
+    Subtraction of numbers up to 4 digits, using columnar method. Chrys.
+    """
     lower = 100 * difficulty + round(10 ** difficulty + 1)
     upper = 100 * difficulty + round(0.5 * (10 ** (difficulty + 1) - 1))
     b = random.randint(lower, upper)
     a = random.randint(round(0.5*lower), round(0.7*b))
-    question = r"\hspace{2cm}{\LARGE$\begin{array}{r}" + str(b) + \
-               r"\\\underline{-\ " + str(a) + r"}\end{array}$} \\ \\" \
-               + "\\vspace{1.2ex}"
+    question = r'''
+    \hspace{2cm}{\LARGE$\begin{array}{r}
+    %s \\ \underline{- \ %s}
+    \end{array}$} \\ \\
+    \vspace{1.2ex}
+    ''' % (b, a)
     answer = mq.dollar(b-a)
     return [question, answer]
 
@@ -728,13 +764,15 @@ def as_14(difficulty):
 
 
 def md_1(difficulty):
-    """Multiplication of 2 or 3 digit numbers with one digit number"""
+    """Multiplication of 2 or 3 digit numbers with one digit number. Chrys."""
     a = random.randint(20 + (difficulty-1) * (difficulty * 150 - 200),
                        100 + (difficulty - 1) * (difficulty * 50 + 300))
     b = random.randint(3, 9)
-    question = r"\hspace{2cm}{\LARGE$\begin{array}{r}" + str(a) + \
-               r"\\\underline{\times\ " + str(b) + r"}\end{array}$}" \
-               "\\vspace{3em}"
+    question = r'''
+    \hspace{2cm}{\LARGE$\begin{array}{r} 
+    %s \\ \underline{\times \ %s}
+    \end{array}$} \vspace{3em}
+    ''' % (a, b)
     answer = mq.dollar(a * b)
     return [question, answer]
 
@@ -1483,7 +1521,7 @@ def fr_7(difficulty):
     order = ["smallest to largest", "largest to smallest"][k]
     n = random.randint(1, 5)
     question = f"If you order the following decimals from {order}," \
-               f" which comes {mq.num2words(n, to='ordinal')}?"
+               f" which comes {num2words(n, to='ordinal')}?"
 
     choices = []
     my_list = []
@@ -2638,3 +2676,4 @@ def st_1(difficulty):
     question = f"Find the mean of these numbers. \n\n {sequence}"
     answer = f"{statistics.mean(nums)}"
     return [question, answer]
+
