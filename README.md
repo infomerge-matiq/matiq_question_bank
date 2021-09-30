@@ -1,6 +1,6 @@
 # Setup
 
-To run this code you will need python, and some additional libraries: pdflatex, num2words, roman.
+To run this code you will need python, and some additional libraries: matiq, pdflatex, num2words, roman.
 
 Also, you will need to install MikTeX. pdflatex uses this program to compile the LaTeX code into a pdf.
 
