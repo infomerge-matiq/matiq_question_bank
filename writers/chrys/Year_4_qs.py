@@ -162,7 +162,7 @@ def pv_7(difficulty):
     \hline  %s & %s \\  \hline  %s & %s \\  
     \hline  %s & %s \\  \hline  %s & %s \\ [1ex]  \hline  
     \end{tabular} 
-    \end{center}"
+    \end{center}
     ''' % (c[0][0], c[0][1], c[1][0], c[1][1], c[2][0],
            c[2][1], c[3][0], c[3][1], c[4][0], c[4][1])
     question = f"Some friends are playing a game. " \
@@ -392,8 +392,8 @@ def as_1(difficulty):
     upper = 2000 * difficulty
     a = random.randint(lower, upper)
     b = random.randint(lower, upper)
-    question = r"\hspace{2cm}{\LARGE$\begin{array}{r}" + str(b) + \
-               r"\\\underline{+\ " + str(a) + r"}\end{array}$} \\ \\" \
+    question = r'\hspace{2cm}{\LARGE$\begin{array}{r}' + str(b) + \
+               r'\\\underline{+\ ' + str(a) + r'}\end{array}$} \\ \\'\
                + "\\vspace{1.2ex}"
     answer = mq.dollar(b+a)
     return [question, answer]
@@ -533,7 +533,7 @@ def as_6(difficulty):
                f"Rule: {rule[1]} {abs(rule[0])} \n\n {table}"
 
     answer = r'''
-    "\begin{tabular}{||c  |  c||}
+    \begin{tabular}{||c  |  c||}
     \hline Input & Output \\ [0.4ex] \hline 
     \hline %s & %s \\ 
     \hline %s & \textbf{%s} \\ 
@@ -1373,15 +1373,15 @@ def md_26(difficulty):
     {\arraycolsep=2pt\LARGE$\begin{array}{rrr%s}
     %s & %s \hspace{%sem} & %s \hspace{%sem} & %s 
     & \colorbox{red}{\makebox(59,34){\textcolor{black}{%s}}}
-    & \colorbox{blue}{\makebox(55,34){\textcolor{black}{%s}}}
+    & \colorbox{cyan}{\makebox(55,34){\textcolor{black}{%s}}}
     %s 
-    \end{array}$} \ "
+    \end{array}$} \
     ''' % (rectangle[0], rectangle[1], box, size[0], box,
            size[1], x, values[0], values[1], rectangle[2])
 
     question = f"Use the model to solve {x * values[2]} $\\div$ {x}." \
                f"\n\n \\textit{{Hint: Firstly, use the areas to find the " \
-               f"missing lengths of the rectangles.}} \n\n {model}"
+               f"missing lengths of the rectangles.}} \n\n" + model
     answer = mq.dollar(values[2])
     return [question, answer]
 
@@ -1784,7 +1784,6 @@ def fr_15(difficulty):
     shuffle(order)
 
     r = ""
-    shapes = []
     if b <= 6 and b % 2 == 1:
         columns = b
         shapes_1 = '&'.join(map(str, [order[i] for i in range(columns)]))
@@ -1792,7 +1791,8 @@ def fr_15(difficulty):
     else:
         columns = ceil(b / 2)
         shapes_1 = '&'.join(map(str, [order[i] for i in range(columns-1)]))
-        shapes_2 = '&'.join(map(str, [order[i] for i in range(columns, len(order))]))
+        shapes_2 = \
+            '&'.join(map(str, [order[i] for i in range(columns, len(order))]))
         shapes = shapes_1 + "\\\\" + shapes_2
     for m in range(columns):
         r += "r"
@@ -1800,7 +1800,7 @@ def fr_15(difficulty):
     model = r'''
     \begin{center}
     {\arraycolsep=2pt\LARGE$\begin{array}{%s} %s \end{array}$} 
-    \end{center}"
+    \end{center}
     ''' % (r, shapes)
     question = f"What fraction of the shapes are {shape_names}? " \
 
@@ -2089,7 +2089,7 @@ def fr_25(difficulty):
             start = random.randint(0, b[1] - c)
             line = r''' 
             \draw[line width = 2pt, color=red] (%s,0) -- (%s,0);
-            ''' % (start * (length / b[1]) , (start + c) * (length / b[1]))
+            ''' % (start * (length / b[1]), (start + c) * (length / b[1]))
             choices.append(f"{mq.num_line(b[1], line, length)} "
                            f"\\vspace{{2em}}")
 
@@ -2722,3 +2722,137 @@ def st_1(difficulty):
     answer = f"{statistics.mean(nums)}"
     return [question, answer]
 
+
+def fr_26(difficulty):
+    """Money addition/ subtraction using columnar method. Chrys."""
+    limit = 2 * difficulty
+    a = round(random.uniform(0.51, limit), 2)
+    b = round(random.uniform(limit, limit * 2), 2)
+
+    n = random.randint(0, 1)
+    question = r'''
+    \hspace{2cm}{\LARGE$\begin{array}{r} 
+    \pounds %s \\ \underline{%s \ \pounds %s}\end{array}$} 
+    \\ \\ \vspace{1.2ex}
+    ''' % (f'{b:.2f}', ['+', '-'][n], f'{a:.2f}')
+    result = [b + a, b - a][n]
+    answer = f'\\pounds {result:.2f}'
+    return [question, answer]
+
+
+def fr_27(difficulty):
+    """Money subtraction with three numbers using columnar method. Chrys."""
+    limit = 1 + difficulty
+    a = round(random.uniform(0.51, limit), 2)
+    b = round(random.uniform(1, limit), 1)
+    c = round(random.uniform(round(a + b) + 1, 10), difficulty - 1)
+    question = r'''
+    \hspace{2cm}{\LARGE$\begin{array}{r} 
+    \pounds %s \\ - \ \pounds %s \\ \underline{- \ \pounds %s} 
+    \end{array}$} \\ \\ \vspace{1.2ex}
+    ''' % (f'{c:.2f}',  f'{b:.2f}', f'{a:.2f}')
+    result = c - b - a
+    answer = f'\\pounds {result:.2f}'
+    return [question, answer]
+
+
+def as_15(difficulty):
+    """Columnar method with mixed operations. Chrys."""
+    lower = 10 ** difficulty
+    upper = 10 ** (difficulty + 1)
+    a = random.randint(lower, upper / 2)
+    b = random.randint(lower, upper / 2)
+    c = a + b
+
+    n = random.randint(0, 1)
+    k = (n + 1) % 2
+    op = ['+', '-']
+    values = [((-1) ** n) * a, ((-1) ** k) * b]
+    question = r'''
+    \hspace{2cm}{\LARGE$\begin{array}{r} 
+    %s \\ %s \ %s \\ \underline{%s \ %s} 
+    \end{array}$} \\ \\ \vspace{1.2ex}
+    ''' % (c, op[n], a, op[k], b)
+    answer = mq.dollar(c + values[0] + values[1])
+    return [question, answer]
+
+
+def fr_28(difficulty):
+    """Money question: difference between starting and ending value. Chrys."""
+    start_value = round(
+        random.uniform(3 * difficulty, 5 * difficulty), difficulty - 1)
+    d_p = [1, 1, 2][difficulty - 1]
+    end_value = round(random.uniform(1, 2 * difficulty), d_p)
+
+    item = random.choice(["food from a cafe",
+                          "items from the shop",
+                          "a book"
+                          ])
+    n = random.randint(0, 1)
+    gender = ['Male', 'Female'][n]
+    pronoun = ['He', 'She'][n]
+    name = names.get_first_name(gender)
+
+    question = f"{name} has \\pounds{start_value:.2f} in pocket money. " \
+               f"{pronoun} decides to buy {item}. Afterwards, {pronoun} has " \
+               f"\\pounds{end_value:.2f} left over. " \
+               f"How much did {name} spend in total?"
+    result = start_value - end_value
+    answer = f"\\pounds{result:.2f}"
+    return [question, answer]
+
+
+def me_16(difficulty):
+    """Money question: number to words and vice versa. Chrys."""
+    pounds = random.randint(2 * difficulty, 9 * difficulty)
+    pence = random.randint(1, 99)
+    total = pounds + (pence / 100)
+    n = random.randint(0, 1)
+    num_words = [f"{num2words(pounds)} pounds and {num2words(pence)} pence",
+                 f"\\pounds{total:.2f}"
+                 ]
+    question = f"Write down {num_words[n]} {['as a number',' in words'][n]}."
+    answer = num_words[(n + 1) % 2]
+    return [question, answer]
+
+
+def me_17(difficulty):
+    """Money question: sum of change in coins. Chrys."""
+    nums = random.choices(range(1, 3), k=2+difficulty)
+    choices = random.sample(range(0, 9), k=2+difficulty)
+    choices = sorted(choices)
+    my_list = [
+        [10, ' ten pound note'],
+        [5, ' five pound note'],
+        [2, ' two pound coin'],
+        [1, ' one pound coin'],
+        [0.5, ' fifty pence coin'],
+        [0.2, ' twenty pence coin'],
+        [0.1, ' ten pence coin'],
+        [0.05, ' five pence coin'],
+        [0.02, ' two pence coin'],
+        [0.01, ' penny'],
+    ]
+    amount = []
+    sums = []
+    for i in range(len(choices)):
+        if choices[i] == 9 and nums[i] > 1:
+            my_list[9][1] = ' pennies'
+        elif choices[i] < 9 and nums[i] > 1:
+            my_list[choices[i]][1] += 's'
+
+        a = str(nums[i]) + my_list[choices[i]][1]
+        amount.append(a)
+        sums.append(nums[i] * my_list[choices[i]][0])
+
+    amount_format = ",\\ ".join([amount[i] for i in range(len(amount) - 1)]) \
+                    + f" and {amount[len(amount) - 1]}"
+
+    n = random.randint(0, 1)
+    gender = [['male', 'he'], ['female', 'she']][n]
+    name = names.get_first_name(gender[0])
+
+    question = f"{name} has {amount_format}. How much money does {gender[1]}" \
+               " have in total?"
+    answer = f"\\pounds{sum(sums):.2f}"
+    return [question, answer]
