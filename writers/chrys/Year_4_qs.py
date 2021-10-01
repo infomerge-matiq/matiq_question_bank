@@ -15,7 +15,9 @@ import matiq as mq
 # NUMBER AND PLACE VALUE_______
 
 def pv_1(difficulty):
-    """Choice of fill in missing or find the next number in a sequence"""
+    """
+    Choice of fill in missing or find the next number in a sequence. Chrys
+    """
     if difficulty == 1:
         step = random.choice([4 + random.randint(0, 5), 25, 100, 1000])
     else:
@@ -43,7 +45,10 @@ def pv_1(difficulty):
 
 
 def pv_2(difficulty):
-    """Choice of 3 questions involving the addition and subtraction of 1000"""
+    """
+    Choice of 3 questions involving the addition and subtraction of 1000.
+    Chrys.
+    """
     lower = round(1000/difficulty)
     upper = 8000+1000*difficulty
     x = random.randint(lower, upper)
@@ -69,7 +74,7 @@ def pv_2(difficulty):
 
 
 def pv_3(difficulty):
-    """Rounding to nearest power of 10."""
+    """Rounding to nearest power of 10. Chrys."""
     lower = 1000 - 250 * difficulty
     upper = 4000 * difficulty - 3000
     no_start = random.randint(lower, upper)
@@ -86,7 +91,7 @@ def pv_3(difficulty):
 
 
 def pv_4(difficulty):
-    """Identify place of a digit in a given number."""
+    """Identify place of a digit in a given number. Chrys."""
     places = ["Ones place",
               "Tens place",
               "Hundreds place",
@@ -107,7 +112,7 @@ def pv_4(difficulty):
 
 
 def pv_5(difficulty):
-    """Identify value of the digit in a given position in a number"""
+    """Identify value of the digit in a given position in a number. Chrys."""
     places = ["ones", "tens", "hundreds", "thousands", "ten thousands"]
     n = random.randint(10 ** (difficulty + 1), 10 ** (difficulty + 2))
     d = random.randint(1 + round(difficulty / 3), len(str(n)))
@@ -118,7 +123,7 @@ def pv_5(difficulty):
 
 
 def pv_6(difficulty):
-    """Find the nth smallest or largest number in a sequence"""
+    """Find the nth smallest or largest number in a sequence. Chrys."""
     limit = 3 + difficulty
     k = random.randint(0, 1)
     size = ["smallest", "largest"]
@@ -142,7 +147,7 @@ def pv_6(difficulty):
 
 
 def pv_7(difficulty):
-    """ Use table to find person with largest/smallest score"""
+    """ Use table to find person with largest/smallest score. Chrys."""
     n = random.randint(0, 1)
     size = ['least', 'most']
     col_2 = random.sample(range(100, 1000 + 10 ** (difficulty + 2)), 5)
@@ -177,7 +182,7 @@ def pv_7(difficulty):
 
 
 def pv_8(difficulty):
-    """ Use table to nth highest/smallest value. """
+    """ Use table to nth highest/smallest value. Chrys."""
     n = random.randint(0, 1)
     m = random.randint(0, 1)
     size = ['smallest', 'highest'][n]
@@ -229,7 +234,7 @@ def pv_8(difficulty):
 
 
 def pv_9(difficulty):
-    """arranging integers in ascending or descending order"""
+    """arranging integers in ascending or descending order. Chrys."""
     lower = 10 - 10*difficulty
     upper = 2 * 10 ** (difficulty+1)
     integers = random.sample(range(lower, upper), 6)
@@ -245,7 +250,7 @@ def pv_9(difficulty):
 
 # noinspection PyTypeChecker
 def pv_10(difficulty):
-    """Pick the sign to complete the inequality"""
+    """Pick the sign to complete the inequality. Chrys."""
     lower = 10 ** (difficulty-1)
     upper = 5 * 10 ** difficulty
     a = random.randint(lower, upper)
@@ -263,7 +268,7 @@ def pv_10(difficulty):
 
 
 def pv_11(difficulty):
-    """Inequalities which include addition and subtraction."""
+    """Inequalities which include addition and subtraction. Chrys."""
     upper = 2**(3+difficulty)
     numbers = random.sample(range(2, upper), 4)
     no_3 = random.randint(0, numbers[0])
@@ -287,7 +292,8 @@ def pv_11(difficulty):
     return mq.multiple_choice(question, choices, answer)
 
 
-def pv_12(difficulty):  # Taken from Year 5 qs and joined two qs into one
+def pv_12(difficulty):
+    """Roman Numerals to number and vice versa. Chrys."""
     n = random.randint(1, difficulty * 100)
     k = random.randint(0, 1)
     question = [f"What is {n} in Roman numerals?",
@@ -297,7 +303,9 @@ def pv_12(difficulty):  # Taken from Year 5 qs and joined two qs into one
 
 
 def pv_13(difficulty):
-    """Inequalities where student fills missing num to make statement true."""
+    """
+    Inequalities where student fills missing num to make statement true. Chrys.
+    """
     upper = 2**(4+difficulty)
     no_1 = random.randint(5, upper)
     no_2 = random.randint(no_1 + 10, 2*upper)
@@ -330,7 +338,9 @@ def pv_13(difficulty):
 
 
 def pv_14(difficulty):
-    """filling in each square to break down number into powers of ten."""
+    """
+    Filling in each square to break down number into powers of ten. Chrys.
+    """
     upper = 10 ** (difficulty + 2) - 1
     lower = 10 ** (difficulty + 1)
     n = random.randint(lower, upper)
@@ -349,7 +359,9 @@ def pv_14(difficulty):
 
 
 def pv_15(difficulty):
-    """Breaking down number into thousands, tens ect. filling in each part"""
+    """
+    Breaking down number into thousands, tens ect. filling in each part. Chrys.
+    """
     upper = 10 ** (difficulty + 2) - 1
     n = random.randint(100, upper)
     suffix = ["ones", "tens", "hundreds", "thousands", "ten-thousands"]
@@ -375,7 +387,7 @@ def pv_15(difficulty):
 
 
 def as_1(difficulty):
-    """addition of numbers up to 4 digits, using columnar method"""
+    """Addition of numbers up to 4 digits, using columnar method. Chrys."""
     lower = 2 * (400 * difficulty - 200)
     upper = 2000 * difficulty
     a = random.randint(lower, upper)
@@ -388,7 +400,7 @@ def as_1(difficulty):
 
 
 def as_2(difficulty):
-    """fill in missing value to balance equation"""
+    """Fill in missing value to balance equation. Chrys."""
     lower = 250 * (difficulty - 1) + 50
     upper = 400 * (difficulty - 1) + 100
     sums = random.randint(lower + 10, upper)
@@ -419,7 +431,7 @@ def as_2(difficulty):
 
 
 def as_3(difficulty):
-    """addition and subtraction using words"""
+    """Addition and subtraction using words. Chrys."""
     lower = 250 * (difficulty-1) + 50
     upper = 400 * (difficulty-1) + 100
     num = random.sample(range(lower, upper), k=2)
@@ -439,7 +451,9 @@ def as_3(difficulty):
 
 
 def as_4(difficulty):
-    """fill in missing number in columnar method for addition & subtraction"""
+    """
+    Fill in missing number in columnar method for addition & subtraction. Chrys
+    """
     lower = 200 * difficulty - 150
     upper = 300 * difficulty
     x = random.sample(range(lower, upper), k=2)
@@ -449,17 +463,21 @@ def as_4(difficulty):
     answer = str(nums[k])
     nums[k] = ''
     for i in range(len(answer)):
-        nums[k] += "{\\fboxsep0pt\\fbox{\\rule{0.5em}{0pt}\\rule{0pt}{2ex}}}"
-    question = "Fill in the missing number. \n\n " \
-               r"\hspace{2cm}{\LARGE$\begin{array}{r}" + str(nums[0]) + \
-               r"\\\underline{" + ['+', '-'][n] + r"\ " + str(nums[1]) + r"}"\
-               + r"\\\underline{" + str(result) + r"} \end{array}$}" \
-               + "\\vspace{1ex}"
+        nums[k] += r'{\fboxsep0pt\fbox{\rule{0.5em}{0pt}\rule{0pt}{2ex}}}'
+    question = r'''
+    Fill in the missing number. \newline
+    \hspace{2cm}{\LARGE$\begin{array}{r} 
+    %s \\ \underline{ %s \ %s } \\ \underline{ %s } 
+    \end{array}$} 
+    \vspace{1ex}
+    ''' % (nums[0], ['+', '-'][n], str(nums[1]), str(result))
     return [question, answer]
 
 
 def as_5(difficulty):
-    """add/subtract 3 numbers with up to 3 digits, using columnar method"""
+    """
+    Add/subtract 3 numbers with up to 3 digits, using columnar method. Chrys.
+    """
     k = random.randint(0, 1)
     n = random.randint(0, 1)
     no_1 = [[random.randint(1, 9), random.randint(10, 99)][n],
@@ -474,16 +492,19 @@ def as_5(difficulty):
              ][n],
             no_1 + no_3 + random.randint(100 * difficulty, 200 * difficulty)
             ][k]
-    question = r"\hspace{2cm}{\LARGE$\begin{array}{r}" \
-               + str(no_2) + r"\\\ " + str(no_1) \
-               + r"\\\underline{" + ["+", "-"][k] + r"\ " + str(no_3) +\
-               r"} \end{array}$} \\ \\" + "\\vspace{1.2ex}"
+    question = r'''
+    \hspace{2cm}{\LARGE$\begin{array}{r}
+    %s \\\ %s \ %s  \\
+    \underline{ %s \ %s} 
+    \end{array}$} \\ \\
+    \vspace{1.2ex}
+    ''' % (no_2,  ["+", "-"][k], no_1, ["+", "-"][k], no_3)
     answer = [mq.dollar(no_1 + no_2 + no_3), mq.dollar(no_2 - no_3 - no_1)][k]
     return [question, answer]
 
 
 def as_6(difficulty):
-    """complete table using addition and subtraction rules"""
+    """Complete table using addition and subtraction rules. Chrys."""
     lower = 100 + (10 ** difficulty)
     upper = 500 * (2 ** difficulty)
     nums = random.sample(range(lower, upper), k=5)
@@ -526,7 +547,9 @@ def as_6(difficulty):
 
 
 def as_7(difficulty):
-    """Find answer to addition/subtraction question and state if odd/even"""
+    """
+    Find answer to addition/subtraction question and state if odd/even. Chrys.
+    """
     lower = 10 * difficulty
     upper = 60 * difficulty
     num_1 = random.sample(range(lower, upper), k=4)
@@ -560,7 +583,7 @@ def as_7(difficulty):
 
 
 def as_8(difficulty):
-    """Worded addition problem"""
+    """Worded addition question. Chrys."""
     lower = 100 + (200 * (difficulty - 1))
     upper = 300 + (200 * (difficulty - 1))
     nums = [random.randint(round((lower+upper)/2), upper)]
@@ -576,7 +599,9 @@ def as_8(difficulty):
 
 
 def as_9(difficulty):
-    """find missing value in table by deducting other values from total"""
+    """
+    Find missing value in table by deducting other values from total. Chrys.
+    """
     lower = 50 + (100 * (difficulty - 1))
     upper = 180 + (100 * (difficulty - 1))
 
@@ -609,7 +634,7 @@ def as_9(difficulty):
 
 
 def as_10(difficulty):
-    """Subtraction patterns"""
+    """Subtraction patterns. Chrys."""
     nums = random.sample(range(2*difficulty, 5*difficulty), k=2)
     sums = sum(nums)
 
@@ -641,7 +666,7 @@ def as_10(difficulty):
 
 
 def as_11(difficulty):
-    """Find the missing digit of a number in the columnar method"""
+    """Find the missing digit of a number in the columnar method. Chrys."""
     lower = 100 + (400 * (difficulty - 1))
     upper = 300 + (500 * (difficulty - 1))
     a = random.randint(lower, upper)
@@ -650,30 +675,31 @@ def as_11(difficulty):
     n = random.randint(0, 1)
     d = random.randint(1, len(str(nums[n])))
     answer = f"{int(str(nums[n])[d-1]): g}"
-    nums[n] = str(nums[n])[:d-1] \
-        + "\\hspace{0.05em}" \
-          "\\fboxsep0pt\\fbox{\\rule{1.05ex}{0pt}\\rule{0pt}{0.75em}}" \
-          "\\hspace{ 0.05em}" \
-        + str(nums[n])[d:]
-
-    values = [str(nums[n]) + "", str(nums[(n + 1) % 2]) + "\\hspace{0.09em}",
-              str(nums[2]) + "\\hspace{0.09em}"
-              ]
+    nums[n] = r'''
+    %s \hspace{0.05em} 
+    \fboxsep0pt\fbox{\rule{1.05ex}{0pt}\rule{0pt}{0.75em}}
+    \hspace{ 0.05em} %s 
+    ''' % (str(nums[n])[:d-1], str(nums[n])[d:])
+    values = [
+        str(nums[n]) + "",
+        str(nums[(n + 1) % 2]) + "\\hspace{0.09em}",
+        str(nums[2]) + "\\hspace{0.09em}"
+    ]
     k = random.sample([0, 1], k=2)
-    question = "Find the missing digit. \n\n" \
-               + r'''
-               \hspace{2cm}{\LARGE$\begin{array}{r}  
-               %s \\
-               \underline{+\  %s } \\
-               \underline{\ \ \ %s }
-               \end{array}$} \ \
-               \vspace{1.2ex}
-               ''' % (values[k[0]], values[k[1]], values[2])
+    question = r'''
+    Find the missing digit. \newline 
+    \hspace{2cm}{\LARGE$\begin{array}{r}  
+    %s \\ 
+    \underline{+\  %s } \\ 
+    \underline{\ \ \ %s }
+    \end{array}$} \ \
+    \vspace{1.2ex}
+    ''' % (values[k[0]], values[k[1]], values[2])
     return [question, answer]
 
 
 def as_12(difficulty):
-    """Subtraction over zero using columnar method"""
+    """Subtraction over zero using columnar method. Chrys."""
     a = 100 * random.randint(2, 9) * 10 ** (difficulty - 1)
     if difficulty < 3:
         b = random.randint(round(a / 2), round(a * 3 / 4))
@@ -686,15 +712,21 @@ def as_12(difficulty):
     if int(str(b)[-2]) == 0:
         b = b + 10
 
-    question = r"\hspace{2cm}{\LARGE$\begin{array}{r}" + str(a) + \
-               r"\\\underline{-" + str(b) + r"}\end{array}$} \\ \\" \
-               + "\\vspace{1.2ex}"
+    question = r'''
+    \hspace{2cm}{\LARGE$\begin{array}{r}
+    %s \\ \underline{- \ %s} 
+    \end{array}$} \\ \\" 
+    \vspace{1.2ex}
+    ''' % (a, b)
     answer = mq.dollar(a - b)
     return [question, answer]
 
 
 def as_13(difficulty):
-    """Worded subtraction problem where values are in word or number format."""
+    """
+    Worded subtraction question where values are in word or number format.
+    Chrys.
+    """
     lower = 200 + 1000 * (difficulty - 1)
     upper = 1000 + 4000 * (difficulty - 1)
     x_1 = random.randint(lower, upper)
@@ -713,14 +745,19 @@ def as_13(difficulty):
 
 
 def as_14(difficulty):
-    """subtraction of numbers up to 4 digits, using columnar method"""
+    """
+    Subtraction of numbers up to 4 digits, using columnar method. Chrys.
+    """
     lower = 100 * difficulty + round(10 ** difficulty + 1)
     upper = 100 * difficulty + round(0.5 * (10 ** (difficulty + 1) - 1))
     b = random.randint(lower, upper)
     a = random.randint(round(0.5*lower), round(0.7*b))
-    question = r"\hspace{2cm}{\LARGE$\begin{array}{r}" + str(b) + \
-               r"\\\underline{-\ " + str(a) + r"}\end{array}$} \\ \\" \
-               + "\\vspace{1.2ex}"
+    question = r'''
+    \hspace{2cm}{\LARGE$\begin{array}{r}
+    %s \\ \underline{- \ %s}
+    \end{array}$} \\ \\
+    \vspace{1.2ex}
+    ''' % (b, a)
     answer = mq.dollar(b-a)
     return [question, answer]
 
@@ -728,19 +765,21 @@ def as_14(difficulty):
 
 
 def md_1(difficulty):
-    """Multiplication of 2 or 3 digit numbers with one digit number"""
+    """Multiplication of 2 or 3 digit numbers with one digit number. Chrys."""
     a = random.randint(20 + (difficulty-1) * (difficulty * 150 - 200),
                        100 + (difficulty - 1) * (difficulty * 50 + 300))
     b = random.randint(3, 9)
-    question = r"\hspace{2cm}{\LARGE$\begin{array}{r}" + str(a) + \
-               r"\\\underline{\times\ " + str(b) + r"}\end{array}$}" \
-               "\\vspace{3em}"
+    question = r'''
+    \hspace{2cm}{\LARGE$\begin{array}{r} 
+    %s \\ \underline{\times \ %s}
+    \end{array}$} \vspace{3em}
+    ''' % (a, b)
     answer = mq.dollar(a * b)
     return [question, answer]
 
 
 def md_2(difficulty):
-    """Fill in missing values in times table"""
+    """Fill in missing values in times table. Chrys."""
     x = random.randint(3, 12)
 
     sequence = []
@@ -760,7 +799,7 @@ def md_2(difficulty):
 
 
 def md_3(difficulty):
-    """find answer to x*y"""
+    """Multiplication of two numbers. Chrys."""
     x = random.randint(3, 12)
     y = random.randint(4*difficulty, 12*difficulty)
     question = mq.dollar(x) + " $\\times$ " + mq.dollar(y) + " $=$"
@@ -769,7 +808,9 @@ def md_3(difficulty):
 
 
 def md_4(difficulty):
-    """ Find the missing value, multiplication worded in groups of numbers"""
+    """
+    Find the missing value, multiplication worded in groups of numbers. Chrys.
+    """
     x = random.randint(2, 5+difficulty)
     y = random.randint(x, 6 * difficulty)
     values = [mq.dollar(x), mq.dollar(y), mq.dollar(x * y)]
@@ -783,7 +824,9 @@ def md_4(difficulty):
 
 
 def md_5(difficulty):
-    """Factor pair multiple choice, taken and adapted from year 5 problems"""
+    """
+    Factor pair multiple choice, Chrys.
+    """
     while True:
         n = random.randint(1, 25 * difficulty)
         if len(mq.factors(n)) > 4:
@@ -802,7 +845,9 @@ def md_5(difficulty):
 
 
 def md_6(difficulty):
-    """Multiplication of 1 digit and two digit number using area as model"""
+    """
+    Multiplication of 1 digit and two digit number using area as model. Chrys.
+    """
     x = random.randint(1 + difficulty, 7+difficulty)
     y = 10 * random.randint(difficulty, 9) + random.randint(1, 9)
 
@@ -840,7 +885,7 @@ def md_6(difficulty):
 
 
 def md_7(difficulty):
-    """Choose the answer that is/is not a multiple of a given number"""
+    """Choose the answer that is/is not a multiple of a given number. Chrys."""
     num = random.randint(2+difficulty, 9 + difficulty)
     multipliers = random.sample(range(2, 12), k=5)
 
@@ -863,7 +908,9 @@ def md_7(difficulty):
 
 
 def md_8(difficulty):
-    """Choose the two numbers that multiply to produce a given answer"""
+    """
+    Choose the two numbers that multiply to produce a given answer. Chrys.
+    """
     a = random.randint(difficulty + 2, 9 + difficulty)
     b = random.randint(3 * difficulty, 12 + 3 * (difficulty - 1))
     if b == a:
@@ -881,13 +928,14 @@ def md_8(difficulty):
     shuffle(choices)
     choices = ",\\ ".join([str(k) for k in choices])
 
-    question = "Choose the two numbers from the list that complete the" \
-               f" multiplication. \n\n \\begin{{center}} {choices}" \
-               "\\end{center} \n\n" \
-               " \\begin{center} \\makebox[0.04pt]{\\hrulefill}" \
-               " $\\times$ \\hspace{0.1em} \\makebox[0.04\\textwidth]" \
-               f"{{\\hrulefill}} = {str(num)}" \
-               "\\end{center}"
+    question = r'''
+    Choose the two numbers from the list that complete the 
+    multiplication.
+    \begin{center} %s  \\ 
+    \vspace{1em} \hspace{1em} \makebox[3em]{\hrulefill} \ 
+    $\times$ \ \makebox[3em]{\hrulefill} $=$ %s
+    \end{center}
+    ''' % (choices, num)
     answer = ",\\ ".join([str(a), str(b)])
     return [question, answer]
 
@@ -997,7 +1045,7 @@ def md_14(difficulty):
 
 
 def md_15(difficulty):
-    """complete table using multiplication or division rule"""
+    """Complete table using multiplication or division rule. Chrys"""
     operand = random.randint(2 + difficulty, 12)
     n = random.randint(0, 1)
     operator = ['Times by', 'Divide by'][n]
@@ -1012,30 +1060,32 @@ def md_15(difficulty):
         col_1 = sorted_results
         col_2 = sorted(nums)
 
-    table = "\\begin{center}\n\\begin{tabular}{||c  |  c||}\n " \
-            "\\hline\n Input & Output \\\\ [0.4ex]\n" \
-            f"\\hline\\hline \n  {col_1[0]} & {col_2[0]} \\\\ \n " \
-            f"\\hline \n  {col_1[1]} &   \\\\ \n \\hline \n " \
-            f"{col_1[2]} &  \\\\ \n \\hline \n  {col_1[3]} &   " \
-            f"\\\\ \n \\hline \n {col_1[4]} &   \\\\ " \
-            "[1ex]\n \\hline \n \\end{tabular}\n \\end{center}"
+    table = r'''
+    \begin{center}\begin{tabular}{||c  |  c||}
+    \hline Input & Output \\ [0.4ex] \hline
+    \hline %s & %s \\ \hline %s &  \\ 
+    \hline %s &  \\ \hline %s &  \\  
+    \hline %s &  \\ [1ex] \hline 
+    \end{tabular} \end{center}
+    ''' % (col_1[0], col_2[0], col_1[1], col_1[2], col_1[3], col_1[4])
 
     question = f"Use the rule to complete the table. \n\n " \
                f"Rule: {operator} {operand} \n\n {table}"
 
-    answer = "\n\\begin{tabular}{||c  |  c||}\n " \
-             "\\hline\n Input & Output \\\\ [0.4ex]\n \\hline\\hline \n  " \
-             f"{col_1[0]} & {col_2[0]} \\\\ \n \\hline \n  " \
-             f"{col_1[1]} & \\textbf{{{col_2[1]}}} \\\\ \n \\hline \n " \
-             f"{col_1[2]} & \\textbf{{{col_2[2]}}} \\\\ \n \\hline \n " \
-             f"{col_1[3]} & \\textbf{{{col_2[3]}}} \\\\ \n \\hline \n " \
-             f"{col_1[4]} & \\textbf{{{col_2[4]}}}  \\\\ " \
-             "[1ex]\n \\hline \n \\end{tabular}\n"
+    answer = r'''
+    \begin{tabular}{||c  |  c||}
+    \hline Input & Output \\ [0.4ex] \hline 
+    \hline %s & %s \\ 
+    \hline %s & \textbf{%s} \\ \hline %s & \textbf{%s} \\ 
+    \hline %s & \textbf{%s} \\ \hline %s & \textbf{%s}  \\ [1ex] \hline 
+    \end{tabular}
+    ''' % (col_1[0], col_2[0], col_1[1], col_2[1], col_1[2],
+           col_2[2], col_1[3], col_2[3], col_1[4], col_2[4])
     return [question, answer]
 
 
 def md_16(difficulty):
-    """Multiplication/Division patterns"""
+    """Multiplication/Division patterns. Chrys."""
     nums = random.sample(range(2 + difficulty, 9 + difficulty), k=2)
     result = nums[0] * nums[1]
 
@@ -1062,7 +1112,7 @@ def md_16(difficulty):
 
 
 def md_17(difficulty):
-    """Worded multiplication problem with 3 numbers"""
+    """Worded multiplication question with 3 numbers. Chrys."""
     num_1 = random.randint(2, 5)
     num_2 = random.randint(2 + difficulty, 5 + difficulty)
     num_3 = random.randint(5 + difficulty, 9 + difficulty)
@@ -1106,7 +1156,7 @@ def md_17(difficulty):
 
 
 def md_18(difficulty):
-    """find answer to x divided by y"""
+    """find answer to x divided by y. Chrys."""
     a = random.randint(3, 12)
     b = random.randint(2 * difficulty, 9 + difficulty)
     question = f"What is {a * b} $\\div$ {b}?"
@@ -1115,7 +1165,7 @@ def md_18(difficulty):
 
 
 def md_19(difficulty):
-    """long Division with remainder"""
+    """long Division with remainder. Chrys."""
     m = random.randint(2 * difficulty, 12)
     n = random.randint(200 * difficulty - 100, 450 * difficulty - 350)
     question = f"\\longdivision[stage=0]{{{n}}}{{{m}}}"
@@ -1127,7 +1177,7 @@ def md_19(difficulty):
 
 
 def md_20(difficulty):
-    """Multiplication using distributive law"""
+    """Multiplication using distributive law. Chrys."""
     a = random.randint(2 * difficulty, 12)
     b = random.randint(2 * difficulty, 9 + difficulty)
     c = random.randint(3 * difficulty, 9 + difficulty)
@@ -1143,7 +1193,7 @@ def md_20(difficulty):
 
 
 def md_21(difficulty):
-    """Choose the two numbers that divide to produce a given answer"""
+    """Choose the two numbers that divide to produce a given answer. Chrys."""
     a = random.randint(2 * difficulty, 4 + 2 ** difficulty)
     b = random.randint(3 + difficulty, 10 + 4 * (difficulty - 1))
     if a == b:
@@ -1159,19 +1209,19 @@ def md_21(difficulty):
     shuffle(choices)
     choices = ",\\ ".join([str(i) for i in choices])
 
-    question = "Choose the two numbers from the list that complete the" \
-               f" statement. \n\n \\begin{{center}} {choices}" \
-               "\\end{center} \n\n" \
-               " \\begin{center} \\makebox[0.04\\textwidth]{\\hrulefill}" \
-               " $\\div$ \\hspace{0.1em} \\makebox[0.04\\textwidth]" \
-               f"{{\\hrulefill}} = {str(b)}" \
-               "\\end{center}"
+    question = r'''
+    Choose the two numbers from the list that complete the statement. \
+    \begin{center} %s \end{center} 
+    \begin{center} 
+    \makebox[3em]{\hrulefill} \ $\div$ \ \makebox[3em]{\hrulefill} $=$ %s 
+    \end{center}
+    ''' % (choices, b)
     answer = ",\\ ".join([str(num), str(a)])
     return [question, answer]
 
 
 def md_22(difficulty):
-    """Find missing values in division table"""
+    """Find missing values in division table. Chrys"""
     col_2 = random.sample(range(2 + difficulty, 9 + difficulty), k=5)
     col_3 = random.choices(range(2 + difficulty, 10 + 2 * difficulty), k=5)
 
@@ -1179,37 +1229,47 @@ def md_22(difficulty):
     for i in range(5):
         values.append([col_2[i] * col_3[i], col_2[i], col_3[i]])
 
-    answer = "\\begin{tabular}{||c | c | c ||}\n  \\hline\n" \
-             "Total & \\shortstack{Number of \\\\ Groups} &" \
-             "\\shortstack{Number in \\\\ Each Group} \\\\ [0.4ex]\n \\hline" \
-             f"\\hline\n {values[0][0]} & {values[0][1]} & {values[0][2]} \\\\"
+    answer = r'''"
+    \begin{tabular}{||c | c | c ||} 
+    \hline Total & \shortstack{Number of \\ Groups} 
+    & \shortstack{Number in \\ Each Group} \\ 
+    [0.4ex] \hline \hline %s & %s & %s \\
+    ''' % (values[0][0], values[0][1], values[0][2])
+
     for k in range(1, 5):
-        answer += f"\n \\hline \n {values[k][0]} & {values[k][1]} " \
-                  f"& {values[k][2]} \\\\ "
-    answer += "[1ex]\n \\hline \n \\end{tabular}"
+        answer += r'\hline %s & %s & %s \\' % (values[k][0],
+                                               values[k][1],
+                                               values[k][2])
+    answer += r'[1ex] \hline \end{tabular}'
 
     for k in range(5):
         n = random.randint(0, 2)
         values[k][n] = ""
 
-    table = "\\begin{tabular}{||c | c | c ||}\n  \\hline\n" \
-            "Total & \\shortstack{Number of \\\\ Groups} &" \
-            "\\shortstack{Number in \\\\ Each Group} \\\\ [0.4ex]\n \\hline" \
-            f"\\hline \n {values[0][0]} & {values[0][1]} & {values[0][2]} \\\\"
-    for k in range(1, 5):
-        table += f"\n \\hline \n {values[k][0]} & {values[k][1]} " \
-                 f"& {values[k][2]} \\\\ "
-    table += "[1ex]\n \\hline \n \\end{tabular}"
+    table = r'''
+    \begin{tabular}{||c | c | c ||} 
+    \hline Total & \shortstack{Number of \\ Groups} 
+    & \shortstack{Number in \\ Each Group} \\ 
+    [0.4ex] \hline \hline %s & %s & %s \\
+    ''' % (values[0][0], values[0][1], values[0][2])
 
-    question = "Complete the table. \n\n \\textit{Hint:} " \
-               "\\textit{Total} = \\textit{Number of Groups} \\\\" \
-               " $\\times$ \\textit{Number in Each Group}" \
-               f" \n\n {table}"
+    for k in range(1, 5):
+        table += r' \hline %s & %s & %s \\' % (values[k][0],
+                                               values[k][1],
+                                               values[k][2])
+    table += r'[1ex] \hline \end{tabular}'
+
+    question = r'Complete the table. \\ \textit{Hint:} \textit{Total} = ' \
+               r'\textit{Number of Groups} \\ ' \
+               r'$\times$ \textit{Number in Each Group} \\ \\' + table
     return [question, answer]
 
 
 def md_23(difficulty):
-    """worded division problem, dividing 3 digit number, includes remainder"""
+    """
+    Worded division question, dividing 3 digit number, includes remainder.
+    Chrys.
+    """
     n = random.randint(100 * difficulty, 250 * difficulty)
     m = random.randint(2 * (difficulty + 1), 11 + difficulty)
 
@@ -1239,7 +1299,9 @@ def md_23(difficulty):
 
 
 def md_24(difficulty):
-    """worded division problem, which divides 3 digit number into an integer"""
+    """
+    Worded division question that divides 3 digit number into an integer. Chrys
+    """
     a = random.randint(2 * (difficulty + 1), 11 + difficulty)
     b = random.randint(5 + 5 * difficulty, 15 + 5 * difficulty)
     c = a * b
@@ -1266,7 +1328,9 @@ def md_24(difficulty):
 
 
 def md_25(difficulty):
-    """True or false question whether an integer is divisible by another."""
+    """
+    True or false question whether an integer is divisible by another. Chrys
+    """
     b = random.randint(3 + difficulty, 12)
     n = random.randint(0, 1)
     a = [
@@ -1285,18 +1349,18 @@ def md_25(difficulty):
 
 
 def md_26(difficulty):
-    """division using model, with area given"""
+    """division using model, with area given. Chrys."""
     x = random.randint(3, 8 + (difficulty % 3))
     tens = random.randint(1, 3 * difficulty) * 10
     ones = random.randint(1, 9)
 
-    box = "\\fboxsep0pt\\fbox{\\rule{1.7em}{0pt}\\rule{0pt}{1em}}"
+    box = r'\fboxsep0pt\fbox{\rule{1.7em}{0pt}\rule{0pt}{1em}}'
     if difficulty == 3:
         rectangle = [
             'r',
-            f"& {box} \\hspace{{{1}em}} ",
-            f"& \\colorbox{{yellow}}"
-            f"{{\\makebox(40,34){{\\textcolor{{black}}{{{ones * x}}} }}}}"
+            r'& %s \hspace{1em}' % box,
+            r'& \colorbox{yellow}'
+            r'{\makebox(40,34){\textcolor{black}{%s}}}' % (ones * x),
         ]
         size = [0.5, 0]
         values = [100 * x, tens * x, 100 + tens + ones]
@@ -1305,16 +1369,15 @@ def md_26(difficulty):
         size = [1, 0.5]
         values = [tens * x, ones * x, tens + ones]
 
-    model = f"\\definecolor{{ceruleanblue}}{{rgb}}{{0.16, 0.32, 0.75}}" \
-            f"\\definecolor{{amaranth}}{{rgb}}{{0.9, 0.17, 0.31}}" \
-            f"\\definecolor{{amber}}{{rgb}}{{1.0, 0.75, 0.0}}" \
-            f"{{\\arraycolsep=2pt" \
-            f"\\LARGE$\\begin{{array}}{{rrr{rectangle[0]}}}\n\n " \
-            f"{rectangle[1]} & {box} \\hspace{{{size[0]}em}} " \
-            f"& {box} \\hspace{{{size[1]}em}} & {x} " \
-            f"&\\colorbox{{red}}{{\\makebox(59,34){{\\textcolor{{black}}{{{values[0]}}} }}}}" \
-            f"&\\colorbox{{blue}}{{\\makebox(55,34){{\\textcolor{{black}}{{{values[1]}}} }}}}" \
-            f"{rectangle[2]} \\end{{array}}$ }}\\ "
+    model = r'''
+    {\arraycolsep=2pt\LARGE$\begin{array}{rrr%s}
+    %s & %s \hspace{%sem} & %s \hspace{%sem} & %s 
+    & \colorbox{red}{\makebox(59,34){\textcolor{black}{%s}}}
+    & \colorbox{blue}{\makebox(55,34){\textcolor{black}{%s}}}
+    %s 
+    \end{array}$} \ "
+    ''' % (rectangle[0], rectangle[1], box, size[0], box,
+           size[1], x, values[0], values[1], rectangle[2])
 
     question = f"Use the model to solve {x * values[2]} $\\div$ {x}." \
                f"\n\n \\textit{{Hint: Firstly, use the areas to find the " \
@@ -1326,11 +1389,10 @@ def md_26(difficulty):
 # FRACTION QUESTIONS____________
 
 def fr_1(difficulty):
-    """Fraction addition and subtraction question."""
+    """Fraction addition and subtraction question. Chrys."""
     lower = 2 ** (1 + difficulty)
     upper = 2 ** (3 + difficulty)
     denominator = random.randint(lower, upper)
-
     sums = random.sample(range(1, denominator), 3)
 
     num_1 = sums[0]
@@ -1338,7 +1400,6 @@ def fr_1(difficulty):
     num_3 = sums[2] - sums[1]
 
     op_1 = op_2 = '$+$'
-
     if num_2 < 0:
         op_1 = '$-$'
         num_2 = -num_2
@@ -1347,19 +1408,19 @@ def fr_1(difficulty):
         num_3 = -num_3
 
     fracs = [
-        f'$\\frac{{{num_1}}}{{{denominator}}}$',
-        f'$\\frac{{{num_2}}}{{{denominator}}}$',
-        f'$\\frac{{{num_3}}}{{{denominator}}}$',
+        r'$\frac{%s}{%s}$' % (num_1, denominator),
+        r'$\frac{%s}{%s}$' % (num_2, denominator),
+        r'$\frac{%s}{%s}$' % (num_3, denominator),
     ]
-
-    question = f"\\begin{{LARGE}} {fracs[0]}{op_1}{fracs[1]}{op_2}{fracs[2]}" \
-               f" $=$\\end{{LARGE}}"
-    answer = f'$\\frac{{{sums[2]}}}{{{denominator}}}$'
+    question = r'''
+    \begin{LARGE} %s%s%s%s%s $=$ \end{LARGE}
+    ''' % (fracs[0], op_1, fracs[1], op_2, fracs[2])
+    answer = r'$\frac{%d}{%d}$' % (sums[2], denominator)
     return [question, answer]
 
 
 def fr_2(difficulty):
-    """Write fraction as decimal."""
+    """Write fraction as decimal. Chrys."""
     n = random.randint(0, 2)
     a = [
         random.randint(1, 3 + 16 * difficulty * n),
@@ -1378,7 +1439,7 @@ def fr_2(difficulty):
 
 
 def fr_3(difficulty):
-    """Find missing number when converting decimal to fraction."""
+    """Find missing number when converting decimal to fraction. Chrys."""
     n = random.randint(0, 2)
     a = [
         random.randint(1, 3),
@@ -1404,7 +1465,7 @@ def fr_3(difficulty):
 
 
 def fr_4(difficulty):
-    """Round number with 1 decimal place to nearest integer."""
+    """Round number with 1 decimal place to nearest integer. Chrys."""
     integer = random.randint(1, 10 ** (difficulty + 1))
     int_choices = [
         0,
@@ -1421,7 +1482,7 @@ def fr_4(difficulty):
 
 
 def fr_5(difficulty):
-    """Which decimal is smallest/largest."""
+    """Which decimal is smallest/largest. Chrys."""
     size = random.choice(["smallest", "largest"])
     upper = [8, 819, 819][difficulty - 1]
 
@@ -1438,7 +1499,7 @@ def fr_5(difficulty):
 
 
 def fr_6(difficulty):
-    """Arrange fractions from smallest to largest."""
+    """Arrange fractions from smallest to largest. Chrys."""
     upper = random.choices([8, 12, 16], weights=(3, difficulty+1, difficulty))
     upper = int(upper[0])
     denominator = [upper, upper, upper // 2, upper // 4]
@@ -1472,7 +1533,7 @@ def fr_6(difficulty):
 
 
 def fr_7(difficulty):
-    """What decimal is the nth smallest/ largest"""
+    """What decimal is the nth smallest/ largest. Chrys."""
     upper = [8, 819, 819][difficulty - 1]
     m = random.randint(1, upper)
     numbers = random.sample(range(1, 20 * (2 ** (3 - difficulty))), 5)
@@ -1483,7 +1544,7 @@ def fr_7(difficulty):
     order = ["smallest to largest", "largest to smallest"][k]
     n = random.randint(1, 5)
     question = f"If you order the following decimals from {order}," \
-               f" which comes {mq.num2words(n, to='ordinal')}?"
+               f" which comes {num2words(n, to='ordinal')}?"
 
     choices = []
     my_list = []
@@ -1499,7 +1560,9 @@ def fr_7(difficulty):
 
 
 def fr_8(difficulty):
-    """Identify tenths, hundredths and thousandths digits from decimal."""
+    """
+    Identify tenths, hundredths and thousandths digits from decimal. Chrys.
+    """
     places = ["thousandths", "hundredths", "tenths"]
     integer = random.choice([0, random.randint(0, 99)])
     power = 10 ** difficulty
@@ -1516,7 +1579,7 @@ def fr_8(difficulty):
 
 
 def fr_9(difficulty):
-    """find answer to a fraction of a given integer"""
+    """Find answer to a fraction of a given integer. Chrys."""
     n = random.randint(2, 2 + 2 ** difficulty)
     m = random.choices(
         [1, random.randint(1, n - 1)],
@@ -1529,7 +1592,7 @@ def fr_9(difficulty):
 
 
 def fr_10(difficulty):
-    """compare sums and difference of fractions with same denominator"""
+    """Compare sums and difference of fractions with same denominator. Chrys"""
     n = random.randint(4, 2 + 2 ** difficulty)
     a = random.randint(1, n - 1)
     b = random.randint(1, n - a)
@@ -1561,7 +1624,7 @@ def fr_10(difficulty):
 
 
 def fr_11(difficulty):
-    """Choose which fraction is equivalent to the one given."""
+    """Choose which fraction is equivalent to the one given. Chrys."""
     n = random.randint(2, 4 + 2 ** difficulty)
     m = random.randint(1, n - 1)
 
@@ -1593,7 +1656,7 @@ def fr_11(difficulty):
 
 
 def fr_12(difficulty):
-    """Simplify fraction."""
+    """Simplify fraction. Chrys."""
     n = random.randint(2, 4 + 2 ** difficulty)
     m = random.randint(1, n - 1)
     if 1 < mq.gcd(n, m) < n:
@@ -1611,11 +1674,11 @@ def fr_12(difficulty):
 
 
 def fr_13(difficulty):
-    """Identify what fraction of a rectangle is shaded."""
+    """Identify what fraction of a rectangle is shaded. Chrys."""
     n = random.randint(3, 8 + 2 ** (difficulty - 1))
     m = random.randint(1, n - 1)
-    shaded_boxes = ""
-    white_boxes = ""
+    shaded_boxes = r''
+    white_boxes = r''
     r = ""
 
     if n <= 6:
@@ -1627,19 +1690,17 @@ def fr_13(difficulty):
 
     colour = random.choice(["red", "cyan", "yellow"])
     for i in range(m):
-        shaded_boxes += f"& \\tikz \\draw [fill={colour}] (0,0) " \
-                        f"rectangle ({size[0]}em, {size[1]}em);"
+        shaded_boxes += r'& \tikz \draw [fill=%s] (0,0) rectangle ' \
+                        r'(%sem, %sem);' % (colour, size[0], size[1])
     for j in range(n-m):
-        white_boxes += f"& \\tikz \\draw [fill=white] (0,0) " \
-                       f"rectangle ({size[0]}em, {size[1]}em);"
+        white_boxes += r'& \tikz \draw [fill=white] (0,0) rectangle ' \
+                       r'(%sem, %sem);' % (size[0], size[1])
     for k in range(n):
         r += "r"
 
-    box = f"{{\\arraycolsep=0pt" \
-          f"\\LARGE$\\begin{{array}}{{r{r}}}\n\n " \
-          f"{shaded_boxes} {white_boxes}" \
-          f" \\end{{array}}$ }}  \\ "
-
+    box = r'''
+    {\arraycolsep=0pt \LARGE$ \begin{array}{r%s} %s %s \end{array}$} \
+    ''' % (r, shaded_boxes, white_boxes)
     question = f"What fraction of the shape is shaded? "
     if difficulty == 1:
         answer = f"${mq.latex_frac(m, n)}$"
@@ -1651,7 +1712,9 @@ def fr_13(difficulty):
 
 
 def fr_14(difficulty):
-    """Choose which of the shaded rectangles represent the given fraction.."""
+    """
+    Choose which of the shaded rectangles represent the given fraction. Chrys.
+    """
     quantity = 1 + difficulty
     m = []
     n = []
@@ -1667,27 +1730,24 @@ def fr_14(difficulty):
                 my_list.append(a / b)
 
     choices = []
-    colour = ["ceruleanblue", "amaranth", "amber", "orange"]
+    colour = ["cyan", "red", "yellow", "orange"]
     shuffle(colour)
     for i in range(quantity):
         shaded_boxes = ""
         white_boxes = ""
         r = ""
         for j in range(m[i]):
-            shaded_boxes += f"& \\tikz \\draw [fill={colour[i]}] (0,0) " \
-                            f"rectangle (0.9em, 2em);"
+            shaded_boxes += r'& \tikz \draw [fill=%s] (0,0)' \
+                            r' rectangle (0.9em, 2em);' % (colour[i])
         for j in range(n[i] - m[i]):
-            white_boxes += f"& \\tikz \\draw [fill=white] (0,0) " \
-                           f"rectangle (0.9em, 2em);"
+            white_boxes += r'& \tikz \draw [fill=white] (0,0) ' \
+                           r'rectangle (0.9em, 2em);'
         for k in range(n[i]):
             r += "r"
-        box = f"\\definecolor{{ceruleanblue}}{{rgb}}{{0.16, 0.32, 0.75}}" \
-              f"\\definecolor{{amaranth}}{{rgb}}{{0.9, 0.17, 0.31}}" \
-              f"\\definecolor{{amber}}{{rgb}}{{1.0, 0.75, 0.0}}" \
-              f" {{\\arraycolsep=0" \
-              f"\\leftmargin\\LARGE$\\begin{{array}}{{r{r}}}\n\n " \
-              f"{shaded_boxes} {white_boxes}" \
-              f" \\end{{array}}$ }}  \\ \\newline"
+        box = r'''
+        {\arraycolsep=0\leftmargin\LARGE$ \begin{array}{r%s} 
+        %s %s \end{array}$}  \ \newline
+        ''' % (r, shaded_boxes, white_boxes)
         choices.append(box)
 
     question = f"What model has had ${mq.latex_frac_simplify(m[0], n[0])}$ " \
@@ -1697,7 +1757,7 @@ def fr_14(difficulty):
 
 
 def fr_15(difficulty):
-    """Find the proportion of a pattern that is a specified shape."""
+    """Find the proportion of a pattern that is a specified shape. Chrys."""
     b = random.randint(3 + difficulty, 9 + difficulty)
     a_1 = random.randint(1, b - 2)
     a_2 = random.randint(1, b - a_1 - 1)
@@ -1708,16 +1768,18 @@ def fr_15(difficulty):
 
     order = []
     for i in range(a_1):
-        circle = "\\tikz \\node[circle, text opacity=0, minimum size=1.5em," \
-                 "draw=blue,fill=blue] (c) {};"
+        circle = r'\tikz \node[circle, text opacity=0, minimum size=1.5em,' \
+                 r' draw=blue,fill=blue] (c) {};'
         order.append(circle)
     for j in range(a_2):
-        square = "\\tikz \\node[regular polygon, regular polygon sides=4, text opacity=0, " \
-                 "minimum size=2em, draw=red,fill=red] (S) {}; "
+        square = r'\tikz \node[regular polygon, regular polygon sides=4, ' \
+                 r' text opacity=0, minimum size=2em, ' \
+                 r'draw=red,fill=red] (S) {};'
         order.append(square)
     for n in range(a_3):
-        triangle = "\\tikz \\node[isosceles triangle, minimum size=1.5em, text opacity=0," \
-                   "rotate=90,draw=yellow,fill=yellow] (T) {}; "
+        triangle = r'\tikz \node[isosceles triangle, minimum size=1.5em, ' \
+                   r'text opacity=0, rotate=90,' \
+                   r'draw=yellow,fill=yellow] (T) {};'
         order.append(triangle)
     shuffle(order)
 
@@ -1735,11 +1797,11 @@ def fr_15(difficulty):
     for m in range(columns):
         r += "r"
 
-
-
-    model = f"\\begin{{center}}{{\\arraycolsep=2pt" \
-            f"\\LARGE$\\begin{{array}}{{{r}}}{shapes}" \
-            f"\\end{{array}} $ }}\\end{{center}}"
+    model = r'''
+    \begin{center}
+    {\arraycolsep=2pt\LARGE$\begin{array}{%s} %s \end{array}$} 
+    \end{center}"
+    ''' % (r, shapes)
     question = f"What fraction of the shapes are {shape_names}? " \
 
     if mq.gcd([a_1, a_2, a_3][k], b) != 1 and difficulty > 1:
@@ -1752,7 +1814,7 @@ def fr_15(difficulty):
 
 
 def fr_16(difficulty):
-    """Convert worded version of fraction into numbers."""
+    """Convert worded version of fraction into numbers. Chrys."""
     b = random.randint(1 + difficulty, 4 + 2 ** difficulty)
     a = random.randint(1, b - 1)
 
@@ -1771,6 +1833,7 @@ def fr_16(difficulty):
 
 
 def fr_17(difficulty):
+    """Convert decimal to fraction and vice versa. Chrys."""
     num_type = random.choice(["decimal", "fraction"])
     b = 10 ** difficulty
     a = random.choice([x for x in range(1, b) if mq.gcd(x, 10) == 1])
@@ -1787,7 +1850,9 @@ def fr_17(difficulty):
 
 
 def fr_18(difficulty):
-    """fill in each square to break down decimal number into powers of tens."""
+    """
+    Fill in each square to break down decimal number into powers of tens. Chrys
+    """
     upper = 10 ** difficulty
     decimal = random.randint(upper / 10 + 1, upper - 2)
     if decimal % 10 == 0:
@@ -1823,7 +1888,7 @@ def fr_18(difficulty):
 
 
 def fr_19(difficulty):
-    """Addition/Subtraction of two fractions with same denominator."""
+    """Addition/Subtraction of two fractions with same denominator. Chrys."""
     b = random.randint(3, 9 + difficulty)
     a_1 = random.randint(1, b - 2)
     a_2 = random.randint(1, b - a_1 - 1)
@@ -1844,7 +1909,7 @@ def fr_19(difficulty):
 
 # noinspection PyTypeChecker
 def fr_20(difficulty):
-    """Find missing value in subtraction/addition of two fractions."""
+    """Find missing value in subtraction/addition of two fractions. Chrys."""
     b = random.randint(3, 9 + difficulty)
     a_1 = random.randint(1, b - 2)
     a_2 = random.randint(1, b - a_1 - 1)
@@ -1863,8 +1928,8 @@ def fr_20(difficulty):
     ]
     n = random.randint(0, 1)
     answer = f"${mq.latex_frac(values[n][0], b)}$"
-    values[n][0] = "\\fboxsep0pt\\fbox{\\rule{0.8em}{0pt}\\rule{0pt}{0.8em}}"
-    values[n][1] = "\\fboxsep0pt\\fbox{\\rule{0.8em}{0pt}\\rule{0pt}{0.8em}}"
+    values[n][0] = r'\fboxsep0pt\fbox{\rule{0.8em}{0pt}\rule{0pt}{0.8em}}'
+    values[n][1] = r'\fboxsep0pt\fbox{\rule{0.8em}{0pt}\rule{0pt}{0.8em}}'
     question = f" Fill in the missing fraction: \n\n \\Large " \
                f"${mq.latex_frac(values[0][0], values[0][1])}$ {op} " \
                f"${mq.latex_frac(values[1][0], values[1][1])}$ " \
@@ -1873,7 +1938,7 @@ def fr_20(difficulty):
 
 
 def fr_21(difficulty):
-    """Worded subtraction problem. Subtracting 2 fractions from 1."""
+    """Worded subtraction question. Subtracting 2 fractions from 1. Chrys."""
     b = random.randint(2 + difficulty, 9 + difficulty)
     a_1 = random.randint(1, b - 2)
     a_2 = random.randint(1, b - a_1 - 1)
@@ -1913,7 +1978,7 @@ def fr_21(difficulty):
 
 
 def fr_22(difficulty):
-    """Worded subtraction problem. Difference of two fractions."""
+    """Worded subtraction question. Difference of two fractions. Chrys."""
     b = random.randint(2 + difficulty, 9 + difficulty)
     a_1 = random.randint(ceil(b / 2), b - 1)
     a_2 = random.randint(1, a_1 - 1)
@@ -1960,7 +2025,7 @@ def fr_22(difficulty):
 
 
 def fr_23(difficulty):
-    """Identify place of a digit in a decimal number."""
+    """Identify place of a digit in a decimal number. Chrys."""
     int_places = ["Ones", "Tens", "Hundreds"]
     dec_places = ["Tenths", "Hundredths", "Thousandths"]
 
@@ -1987,7 +2052,7 @@ def fr_23(difficulty):
 
 
 def fr_24(difficulty):
-    """Identify fraction from number line."""
+    """Identify fraction from number line. Chrys."""
     b = random.randint(1 + difficulty, 3 + 2 ** difficulty)
     a = random.randint(1, b - 1)
     length = 7
@@ -2003,7 +2068,7 @@ def fr_24(difficulty):
 
 
 def fr_25(difficulty):
-    """Identifying fraction lengths on number line. Multiple choice."""
+    """Identifying fraction lengths on number line. Multiple choice. Chrys."""
     b = random.sample(range(3 + difficulty, 8 + 2 ** (difficulty-1)), k=2)
     a = random.sample(range(1, b[0] - 1), k=2)
     length = 6
@@ -2012,19 +2077,19 @@ def fr_25(difficulty):
     choices = []
     for i in range(2):
         start = random.randint(0, b[0] - a[i])
-        line = f"\\draw[line width = 2pt, color=red] " \
-               f"(({start} * {length}/{b[0]},0) -- " \
-               f"(({start + a[i]} * {length}/{b[0]},0);"
+        line = r'''
+        \draw[line width = 2pt, color=red](%s,0) -- (%s,0);
+        ''' % (start * (length / b[0]), (start + a[i]) * (length / b[0]))
         choices.append(
-            f"{mq.num_line(b[0], line, length)} \\vspace{{2em}}"
-        )
+            f"{mq.num_line(b[0], line, length)} \\vspace{{2em}}")
+
     while len(choices) < 3:
         c = random.randint(1, b[1] - 1)
         if c/b[1] not in values:
             start = random.randint(0, b[1] - c)
-            line = f"\\draw[line width = 2pt, color=red] " \
-                   f"(({start} * {length}/{b[1]},0) -- " \
-                   f"(({start + c} * {length}/{b[1]},0);"
+            line = r''' 
+            \draw[line width = 2pt, color=red] (%s,0) -- (%s,0);
+            ''' % (start * (length / b[1]) , (start + c) * (length / b[1]))
             choices.append(f"{mq.num_line(b[1], line, length)} "
                            f"\\vspace{{2em}}")
 
@@ -2037,7 +2102,9 @@ def fr_25(difficulty):
 
 
 def me_1(difficulty):
-    """Money Problem question, subtracting a value from a starting amount"""
+    """
+    Money question, subtracting a value from a starting amount. Chrys.
+    """
     y0 = random.randint(2, round(0.5 * difficulty) + 5)
     if difficulty == 2:
         d_p = 1
@@ -2055,7 +2122,7 @@ def me_1(difficulty):
 
 
 def me_2(difficulty):
-    """ Convert 24hr into 12hr clock and vice versa"""
+    """ Convert 24hr into 12hr clock and vice versa. Chrys."""
     h = random.choices([random.randint(0, 12), random.randint(12, 23)],
                        weights=(1.5, difficulty), k=1)[0]
     m = random.randint(0, 59)
@@ -2070,7 +2137,7 @@ def me_2(difficulty):
 
 
 def me_3(difficulty):
-    """Question: How many minutes is between two 24hr times t1 and t2?"""
+    """How many minutes is between two 24hr times t1 and t2? Chrys."""
     if difficulty == 1:
         h1, m1 = random.randint(1, 11), 5*random.randint(0, 4)
         h2, m2 = h1, m1+15+5*random.randint(0, 4)
@@ -2088,7 +2155,7 @@ def me_3(difficulty):
     d1 = timedelta(hours=h1, minutes=m1)
     d2 = timedelta(hours=h2, minutes=m2)
 
-    question = f"How many minutes after " \
+    question = "How many minutes after " \
                + time(h1, m1).strftime("%H:%M") \
                + " do we have to wait until it is " \
                + time(h2, m2).strftime("%H:%M") + "?"
@@ -2097,7 +2164,9 @@ def me_3(difficulty):
 
 
 def me_4(difficulty):
-    """find how long someone was doing an activity, answer in hrs & mins"""
+    """
+    Find how long someone was doing an activity, answer in hrs & mins. Chrys.
+    """
     activity = random.choice(['studying', 'reading', 'walking', 'painting',
                               'drawing', 'gardening'])
 
@@ -2139,19 +2208,19 @@ def me_4(difficulty):
 
     if time_elapsed[0] == 0:
         answer = f"{time_elapsed[1]} minutes."
-        question += "\\begin{center} " \
-                    "\\makebox[0.04\\textwidth]{\\hrulefill} minutes" \
-                    "\\end{center}"
+        question += r'\begin{center} \makebox[0.04\textwidth]{\hrulefill}' \
+                    r' minutes \end{center}'
     else:
         answer = f"{time_elapsed[0]} hours and {time_elapsed[1]} minutes."
-        question += "\\begin{center} \\makebox[0.04\\textwidth]{\\hrulefill}" \
-                    " hours and \\hspace{0.1em} \\makebox[0.04\\textwidth]" \
-                    "{\\hrulefill} minutes \\end{center}"
+        question += r'\begin{center} \makebox[0.04\textwidth]{\hrulefill} ' \
+                    r' hours and \hspace{0.1em} ' \
+                    r'\makebox[0.04\textwidth]{\hrulefill} minutes ' \
+                    r'\end{center}'
     return [question, answer]
 
 
 def me_5(difficulty):
-    """Converting units of clock measurements, e.g. 1 week in days"""
+    """Converting units of clock measurements, e.g. 1 week in days. Chrys."""
     units = ['months', 'weeks', 'days', 'hours', 'minutes', 'seconds']
     unit_out = random.choice(units)
 
@@ -2179,14 +2248,16 @@ def me_5(difficulty):
     else:
         prefix = 'a'
 
-    result = mq.time_unit_converter(unit_in, unit_out, 1)
+    result = mq.time_unit_converter(1, unit_in, unit_out)
     question = f"How many {unit_out} are there in {prefix} {unit_in}?"
     answer = str(result[0]) + result[1]
     return [question, answer]
 
 
 def me_6(difficulty):
-    """Select the correct time in words from a 24hr clock, multiple choice"""
+    """
+    Select the correct time in words from a 24hr clock, multiple choice. Chrys.
+    """
     sample = random.sample(range(0, 11), 3)
     minutes = [5 * i for i in sample]
     hours = random.choices([
@@ -2213,16 +2284,18 @@ def me_6(difficulty):
         time_2 = [(time_in[0] + difference), (time_in[1] + 30) % 60]
     else:
         time_2 = [hours[1], minutes[2]]
-    choice2 = mq.time_to_words(time_2[0], time_2[1])
-    choice3 = mq.time_to_words(time_in[1], time_in[0])
+    choice2 = mq.time_to_words(time_2[0] % 12, time_2[1])
+    choice3 = mq.time_to_words(time_in[1] % 12, time_in[0])
 
-    answer = mq.time_to_words(time_in[0], time_in[1])
+    answer = mq.time_to_words(time_in[0] % 12, time_in[1])
     choices.extend([choice1, choice2, choice3, answer])
     return mq.multiple_choice(question, choices, answer)
 
 
 def me_7(difficulty):
-    """"Multiple choice, converting time in words to a 12hr or 24hr clock"""
+    """"
+    Multiple choice, converting time in words to a 12hr or 24hr clock. Chrys.
+    """
     minutes = random.sample(range(0, 59), 5)
     hour = random.choices([random.randint(1, 11), random.randint(12, 23)],
                           weights=(1, difficulty), k=1
@@ -2238,7 +2311,7 @@ def me_7(difficulty):
     else:
         morn_eve = 'at night'
 
-    question = f'What is {mq.time_to_words(hour, minutes[0])} ' \
+    question = f'What is {mq.time_to_words(hour % 12, minutes[0])} ' \
                f'{morn_eve} in {clock_format} format.'
     choices = []
     time_out = time(hour, minutes[0])
@@ -2271,7 +2344,9 @@ def me_7(difficulty):
 
 
 def me_8(difficulty):
-    """Simple elapsed time question with mix of time in words and digits """
+    """
+    Simple elapsed time question with mix of time in words and digits. Chrys.
+    """
     h1 = random.randint(0, 22)
     if difficulty == 3:
         m1 = 5 * random.randint(0, 9)
@@ -2288,12 +2363,12 @@ def me_8(difficulty):
     hour_out = floor(delta / (60 * 60) % 24)
     min_out = floor((delta % (60 * 60)) / 60)
     answer = random.choice([time(hour_out, min_out).strftime("%H:%M"),
-                            mq.time_to_words(hour_out, min_out)
+                            mq.time_to_words(hour_out % 12, min_out)
                             ])
 
     words_or_number = random.choice([
         [time1, num2words(minutes_add)],
-        [mq.time_to_words(h1, m1), minutes_add],
+        [mq.time_to_words(h1 % 12, m1), minutes_add],
         [time1, minutes_add]
     ])
     choices = []
@@ -2302,13 +2377,13 @@ def me_8(difficulty):
     for i in range(3):
         m_2 = random.choice([mins_sample_1[i], mins_sample_2[i]])
         choice2 = random.choice([time(hour_out, m_2 % 60).strftime("%H:%M"),
-                                 mq.time_to_words(hour_out, m_2 % 60)
+                                 mq.time_to_words(hour_out % 12, m_2 % 60)
                                  ])
         choices.append(choice2)
     ch1 = random.choice([(hour_out + 1) % 24, (hour_out - 1) % 24])
     cm1 = random.randint(0, 59)
     choice1 = random.choice([time(ch1, cm1).strftime("%H:%M"),
-                             mq.time_to_words(ch1, cm1)
+                             mq.time_to_words(ch1 % 12, cm1)
                              ])
     choices = choices + [choice1, answer]
     question = f"The time is {words_or_number[0]}, " \
@@ -2317,7 +2392,7 @@ def me_8(difficulty):
 
 
 def me_9(difficulty):
-    """elapsed time problem, mixture of 12hr, 24hr and worded format."""
+    """elapsed time question, mixture of 12hr, 24hr and worded format. Chrys"""
     n = random.randint(0, 1)
     gender = ['Female', 'Male'][n]
     name = random.choice([names.get_first_name(gender=gender[n])])
@@ -2348,13 +2423,16 @@ def me_9(difficulty):
 
 
 def me_10(difficulty):
-    """AM/PM problem where student picks correct time from multiple choice. """
+    """
+    AM/PM question where student picks correct time from multiple choice. Chrys
+    """
     if difficulty == 3:
         time_in = [random.randint(0, 23), 5 * random.randint(0, 11)]
     else:
-        time_in = [random.randint(0, 23),
-                   (20 - 5 * difficulty) * random.randint(0, 1 + 2*difficulty)
-                   ]
+        time_in = [
+            random.randint(0, 23),
+            (20 - 5 * difficulty) * random.randint(0, 1 + 2*difficulty)
+        ]
 
     time_24hr = datetime(year=2021, month=6, day=20,
                          hour=time_in[0], minute=time_in[1])
@@ -2370,10 +2448,11 @@ def me_10(difficulty):
     time_format = time_24hr.strftime("%H:%M")
     n = random.choices([0, 1, 2], weights=(1, 4, 2), k=1)
     n = n[0]
-    num_or_words = [[mq.time_to_words(time_in[0], time_in[1]), morn_eve[0]],
-                    [time_format, ''],
-                    [mq.time_to_words(time_in[0], time_in[1]), morn_eve[0]]
-                    ][n]
+    num_or_words = [
+        [mq.time_to_words(time_in[0] % 12, time_in[1]), morn_eve[0]],
+        [time_format, ''],
+        [mq.time_to_words(time_in[0] % 12, time_in[1]), morn_eve[0]]
+    ][n]
     question = f"John looks at his clock, " \
                f"it is {num_or_words[0]} {num_or_words[1]}. "
     question += ['What is the time in 12 hour format?',
@@ -2390,23 +2469,24 @@ def me_10(difficulty):
 
 
 def me_11(difficulty):
-    """ Converting analogue clock to digital times or worded time"""
+    """ Converting analogue clock to digital times or worded time. Chrys."""
     hour = random.randint(0, 11)
     minute = ((20-5*difficulty)*random.randint(0, 11)) % 60
-    choice = random.choice([['In 12 hour format',
-                             time(hour, minute).strftime("%H:%M")
-                             ],
-                            ['Using words', mq.time_to_words(hour, minute)]
-                            ])
+    choice = random.choice([
+        ['In 12 hour format', time(hour, minute).strftime("%H:%M")],
+        ['Using words', mq.time_to_words(hour % 12, minute)]
+    ])
     question = f"{choice[0]}, write down the time shown on the clock.\n\n " \
                f"\\begin{{center}}\n {mq.analogue_clock(hour, minute)}" \
-               f"\n \\end{{center}}"
+               f"\\end{{center}}"
     answer = choice[1]
     return [question, answer]
 
 
 def me_12(difficulty):
-    """Multiple choice, converting analogue to digital clock and vice versa"""
+    """
+    Multiple choice, converting analogue to digital clock and vice versa. Chrys
+    """
     hour = random.randint(0, 12)
     sample = random.sample(range(0, 11), 6)
     minute = [(x * (20 - 5 * difficulty)) % 60 for x in sample]
@@ -2419,7 +2499,7 @@ def me_12(difficulty):
                 minute[j] = (minute[k] + 13) % 60
 
     time_in = random.choice([
-        mq.time_to_words(hour, minute[0]),
+        mq.time_to_words(hour % 12, minute[0]),
         time(hour, minute[0]).strftime("%I:%M")
     ])
 
@@ -2460,12 +2540,12 @@ def me_12(difficulty):
 
 
 def me_13(difficulty):
-    """Draw on clock to get time"""
+    """Draw on clock to get time. Chrys."""
     hour = random.randint(0, 11)
     minute = ((20-5*difficulty) * random.randint(0, 11)) % 60
     time_in = random.choice([
         time(hour, minute).strftime("%H:%M"),
-        mq.time_to_words(hour, minute)
+        mq.time_to_words(hour % 12, minute)
     ])
     blank_clock = r'''
     \begin{center} 
@@ -2485,7 +2565,7 @@ def me_13(difficulty):
 
 
 def me_14(difficulty):
-    """elapsed time question using analogue clock"""
+    """Elapsed time question using analogue clock. Chrys. """
     hour_in = random.randint(0, 11)
     minute_in = ((20-5*difficulty) * random.randint(0, 11)) % 60
 
@@ -2507,21 +2587,22 @@ def me_14(difficulty):
         [
             "using words",
             mq.time_to_words(
-                hour_in+floor((minute_in+time_elapsed)/60),
-                (minute_in+time_elapsed) % 60)
+                int(hour_in + floor((minute_in + time_elapsed)/60)) % 12,
+                int((minute_in + time_elapsed) % 60))
         ]
     ])
     question = f"Using the clock, find what time it will be in " \
                f"{time_elapsed_format} minutes? Write this down " \
                f"{answer_format[0]}.\n\n " \
-               f"\\begin{{center}}\n {mq.analogue_clock(hour_in, minute_in)}" \
+               f"\\begin{{center}}\n " \
+               f"{mq.analogue_clock(int(hour_in), int(minute_in))}" \
                f"\\end{{center}}\n "
     answer = answer_format[1]
     return [question, answer]
 
 
 def me_15(difficulty):
-    """ Time sequence question where student fills missing time. """
+    """ Time sequence question where student fills missing time. Chrys."""
     h_0 = random.randint(0, 23)
     m_0 = ((20 - 5 * difficulty) * random.randint(0, 11)) % 60
     t_0 = datetime(year=2021, month=6, day=20, hour=h_0, minute=m_0)
@@ -2554,7 +2635,7 @@ def me_15(difficulty):
 
 
 def sh_1(difficulty):
-    """Guess the shape, multiple choice."""
+    """Guess the shape, multiple choice. Chrys."""
     upper = [5, 7, 10][difficulty - 1]
     n = random.randint(3, upper)
     if n == 9:
@@ -2579,7 +2660,7 @@ def sh_1(difficulty):
 
 
 def pd_1(difficulty):
-    """What type of transformation is occurring.."""
+    """What type of transformation is occurring. Chrys."""
     size = 6
     n = random.randint(0, 2)
     name = [
@@ -2590,10 +2671,10 @@ def pd_1(difficulty):
     rotate = [[0, 180], [270, 90], [45, 135]][n]
 
     k = random.randint(0, 1)
-    shape = f"node[{name}, minimum size=1cm," \
-            f" rotate={rotate[k]}, draw, fill=green] {{}}"
-    reflection = f"node[{name}, minimum size=1cm," \
-                 f" rotate={rotate[(k + 1) % 2]}, draw, fill=green] {{}}"
+    shape = r'node[%s, minimum size=1cm, rotate=%s, draw, fill=green] {}' \
+            % (name, rotate[k])
+    reflection = r'node[%s, minimum size=1cm, rotate=%s, draw,fill=green] {}' \
+                 % (name, rotate[(k + 1) % 2])
 
     lower_x = [[1, 4], [0.5, 3.5], [0.5, 3.5]][n]
     upper_x = [[2, 5], [2.5, 4.5], [2.5, 4.5]][n]
@@ -2609,14 +2690,16 @@ def pd_1(difficulty):
         x_1 = random.uniform(lower_x[1], upper_x[1])
         y_1 = random.uniform(0.5, 2.5)
 
-    pic = f"\\begin{{tikzpicture}} \\usetikzlibrary{{shapes,snakes}} " \
-          f"\\draw[step=0.5,gray,thin] (0,0) grid ({size},3);" \
-          f"\\draw ({x_0},{y_0}) {shape} ;" \
-          f"\\draw ({x_1}, {y_1}) {[shape, reflection][m]} ;"
+    pic = r'''
+    \begin{tikzpicture} \usetikzlibrary{shapes,snakes}
+    \draw[step=0.5,gray,thin] (0,0) grid (%s,3);
+    \draw (%s,%s) %s; 
+    \draw (%s, %s) %s;"
+    ''' % (size, x_0, y_0, shape, x_1, y_1, [shape, reflection][m])
 
     if difficulty == 1:
-        pic += "\\draw [ultra thick,red] (3,0) -- (3,3); "
-    pic += "\\end{tikzpicture}"
+        pic += r'\draw [ultra thick,red] (3,0) -- (3,3);'
+    pic += r'\end{tikzpicture}'
 
     question = f"What transformation has occurred? \n\n {pic}"
     choices = ["Translation", "Reflection"]
@@ -2625,7 +2708,7 @@ def pd_1(difficulty):
 
 
 def st_1(difficulty):
-    """Mean of a group of numbers."""
+    """Mean of a group of numbers. Chrys."""
     upper = 10 ** difficulty - 1 - 800 * round(difficulty / 10 + 0.3)
     nums = []
     while len(nums) == 0:
@@ -2638,3 +2721,4 @@ def st_1(difficulty):
     question = f"Find the mean of these numbers. \n\n {sequence}"
     answer = f"{statistics.mean(nums)}"
     return [question, answer]
+
