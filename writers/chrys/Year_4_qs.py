@@ -506,7 +506,7 @@ def as_5(difficulty):
     \underline{ %s \ %s} \\ \underline{\phantom{%s \ %s}}
     \end{array}$} \\ \\
     \vspace{1.2ex}
-    ''' % (no_2,  op, no_1, os, no_3, op, no_3)
+    ''' % (no_2,  op, no_1, op, no_3, op, no_3)
     answer = [mq.dollar(no_1 + no_2 + no_3), mq.dollar(no_2 - no_3 - no_1)][k]
     return [question, answer]
 
@@ -2775,7 +2775,6 @@ def fr_27(difficulty):
     return [question, answer]
 
 
-
 def as_15(difficulty):
     """Columnar method with mixed operations. Chrys."""
     lower = 10 ** difficulty
@@ -2887,7 +2886,7 @@ def sh_2(difficulty):
     x_angle = 90 * random.randint(0, difficulty)
     drawing = mq.angle_drawing(x_angle, x_angle - angle, 4)
     question = "Which of the following best describes the angle? \n\n" \
-               r"\begin{center} %s \end{center}" % (drawing)
+               r"\begin{center} %s \end{center}" % drawing
     choices = ["Acute", "Obtuse", "Right angle"]
     if angle < 90:
         answer = choices[0]
@@ -2919,7 +2918,7 @@ def st_3(difficulty):
     nums = random.sample(range(lower, upper), k=5)
 
     n = random.randint(0, 2)
-    city = ['New Central', 'Snowy Capital','Artemisia', 'Old Town', 'Aegina']
+    city = ['New Central', 'Snowy Capital', 'Artemisia', 'Old Town', 'Aegina']
     title = ['Population', 'Bicycle Journeys', 'Number of Tourists'][n]
     values = [
         ['the populations of'],
