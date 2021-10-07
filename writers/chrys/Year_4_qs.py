@@ -1303,7 +1303,6 @@ def md_25(difficulty):
 
     choices = ["True", "False"]
     answer = choices[n]
-
     question = f"Is {a} divisible by {b}?"
     return mq.multiple_choice(question, choices, answer)
 
