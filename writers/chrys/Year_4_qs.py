@@ -348,7 +348,7 @@ def pv_14(difficulty):
     y = []
     results = []
     for i in reversed(range(2 + difficulty)):
-        y.append(f"$\\square$ {places[i]}")
+        y.append(f"\\makebox[1em]{{\\hrulefill}} {places[i]}")
         results.append(f"{mq.dollar({int(str(n)[- (i + 1)])})} {places[i]}")
     values = " $+$\\ ".join(y)
     answer = " $+$\\ ".join(results)
@@ -392,9 +392,11 @@ def as_1(difficulty):
     upper = 2000 * difficulty
     a = random.randint(lower, upper)
     b = random.randint(lower, upper)
-    question = r'\hspace{2cm}{\LARGE$\begin{array}{r}' + str(b) + \
-               r'\\\underline{+\ ' + str(a) + r'}\end{array}$} \\ \\'\
-               + "\\vspace{1.2ex}"
+    question = r'''
+    \hspace{2cm}{\LARGE$\begin{array}{r}  %s \\
+    \underline{+ \ %s } \\ 
+    \underline{\phantom{+ \ %s}}
+    \end{array}$} \\ \\ \vspace{1.2ex}''' % (b, a, a)
     answer = mq.dollar(b+a)
     return [question, answer]
 
@@ -424,7 +426,7 @@ def as_2(difficulty):
     k = random.randint(0, 3)
     answer = mq.dollar(values[k])
     values[k] = "\\makebox[2.5em]{\\hrulefill}"
-    question = f"Find the number that makes the equation true." \
+    question = f"Find the missing number to complete the equation." \
                f"\n\n {values[0]} {sign[0]} {(values[1])} " \
                f"$=$ {values[2]} {sign[1]} {values[3]}"
     return [question, answer]
@@ -457,20 +459,25 @@ def as_4(difficulty):
     lower = 200 * difficulty - 150
     upper = 300 * difficulty
     x = random.sample(range(lower, upper), k=2)
-    n, k = random.randint(0, 1), random.randint(0, 1)
+    n = random.randint(0, 1)
+    k = random.randint(0, 1)
+
     nums = [[x[1], x[0] + x[1]][n], x[0]]
+    op = ['+', '-'][n]
     result = [nums[1] + nums[0], x[1]][n]
     answer = str(nums[k])
     nums[k] = ''
     for i in range(len(answer)):
         nums[k] += r'{\fboxsep0pt\fbox{\rule{0.5em}{0pt}\rule{0pt}{2ex}}}'
+
     question = r'''
-    Fill in the missing number. \newline
+    Fill in the missing number. \\ \\
     \hspace{2cm}{\LARGE$\begin{array}{r} 
-    %s \\ \underline{ %s \ %s } \\ \underline{ %s } 
-    \end{array}$} 
+    %s \\ \underline{%s \ %s }\\ 
+    %s \\ \overline{\phantom{%s \ %s}} 
+    \end{array}$}
     \vspace{1ex}
-    ''' % (nums[0], ['+', '-'][n], str(nums[1]), str(result))
+    ''' % (nums[0], op, str(nums[1]), str(result), op, str(nums[1]))
     return [question, answer]
 
 
@@ -492,13 +499,14 @@ def as_5(difficulty):
              ][n],
             no_1 + no_3 + random.randint(100 * difficulty, 200 * difficulty)
             ][k]
+    op = ["+", "-"][k]
     question = r'''
     \hspace{2cm}{\LARGE$\begin{array}{r}
-    %s \\\ %s \ %s  \\
-    \underline{ %s \ %s} 
+    %s \\ %s \ %s  \\
+    \underline{ %s \ %s} \\ \underline{\phantom{%s \ %s}}
     \end{array}$} \\ \\
     \vspace{1.2ex}
-    ''' % (no_2,  ["+", "-"][k], no_1, ["+", "-"][k], no_3)
+    ''' % (no_2,  op, no_1, op, no_3, op, no_3)
     answer = [mq.dollar(no_1 + no_2 + no_3), mq.dollar(no_2 - no_3 - no_1)][k]
     return [question, answer]
 
@@ -523,18 +531,18 @@ def as_6(difficulty):
 
     table = r'''
     \begin{center} \begin{tabular}{||c  |  c||}
-    \hline Input & Output \\ [0.4ex] \hline
+    \hline Input & %s \\ [0.4ex] \hline
     \hline %s & %s \\ \hline %s &    \\ 
     \hline %s &    \\ \hline %s &    \\ 
     \hline %s &    \\ [1ex] \hline 
-    \end{tabular} \end{center}"
-    ''' % (col_1[0], col_2[0], col_1[1], col_1[2], col_1[3], col_1[4])
-    question = f"Use the rule to complete the table. \n\n " \
-               f"Rule: {rule[1]} {abs(rule[0])} \n\n {table}"
+    \end{tabular} \end{center}
+    ''' % (f"Rule: {rule[1]} {abs(rule[0])}", col_1[0], col_2[0],
+           col_1[1], col_1[2], col_1[3], col_1[4])
+    question = f"Use the rule to complete the table. \n\n {table}"
 
     answer = r'''
     \begin{tabular}{||c  |  c||}
-    \hline Input & Output \\ [0.4ex] \hline 
+    \hline Input & Answer \\ [0.4ex] \hline 
     \hline %s & %s \\ 
     \hline %s & \textbf{%s} \\ 
     \hline %s & \textbf{%s} \\ 
@@ -691,10 +699,11 @@ def as_11(difficulty):
     \hspace{2cm}{\LARGE$\begin{array}{r}  
     %s \\ 
     \underline{+\  %s } \\ 
-    \underline{\ \ \ %s }
+    %s \\
+    \overline{\phantom{+ \ %s}} \\ 
     \end{array}$} \ \
     \vspace{1.2ex}
-    ''' % (values[k[0]], values[k[1]], values[2])
+    ''' % (values[k[0]], values[k[1]], values[2], values[k[1]])
     return [question, answer]
 
 
@@ -714,10 +723,10 @@ def as_12(difficulty):
 
     question = r'''
     \hspace{2cm}{\LARGE$\begin{array}{r}
-    %s \\ \underline{- \ %s} 
-    \end{array}$} \\ \\" 
+    %s \\ \underline{- \ %s} \\ \underline{\phantom{- \ %s}} 
+    \end{array}$} \\ \\ 
     \vspace{1.2ex}
-    ''' % (a, b)
+    ''' % (a, b, b)
     answer = mq.dollar(a - b)
     return [question, answer]
 
@@ -731,7 +740,7 @@ def as_13(difficulty):
     upper = 1000 + 4000 * (difficulty - 1)
     x_1 = random.randint(lower, upper)
     x_2 = random.randint(round(lower * 1/2), round(x_1 * 2/3))
-    name = random.choice([["space company", "rockets", "uses"],
+    name = random.choice([["Cosmos Space Agency", "rockets", "uses"],
                           ["Car dealership", "cars", "sells"],
                           ["delivery company", "packages", "delivers"],
                           ["technology company", "laptops", "sells"]
@@ -751,14 +760,14 @@ def as_14(difficulty):
     lower = 100 * difficulty + round(10 ** difficulty + 1)
     upper = 100 * difficulty + round(0.5 * (10 ** (difficulty + 1) - 1))
     b = random.randint(lower, upper)
-    a = random.randint(round(0.5*lower), round(0.7*b))
+    a = random.randint(round(0.5 * lower), round(0.7 * b))
     question = r'''
     \hspace{2cm}{\LARGE$\begin{array}{r}
-    %s \\ \underline{- \ %s}
+    %s \\ \underline{- \ %s} \\ \underline{\phantom{- \ %s}}
     \end{array}$} \\ \\
     \vspace{1.2ex}
-    ''' % (b, a)
-    answer = mq.dollar(b-a)
+    ''' % (b, a, a)
+    answer = mq.dollar(b - a)
     return [question, answer]
 
 # Multiplication Division______
@@ -1062,19 +1071,18 @@ def md_15(difficulty):
 
     table = r'''
     \begin{center}\begin{tabular}{||c  |  c||}
-    \hline Input & Output \\ [0.4ex] \hline
+    \hline Input & %s \\ [0.4ex] \hline
     \hline %s & %s \\ \hline %s &  \\ 
     \hline %s &  \\ \hline %s &  \\  
     \hline %s &  \\ [1ex] \hline 
     \end{tabular} \end{center}
-    ''' % (col_1[0], col_2[0], col_1[1], col_1[2], col_1[3], col_1[4])
+    ''' % (f"Rule: {operator} {operand}", col_1[0], col_2[0],
+           col_1[1], col_1[2], col_1[3], col_1[4])
 
-    question = f"Use the rule to complete the table. \n\n " \
-               f"Rule: {operator} {operand} \n\n {table}"
-
+    question = f"Use the rule to complete the table. \n\n {table}"
     answer = r'''
     \begin{tabular}{||c  |  c||}
-    \hline Input & Output \\ [0.4ex] \hline 
+    \hline Input & Answer \\ [0.4ex] \hline 
     \hline %s & %s \\ 
     \hline %s & \textbf{%s} \\ \hline %s & \textbf{%s} \\ 
     \hline %s & \textbf{%s} \\ \hline %s & \textbf{%s}  \\ [1ex] \hline 
@@ -1358,20 +1366,21 @@ def md_26(difficulty):
     if difficulty == 3:
         rectangle = [
             'r',
-            r'& %s \hspace{1em}' % box,
+            r'& %s \hspace{1.1em}' % box,
             r'& \colorbox{yellow}'
             r'{\makebox(40,34){\textcolor{black}{%s}}}' % (ones * x),
         ]
-        size = [0.5, 0]
+        size = [0.8, 0.4]
         values = [100 * x, tens * x, 100 + tens + ones]
     else:
         rectangle = ['', '', '']
-        size = [1, 0.5]
+        size = [0.95, 0.9]
         values = [tens * x, ones * x, tens + ones]
 
     model = r'''
     {\arraycolsep=2pt\LARGE$\begin{array}{rrr%s}
-    %s & %s \hspace{%sem} & %s \hspace{%sem} & %s 
+    %s & %s \hspace{%sem} & %s \hspace{%sem} \\
+    %s 
     & \colorbox{red}{\makebox(59,34){\textcolor{black}{%s}}}
     & \colorbox{cyan}{\makebox(55,34){\textcolor{black}{%s}}}
     %s 
@@ -1413,7 +1422,7 @@ def fr_1(difficulty):
         r'$\frac{%s}{%s}$' % (num_3, denominator),
     ]
     question = r'''
-    \begin{LARGE} %s%s%s%s%s $=$ \end{LARGE}
+    \begin{LARGE} %s%s%s%s%s $=$ ? \end{LARGE}
     ''' % (fracs[0], op_1, fracs[1], op_2, fracs[2])
     answer = r'$\frac{%d}{%d}$' % (sums[2], denominator)
     return [question, answer]
@@ -1605,7 +1614,7 @@ def fr_10(difficulty):
         op = "$+$"
         result = (a + b)
 
-    question = "Choose the sign that makes the statement true. \n\n" \
+    question = "Which sign that makes the following statement true. \n\n" \
                f"\\begin{{center}} \\huge ${mq.latex_frac(a, n)}$ " \
                f"{op} ${mq.latex_frac(b, n)}$ $\\square$ " \
                f"${mq.latex_frac(c, n)}$ \\end{{center}} \\large"
@@ -1827,7 +1836,7 @@ def fr_16(difficulty):
     if a != 1:
         denominator += "s"
 
-    question = f"Write down {num2words(a)} {denominator} as a fraction?"
+    question = f"Write down {num2words(a)} {denominator} as a fraction."
     answer = f"${mq.latex_frac(a, b)}$"
     return [question, answer]
 
@@ -1863,7 +1872,8 @@ def fr_18(difficulty):
     integer_place = ["ones", "tens", "hundreds", "thousands"]
     decimal_place = ["tenths", "hundredths", "thousandths"]
 
-    y_1 = f"$\\square${integer_place[len(str(integer)) - 1]}"
+    y_1 = f"\\makebox[1em]{{\\hrulefill}} " \
+          f"{integer_place[len(str(integer)) - 1]}"
     y_2 = ""
 
     result_int = f"{mq.dollar({int(str(integer)[- len(str(integer))])})} " \
@@ -1872,12 +1882,12 @@ def fr_18(difficulty):
 
     if len(str(integer)) > 1:
         for i in reversed(range(1, len(str(integer)))):
-            y_1 += f" $+$ $\\square${integer_place[i - 1]}"
+            y_1 += f" $+$ \\makebox[1em]{{\\hrulefill}} {integer_place[i - 1]}"
             result_int += f" $+$ {mq.dollar({int(str(integer)[- i])})} " \
                           f"{integer_place[i - 1]} "
 
     for j in range(len(str(decimal))):
-        y_2 += f" $+$ $\\square${decimal_place[j]}"
+        y_2 += f" $+$ \\makebox[1em]{{\\hrulefill}} {decimal_place[j]}"
         result_dec += f" $+$ {mq.dollar({int(str(decimal)[j])})} " \
                       f"{decimal_place[j]} "
 
@@ -1928,12 +1938,17 @@ def fr_20(difficulty):
     ]
     n = random.randint(0, 1)
     answer = f"${mq.latex_frac(values[n][0], b)}$"
-    values[n][0] = r'\fboxsep0pt\fbox{\rule{0.8em}{0pt}\rule{0pt}{0.8em}}'
-    values[n][1] = r'\fboxsep0pt\fbox{\rule{0.8em}{0pt}\rule{0pt}{0.8em}}'
-    question = f" Fill in the missing fraction: \n\n \\Large " \
-               f"${mq.latex_frac(values[0][0], values[0][1])}$ {op} " \
-               f"${mq.latex_frac(values[1][0], values[1][1])}$ " \
-               f"$=$ ${mq.latex_frac(a_1 + ((-1) ** k) * a_2, b)}$\\large"
+    fracs = [f"${mq.latex_frac(values[0][0], values[0][1])}$",
+             f"${mq.latex_frac(values[1][0], values[1][1])}$"
+             ]
+    fracs[n] = "?"
+    if a_1 + ((-1) ** k) * a_2 == 0:
+        result = 0
+    else:
+        result = f"${mq.latex_frac(a_1 + ((-1) ** k) * a_2, b)}$"
+    question = f" Fill in the missing number: \n\n \\Large " \
+               f"{fracs[0]} {op} {fracs[1]} " \
+               f"$=$ {result} \\large"
     return [question, answer]
 
 
@@ -2718,7 +2733,7 @@ def st_1(difficulty):
             nums = values
 
     sequence = ",\\ ".join(str(nums[i]) for i in range(len(nums)))
-    question = f"Find the mean of these numbers. \n\n {sequence}"
+    question = f"Find the mean of the following numbers. \n\n {sequence}"
     answer = f"{statistics.mean(nums)}"
     return [question, answer]
 
@@ -2730,12 +2745,15 @@ def fr_26(difficulty):
     b = round(random.uniform(limit, limit * 2), 2)
 
     n = random.randint(0, 1)
+    result = [b + a, b - a][n]
+    op = ['+', '-'][n]
     question = r'''
     \hspace{2cm}{\LARGE$\begin{array}{r} 
-    \pounds %s \\ \underline{%s \ \pounds %s}\end{array}$} 
+    \pounds %s \\ \underline{%s \ \pounds %s} \\ 
+    \underline{\phantom{%s \ \pounds %s}}
+    \end{array}$} 
     \\ \\ \vspace{1.2ex}
-    ''' % (f'{b:.2f}', ['+', '-'][n], f'{a:.2f}')
-    result = [b + a, b - a][n]
+    ''' % (f'{b:.2f}', op, f'{a:.2f}', op, f'{a:.2f}')
     answer = f'\\pounds {result:.2f}'
     return [question, answer]
 
@@ -2748,9 +2766,10 @@ def fr_27(difficulty):
     c = round(random.uniform(round(a + b) + 1, 10), difficulty - 1)
     question = r'''
     \hspace{2cm}{\LARGE$\begin{array}{r} 
-    \pounds %s \\ - \ \pounds %s \\ \underline{- \ \pounds %s} 
+    \pounds %s \\ - \ \pounds %s \\ \underline{- \ \pounds %s}  \\ 
+    \underline{\phantom{- \ \pounds %s}}
     \end{array}$} \\ \\ \vspace{1.2ex}
-    ''' % (f'{c:.2f}',  f'{b:.2f}', f'{a:.2f}')
+    ''' % (f'{c:.2f}',  f'{b:.2f}', f'{a:.2f}', f'{a:.2f}')
     result = c - b - a
     answer = f'\\pounds {result:.2f}'
     return [question, answer]
@@ -2770,9 +2789,9 @@ def as_15(difficulty):
     values = [((-1) ** n) * a, ((-1) ** k) * b]
     question = r'''
     \hspace{2cm}{\LARGE$\begin{array}{r} 
-    %s \\ %s \ %s \\ \underline{%s \ %s} 
+    %s \\ %s \ %s \\ \underline{%s \ %s} \\ \underline{\phantom{%s \ %s}}
     \end{array}$} \\ \\ \vspace{1.2ex}
-    ''' % (c, op[n], a, op[k], b)
+    ''' % (c, op[n], a, op[k], b, op[k], b)
     answer = mq.dollar(c + values[0] + values[1])
     return [question, answer]
 
@@ -2855,4 +2874,65 @@ def me_17(difficulty):
     question = f"{name} has {amount_format}. How much money does {gender[1]}" \
                " have in total?"
     answer = f"\\pounds{sum(sums):.2f}"
+    return [question, answer]
+
+
+def sh_2(difficulty):
+    """Decide whether angle is obtuse, acute or right angle. Chrys."""
+    angle = random.choices([
+        random.randint(20, 60), 90, random.randint(110, 160)],
+        weights=(4, 4 - difficulty, 4), k=2)[0]
+
+    x_angle = 90 * random.randint(0, difficulty)
+    drawing = mq.angle_drawing(x_angle, x_angle - angle, 4)
+    question = "Which of the following best describes the angle? \n\n" \
+               r"\begin{center} %s \end{center}" % drawing
+    choices = ["Acute", "Obtuse", "Right angle"]
+    if angle < 90:
+        answer = choices[0]
+    elif angle > 90:
+        answer = choices[1]
+    else:
+        answer = choices[2]
+    return mq.multiple_choice(question, choices, answer)
+
+
+def st_2(difficulty):
+    """Range of a group of numbers. Chrys."""
+    lower = 10 ** (difficulty - 1) - 1
+    upper = 10 ** (difficulty + 1) - 1
+    k = random.randint(5, 9 - difficulty)
+    nums = random.sample(range(lower, upper), k=k)
+
+    sequence = ",\\ ".join(str(i) for i in nums)
+    question = "Find the range of the following numbers. \n\n " \
+               f"\\begin{{center}} {sequence} \\end{{center}}"
+    answer = mq.dollar(max(nums) - min(nums))
+    return [question, answer]
+
+
+def st_3(difficulty):
+    """Find the range using data from a table. Chrys."""
+    lower = 10 ** (difficulty + 1)
+    upper = 10 ** (difficulty + 2) - 1
+    nums = random.sample(range(lower, upper), k=5)
+
+    n = random.randint(0, 2)
+    city = ['New Central', 'Snowy Capital', 'Artemisia', 'Old Town', 'Aegina']
+    title = ['Population', 'Bicycle Journeys', 'Number of Tourists'][n]
+    values = [
+        ['the populations of'],
+        ['amount of bicycles journeys made in'],
+        ['the number of tourists visiting']
+    ][n][0]
+    place = [['Town', 'towns'], ['City', 'cities']][round(difficulty/3)]
+
+    table = [[place[0], title]]
+    for i in range(len(nums)):
+        table.append([city[i], str(nums[i])])
+
+    question = f"Here is some data on the {values} some {place[1]}. " \
+               "What is the mean of this data? \n\n " \
+               f"\\begin{{center}} {mq.draw_table(table)} \\end{{center}}"
+    answer = mq.dollar(max(nums) - min(nums))
     return [question, answer]
