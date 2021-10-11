@@ -1,13 +1,14 @@
 import random
 import roman
-import statistics
 
 from datetime import time, datetime, timedelta
 from math import floor, ceil
 from num2words import num2words
+from statistics import mean
 
 from random import shuffle
 import names
+
 
 import matiq as mq
 
@@ -1801,17 +1802,14 @@ def fr_16(difficulty):
 
 def fr_17(difficulty):
     """Convert decimal to fraction and vice versa. Chrys."""
-    num_type = random.choice(["decimal", "fraction"])
+    n = random.randint(0, 1)
+    num_type = ["decimal", "fraction"][n]
     b = 10 ** difficulty
     a = random.choice([x for x in range(1, b) if mq.gcd(x, 10) == 1])
     fraction = mq.dollar(mq.latex_frac(a, b))
     decimal = a / b
-    if num_type == "decimal":
-        num = fraction
-        answer = mq.dollar(decimal)
-    else:
-        num = mq.dollar(decimal)
-        answer = fraction
+    num = [fraction, mq.dollar(decimal)][n]
+    answer = [mq.dollar(decimal), fraction][n]
     question = f"What is {num} as a {num_type}?"
     return [question, answer]
 
@@ -2495,7 +2493,7 @@ def me_12(difficulty):
         choice1 = mq.analogue_clock((hour + difference) % 12, minute[0], False)
         choice2 = mq.analogue_clock(minute[0] / 5, (5*hour) % 60, False)
         choice3 = mq.analogue_clock(
-            hour, (minute[0] + 5 * random.randint(1, 11)) % 60, centered=False)
+            hour, (minute[0] + 5 * random.randint(1, 11)) % 60, center=False)
     else:
         question = f"What is the correct time, in 12 hour format, " \
                    f"that is shown on the clock?\n\n" \
@@ -2700,7 +2698,7 @@ def st_1(difficulty):
 
     sequence = ",\\ ".join(str(nums[i]) for i in range(len(nums)))
     question = f"Find the mean of the following numbers. \n\n {sequence}"
-    answer = f"{statistics.mean(nums)}"
+    answer = f"{mean(nums)}"
     return [question, answer]
 
 
@@ -3000,3 +2998,177 @@ def st_4(difficulty):
     question = "If we were to select one of these shapes at random, " \
                f"which one are we most likely to choose? \n\n {model}"
     return mq.multiple_choice(question, choices, answer)
+
+
+def st_5(difficulty):
+    """Find the mean using data from a table. Chrys."""
+    lower = 10 * difficulty
+    upper = 2 ** (5 + difficulty)
+    values = []
+    while len(values) < 4:
+        sample = random.sample(range(lower, upper), k=4)
+        if sum(sample) % 4 == 0:
+            values = sample
+
+    n = random.randint(0, 1)
+    items = ["number of cars sold", "number of computers sold"][n]
+    shop_type = ["Car Dealerships", "Electronics Stores"][n]
+    shop_name = [
+        ["Cars for All", "Car City", "United Motors", "Rocket Cars"],
+        ["Tech Central", "Turing's Computers",
+         "Faraday's Electrics", "Master Tech"]
+    ][n]
+
+    data = [[["Dealership", "Store"][n], "Amount Sold"]]
+    for i in range(4):
+        data.append([shop_name[i], str(values[i])])
+
+    question = f"Here is the results of some market research on the {items} " \
+               f"by some {shop_type.lower()}. " \
+               f"Find the mean value of the results? \n\n" \
+               f"\\begin{{center}} {mq.draw_table(data)} \\end{{center}}"
+    answer = mq.dollar(mean(values))
+    return [question, answer]
+
+
+def fr_30(difficulty):
+    """Addition and subtraction of both a decimal and a fraction. Chrys."""
+    b = random.choices(
+        [2, 4, 10, 100],
+        weights=(difficulty, difficulty, 4 - difficulty, difficulty), k=1)[0]
+    a = random.choice([x for x in range(1, b) if mq.gcd(x, b) == 1])
+    fraction = mq.dollar(mq.latex_frac(a, b))
+
+    upper = [10, 10, 100][difficulty - 1]
+    c = random.randint(1, upper)
+    decimal = c / upper
+
+    values = [[fraction, a / b], [decimal, decimal]]
+    n = random.randint(0, 1)
+    op = ["$+$", "$-$"][n]
+    if n == 0:
+        shuffle(values)
+    else:
+        values.sort(key=lambda x: x[1])
+
+    question = r""" 
+    Writing your answer as a decimal, solve the equation. \ 
+    \begin{center} %s %s %s = \makebox[2em]{\hrulefill} \end{center}
+    """ % (values[1][0], op, values[0][0])
+
+    result = [(a / b + decimal), values[1][1] - values[0][1]][n]
+    answer = mq.dollar(round(result, 2))
+    return [question, answer]
+
+
+def me_18(difficulty):
+    """Convert units. Chrys."""
+    prefixes = ['kilo', '', 'centi', 'milli']
+
+    n = random.randint(0, 2)
+    unit = ['meter', 'liter', 'gram'][n]
+
+    m = ''
+    k = ''
+    while m == '' and k == '':
+        a = random.randint(0, 3)
+        b = a + (-1) ** random.randint(1, 2) * random.randint(1, 2)
+        if 0 <= a < 3 and 0 <= b < 3:
+            if a == 2 and b == 0:
+                b = b + 1
+            if n == 2 and a != 2 and b != 2:
+                k = a
+                m = b
+            elif n == 1 and a != 0 and b != 0:
+                k = a
+                m = b
+            elif n == 0:
+                k = a
+                m = b
+
+    rand = random.randint(1,  5 * (difficulty - 1))
+    num = random.choices([1, rand], weights=(5, difficulty - 1), k=1)[0]
+    unit_in = str(prefixes[k][:1] + unit[:1])
+    unit_out = str(prefixes[m][:1] + unit[:1])
+    convert = mq.convert_measurement(int(num), unit_in, unit_out)
+    if convert >= 1:
+        convert = int(convert)
+
+    s_1, s_2 = '', ''
+    if convert != 1:
+        s_2 = "s"
+    if num != 1:
+        s_1 = "s"
+    question = f"Convert the following. \n\n {num} {prefixes[k]}{unit}{s_1} " \
+               f"= \\makebox[2em]{{\\hrulefill}} {prefixes[m]}{unit}{s_2}"
+    answer = f"{convert}"
+    return [question, answer]
+
+
+def sh_3(difficulty):
+    """Compare angles. Chrys."""
+    acute = random.randint(10 + 10 * difficulty, 50 + 10 * difficulty)
+    obtuse = random.randint(130 - 10 * difficulty, 170)
+    n = random.sample(range(3), k=2)
+    angles = [acute, 90, obtuse]
+
+    angle_size = ["acute", "a right angle", "obtuse"][n[0]]
+    choices = []
+    for i in range(2):
+        choices.append(mq.angle_drawing(angles[n[i]], 0, 1.7, 0.5))
+    answer = choices[0]
+    question = f"Which of these angles is {angle_size}? \n\n"
+    return mq.multiple_choice(question, choices, answer)
+
+
+def sh_4(difficulty):
+    """Guess how many sides/vertices a 2d shape has. Chrys."""
+    upper = [5, 7, 10][difficulty - 1]
+    n = random.choices([1, random.randint(2, upper)],
+                       weights=(difficulty, upper))[0]
+    if n == 1:
+        shape = mq.draw_circle(4, 'white', 'black')
+        vertices = 0
+    elif n == 2:
+        shape = r"""
+        \begin{tikzpicture} 
+        [baseline=(current bounding box.north)] 
+        \draw (-1.5,0) -- (1.5,0) arc(0:180:1.5) --cycle; 
+        \end{tikzpicture}
+        """
+        vertices = n
+    else:
+        shape = r"""
+        \begin{tikzpicture} 
+        \node[regular polygon, regular polygon sides=%s, minimum size=2cm, 
+        draw] at (0, 0) {};
+        \end{tikzpicture}
+        """ % n
+        vertices = n
+    k = random.randint(0, 1)
+    choice = ["sides", "vertices"][k]
+    question = f"How many {choice} does this shape have? \n\n " \
+               f"\\begin{{center}} {shape} \\end{{center}}"
+    answer = [str(n), str(vertices)][k]
+    return [question, answer]
+
+
+def sh_5(difficulty):
+    """Guess how many lines of symmetry a 2d shape has. Chrys."""
+    w = difficulty - 1
+    n = random.choices([0, 1, 2, 3, 4, 5], weights=(w, w, w, 1, 1, 1))[0]
+    if n == 0:
+        shape = mq.draw_semi_circle(1.5)
+        answer = "1"
+    elif n == 1:
+        shape = mq.draw_triangle(5, draw="black", fill="white")
+        answer = "1"
+    elif n == 2:
+        shape = r"\tikz \draw (0,0) rectangle (3cm,1.5cm);"
+        answer = "2"
+    else:
+        shape = mq.draw_regular_polygon(n)
+        answer = str(n)
+    question = "How many lines of Symmetry does this shape have? \n\n" \
+               r" \begin{center} %s \end{center}" % shape
+    return [question, answer]
