@@ -2466,7 +2466,7 @@ def me_12(difficulty):
     """
     Multiple choice, converting analogue to digital clock and vice versa. Chrys
     """
-    hour = random.randint(0, 12)
+    hour = random.randint(1, 12)
     sample = random.sample(range(0, 11), 6)
     minute = [(x * (20 - 5 * difficulty)) % 60 for x in sample]
 
@@ -2478,7 +2478,7 @@ def me_12(difficulty):
                 minute[j] = (minute[k] + 13) % 60
 
     time_in = random.choice([
-        mq.time_to_words(hour % 12, minute[0]),
+        mq.time_to_words(hour, minute[0]),
         time(hour, minute[0]).strftime("%I:%M")
     ])
 
@@ -2842,7 +2842,7 @@ def sh_2(difficulty):
         weights=(4, 4 - difficulty, 4), k=2)[0]
 
     x_angle = 90 * random.randint(0, difficulty)
-    drawing = mq.angle_drawing(x_angle, x_angle - angle, 4)
+    drawing = mq.draw_angle(x_angle, x_angle - angle, 4)
     question = "Which of the following best describes the angle? \n\n" \
                r"\begin{center} %s \end{center}" % drawing
     choices = ["Acute", "Obtuse", "Right angle"]
@@ -3066,7 +3066,7 @@ def me_18(difficulty):
     prefixes = ['kilo', '', 'centi', 'milli']
 
     n = random.randint(0, 2)
-    unit = ['meter', 'liter', 'gram'][n]
+    unit = ['metre', 'litre', 'gram'][n]
 
     m = ''
     k = ''
@@ -3115,7 +3115,7 @@ def sh_3(difficulty):
     angle_size = ["acute", "a right angle", "obtuse"][n[0]]
     choices = []
     for i in range(2):
-        choices.append(mq.angle_drawing(angles[n[i]], 0, 1.7, 0.5))
+        choices.append(mq.draw_angle(angles[n[i]], 0, 1.7, 0.5))
     answer = choices[0]
     question = f"Which of these angles is {angle_size}? \n\n"
     return mq.multiple_choice(question, choices, answer)
@@ -3172,3 +3172,204 @@ def sh_5(difficulty):
     question = "How many lines of Symmetry does this shape have? \n\n" \
                r" \begin{center} %s \end{center}" % shape
     return [question, answer]
+
+
+def as_16(difficulty):
+    """
+    Addition & subtraction of money using decimal and pence format. Chrys.
+    """
+    a = random.randint(10 * difficulty, 60 * difficulty)
+    b = random.randint(30 * difficulty, 65 * difficulty)
+    values = [round((a + b) / 100, 2), round(b / 100, 2), round(a / 100, 2)]
+    n = random.randint(0, 1)
+
+    values[n] = f"\\pounds{values[n]:.2f}"
+    values[(n + 1) % 2] = f"{round(values[(n + 1) % 2] * 100)}p"
+
+    j = random.randint(0, 1)
+    answer = [f"\\pounds{values[2]:.2f}", f"{round(values[2] * 100)}p"][j]
+
+    choices = []
+    choices.extend([answer, f"\\pounds{round((a + b) / 100, 2):.2f}"])
+    while len(choices) < 5:
+        num = random.randint(1, 30)
+        k = random.randint(0, 1)
+        c_0 = a + (-1) ** k * num
+        c_1 = f"\\pounds{round(c_0 / 100, 2):.2f}"
+        if c_0 > 0 and num not in choices:
+            choices.append(random.choice([str(c_0) + "p", c_1]))
+
+    question = f"What is {values[0]} $-$ {values[1]}?"
+    return mq.multiple_choice(question, choices, answer)
+
+
+def fr_31(difficulty):
+    """Identify decimal from number line. Chrys."""
+    length = 7
+    b = random.choices(
+        [10, 4, 2, 5], weights=(2, difficulty, 2, difficulty), k=1)[0]
+    a = random.randint(1, b - 1)
+    marker = r'''\fill [shift={(%d * %f/%d, 7pt)}, color=red] (0,0) -- 
+        (0.2cm, 0.4cm) -- (-0.2cm, 0.4cm) -- cycle;
+        ''' % (a, length, b)
+
+    question = "What decimal is shown on the number line? \n\n" \
+               + mq.num_line(b, additional=marker, length=length)
+    answer = str(round(a / b, 2))
+    return [question, answer]
+
+
+def me_19(difficulty):
+    """
+    Compare distances between points in mm or cm using ruler. Chrys.
+    """
+    length = 7
+    upper = [10, 20, 30][difficulty - 1]
+    scale = [1, 0.5, 0.3][difficulty - 1]
+
+    nums = random.sample(range(1, upper), k=3)
+    nums = [round(k * scale, 1) for k in nums]
+    nums.sort()
+
+    locate = (length - 0.2) * 0.1
+    tags = ['A', 'B', 'C']
+    colour = ['red', 'blue', 'green', 'violet']
+
+    additional = ''
+    k = [2, 3, 3][difficulty - 1]
+    for i in range(k):
+        additional += r'''\fill [shift={(%f * %f, 1)}, color=%s] (0,0) -- 
+            (0.07cm, 0.3cm) -- (-0.07cm, 0.3cm) -- cycle;
+            \draw (%f * %f, 1.3) node[above, text=%s, scale=0.5]{%s};
+            ''' % (nums[i], locate, colour[i],
+                   nums[i], locate, colour[i], tags[i])
+
+    values = []
+    for j in range(1, 3):
+        values.append([tags[j - 1] + " to " + tags[j], nums[j] - nums[j - 1]])
+    values.append(["A to C", nums[2] - nums[0]])
+
+    ruler = mq.ruler(length, additional)
+    n = random.randint(0, 1)
+    unit = [['mm', 'millimetres', 10], ['cm', 'centimetres', 1]][n]
+
+    question = "Find the distance between the points." \
+               f" Write your answer in {unit[1]}. \n\n {ruler}" \
+               r"\ \begin{center} "
+    answer = ""
+
+    for j in range(difficulty):
+        result = values[j][1] * unit[2]
+        if result % 1 == 0:
+            result = round(result)
+        question += r"%s = \makebox[1.5em]{\hrulefill} %s \\" \
+                     % (values[j][0], unit[0])
+        answer += r"%s = %s%s \\" \
+                  % (values[j][0], result, unit[0])
+    question += r"\end{center}"
+    return [question, answer]
+
+
+def me_20(difficulty):
+    """
+    Choose which two points are farthest/closest from each other on a ruler.
+    Chrys.
+    """
+    length = 7
+    upper = [10, 20, 30][difficulty - 1]
+    scale = [1, 0.5, 0.3][difficulty - 1]
+    tags = ['A', 'B', 'C', 'D']
+    n = random.randint(0, 1)
+
+    nums = []
+    results = []
+    choices = []
+    while len(nums) < 4:
+        num = random.sample(range(1, upper), k=4)
+        num = [round(k * scale, 1) for k in num]
+        num.sort()
+        values = []
+        choice = []
+        for j in range(1, 4):
+            name = tags[j - 1] + " to " + tags[j]
+            values.append([name, num[j] - num[j - 1]])
+            choice.append(name)
+        if n == 1:
+            values.sort(key=lambda x: x[1])
+        else:
+            values.sort(key=lambda x: x[1], reverse=True)
+        if values[0][1] != values[1][1]:
+            nums = num
+            results = values
+            choices = choice
+
+    locate = (length - 0.2) * 0.1
+    colour = ['red', 'blue', 'green', 'violet']
+    additional = ''
+    for i in range(4):
+        additional += r'''\fill [shift={(%f * %f, 1)}, color=%s] (0,0) -- 
+        (0.07cm, 0.3cm) -- (-0.07cm, 0.3cm) -- cycle;
+        ''' % (nums[i], locate, colour[i])
+
+        additional += r'''
+        \draw (%f * %f, 1.3) node[above, text=%s, scale=0.5]{%s};
+        ''' % (nums[i], locate, colour[i], tags[i])
+    ruler = mq.ruler(length, additional)
+    size = ['furthest away from', 'closest to'][n]
+    answer = results[0][0]
+    question = f"Which of these points on the ruler are {size} each other? " \
+               + ruler
+    return mq.multiple_choice(question, choices, answer)
+
+
+def me_21(difficulty):
+    """
+    Multiple choice. Choose which two points are a given distance apart on a
+    ruler. Chrys.
+    """
+    length = 7
+    upper = [10, 20, 30][difficulty - 1]
+    scale = [1, 0.5, 0.3][difficulty - 1]
+    tags = ['A', 'B', 'C']
+
+    nums = []
+    values = []
+    choices = []
+    while len(nums) < 3:
+        num = random.sample(range(1, upper), k=3)
+        num = [round(k * scale, 1) for k in num]
+        num.sort()
+
+        sample = []
+        points = []
+        for j in range(1, 3):
+            name = tags[j - 1] + " to " + tags[j]
+            sample.append([name, num[j] - num[j - 1]])
+            points.append(name)
+        sample.append(['A to C', num[2] - num[0]])
+        points.append("A to C")
+        if sample[0][1] != sample[1][1] != sample[2][1]:
+            nums = num
+            values = sample
+            choices = points
+
+    locate = (length - 0.2) * 0.1
+    colour = ['red', 'blue', 'green']
+    additional = ''
+    for i in range(3):
+        additional += r'''
+        \fill [shift={(%f * %f, 1)}, color=%s] (0,0) -- 
+        (0.07cm, 0.3cm) -- (-0.07cm, 0.3cm) -- cycle;
+        \draw (%f * %f, 1.3) node[above, text=%s, scale=0.5]{%s};
+        ''' % (nums[i], locate, colour[i], nums[i], locate, colour[i], tags[i])
+
+    k = random.randint(0, 1)
+    unit = [['cm', 1], ['m', 10]][k]
+    ruler = mq.ruler(length, additional, unit[0])
+
+    m = random.randint(0, 2)
+    choice = values[m][1] * unit[1]
+    question = "Which two points on the ruler are " \
+               f"{choice}cm apart? \n\n {ruler}"
+    answer = values[m][0]
+    return mq.multiple_choice(question, choices, answer)
