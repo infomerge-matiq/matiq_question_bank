@@ -3263,7 +3263,7 @@ def me_19(difficulty):
         if result % 1 == 0:
             result = round(result)
         question += r"%s = \makebox[1.5em]{\hrulefill} %s \\" \
-                     % (values[j][0], unit[0])
+                    % (values[j][0], unit[0])
         answer += r"%s = %s%s \\" \
                   % (values[j][0], result, unit[0])
     question += r"\end{center}"
@@ -3373,3 +3373,28 @@ def me_21(difficulty):
                f"{choice}cm apart? \n\n {ruler}"
     answer = values[m][0]
     return mq.multiple_choice(question, choices, answer)
+
+
+def me_22(difficulty):
+    """Measure length of side of shape in cm using ruler. Chrys."""
+    length = 7
+    upper = [7, 14, 20][difficulty - 1]
+    lower = [1, 2, 3][difficulty - 1]
+    scale = [1, 0.5, 0.3][difficulty - 1]
+    a = round(scale * random.randint(lower, upper), 1)
+    coordinate = a * (length - 0.2) * 0.1
+
+    square = r'\filldraw[fill=cyan] (0,1) rectangle (%f,2.5);' % coordinate
+    triangle = r'\filldraw[fill=cyan] (0,1) -- (%f,1) -- (%f,2.5);' \
+               % (coordinate, coordinate)
+    semi_circle = r'\filldraw[fill=red] (0,1)  arc(180:0:%s) --cycle;' \
+                  % (coordinate / 2)
+    additional = random.choice([square, triangle, semi_circle])
+
+    question = "Using the ruler, measure the length of the side of the " \
+               "shape. Give your answer in centimetres. \n\n" \
+               + mq.ruler(length, additional)
+    if a % 1 == 0:
+        a = round(a)
+    answer = f"{a}cm"
+    return [question, answer]
