@@ -3023,8 +3023,8 @@ def st_5(difficulty):
     for i in range(4):
         data.append([shop_name[i], str(values[i])])
 
-    question = f"Here is the results of some market research on the {items} " \
-               f"by some {shop_type.lower()}. " \
+    question = f"Here are the results of some market research on the {items}" \
+               f" by some {shop_type.lower()}. " \
                f"Find the mean value of the results? \n\n" \
                f"\\begin{{center}} {mq.draw_table(data)} \\end{{center}}"
     answer = mq.dollar(mean(values))
@@ -3397,4 +3397,104 @@ def me_22(difficulty):
     if a % 1 == 0:
         a = round(a)
     answer = f"{a}cm"
+    return [question, answer]
+
+
+def me_23(difficulty):
+    """Comparing size of different metric units. Multiple Choice. Chrys."""
+    units = ['mm', 'cm', 'm', 'km', 'ml', 'l']
+    n = random.choices([1, 2, 3, 5], k=1)[0]
+    unit_choice = [units[n], units[n - 1]]
+    sample_size = 5
+
+    lower = [1, 10, 10]
+    upper = [10, 100, 100]
+    if n > 1:
+        lower[2] = lower[2] * 10
+        upper[2] = upper[2] * 10
+    lower = lower[difficulty - 1]
+    upper = upper[difficulty - 1]
+    deviation = ceil((lower * sample_size) / 2)
+
+    mid = random.randint(deviation, upper)
+
+    choices = []
+    values = []
+    nums = []
+    while len(choices) < sample_size:
+        a = random.sample(range(mid - deviation, mid + deviation),
+                          k=sample_size)
+        a = [j / lower for j in a]
+        for i in range(sample_size):
+            unit_out = unit_choice[(i + 1) % 2]
+            convert = mq.convert_measurement(a[i], unit_choice[0], unit_out)
+
+            num = round(convert, difficulty - 1)
+            if num % 1 == 0 or difficulty == 1:
+                num = round(num)
+            if num not in nums:
+                values.append([f"{num}{unit_out}", a[i]])
+                choices.append(f"{num}{unit_out}")
+                nums.append(num)
+
+    k = random.randint(0, 1)
+    if k == 0:
+        values.sort(key=lambda x: x[1])
+    else:
+        values.sort(key=lambda x: x[1], reverse=True)
+
+    question = f"Which of these is the {['smallest' ,'largest'][k]}?"
+    answer = values[0][0]
+    return mq.multiple_choice(question, choices, answer)
+
+
+def st_6(difficulty):
+    """Read the values from a pictogram. Chrys."""
+    power = 2 ** (difficulty - 1)
+    key = random.randint(1, 7 - power) * power
+
+    day_name = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday',
+                'Saturday', 'Sunday']
+    data = [['Day', 'Number Sold']]
+    values = []
+
+    angle = [-90, 90, 180]
+
+    k = 0
+    for i in range(7):
+        n = random.randint(1, 6)
+        if difficulty > 1:
+            k = random.randint(0, 1)
+        num = n * key + (1 - difficulty / 4) * k * key
+        values.append(num)
+
+        col_2 = []
+        m = []
+        for j in range(n):
+            m.append(0)
+        for r in range(k):
+            m.append(difficulty - 1)
+        for h in range(len(m)):
+            circle = r'''\ \begin{tikzpicture} 
+            \filldraw[fill=red, draw=red] (0,0)  arc(%d:270:0.2) --cycle; 
+            \end{tikzpicture}''' % angle[m[h]]
+            if m[h] > 1:
+                circle = r''' %s
+                \filldraw[fill=red, draw=red] (0,0) -- (0.2,0) -- (0.2, -0.2);
+                 %s ''' % (circle[:21], circle[21:])
+            col_2.append(circle)
+        col_2 = "\\ ".join(col_2)
+        data.append([day_name[i], col_2])
+
+    data.append([
+        r"\textbf{Key}",
+        r"%s\textbf{ = %s Pizzas}" % (mq.draw_circle(0.2, 'red', 'red'), key)
+    ])
+    table = mq.draw_table(data)
+
+    a = random.randint(0, 6)
+    question = "A restaurant made a pictogram to show the number of pizzas " \
+               "sold in a day. How many pizzas did they sell on " \
+               f"{day_name[a]}?" + table
+    answer = str(int(values[a]))
     return [question, answer]
