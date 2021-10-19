@@ -2696,8 +2696,8 @@ def st_1(difficulty):
         if sum(values) % k == 0:
             nums = values
 
-    sequence = ",\\ ".join(str(nums[i]) for i in range(len(nums)))
-    question = f"Find the mean of the following numbers. \n\n {sequence}"
+    sample = ",\\ ".join(str(nums[i]) for i in range(len(nums)))
+    question = f"Find the mean of the following numbers. \n\n {sample}"
     answer = f"{mean(nums)}"
     return [question, answer]
 
@@ -2862,9 +2862,9 @@ def st_2(difficulty):
     k = random.randint(5, 9 - difficulty)
     nums = random.sample(range(lower, upper), k=k)
 
-    sequence = ",\\ ".join(str(i) for i in nums)
+    sample = ",\\ ".join(str(i) for i in nums)
     question = "Find the range of the following numbers. \n\n " \
-               f"\\begin{{center}} {sequence} \\end{{center}}"
+               f"\\begin{{center}} {sample} \\end{{center}}"
     answer = mq.dollar(max(nums) - min(nums))
     return [question, answer]
 
@@ -3451,7 +3451,7 @@ def me_23(difficulty):
 def st_6(difficulty):
     """Read the values from a pictogram. Chrys."""
     power = 2 ** (difficulty - 1)
-    key = random.randint(1, 7 - power) * power
+    num_key = random.randint(1, 7 - power) * power
 
     day_name = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday',
                 'Saturday', 'Sunday']
@@ -3465,7 +3465,7 @@ def st_6(difficulty):
         n = random.randint(1, 6)
         if difficulty > 1:
             k = random.randint(0, 1)
-        num = n * key + (1 - difficulty / 4) * k * key
+        num = n * num_key + (1 - difficulty / 4) * k * num_key
         values.append(num)
 
         col_2 = []
@@ -3486,15 +3486,117 @@ def st_6(difficulty):
         col_2 = "\\ ".join(col_2)
         data.append([day_name[i], col_2])
 
-    data.append([
-        r"\textbf{Key}",
-        r"%s\textbf{ = %s Pizzas}" % (mq.draw_circle(0.2, 'red', 'red'), key)
-    ])
+    key = r"\textbf{Key}: %s\textbf{ = %s Pizzas}" \
+          % (mq.draw_circle(0.2, 'red', 'red'), num_key)
     table = mq.draw_table(data)
 
     a = random.randint(0, 6)
     question = "A restaurant made a pictogram to show the number of pizzas " \
                "sold in a day. How many pizzas did they sell on " \
-               f"{day_name[a]}?" + table
+               f"{day_name[a]}? \n {table} \n\n {key}"
     answer = str(int(values[a]))
+    return [question, answer]
+
+
+def as_17(difficulty):
+    """
+    Find the next number in a sequence, with increasing step size. Chrys
+    """
+    start = random.randint(1, 10 + 10 * (difficulty - 1))
+    step_1 = random.randint(1 * difficulty, 3 * difficulty)
+    step_increase = random.randint(1, 1 + difficulty)
+
+    numbers = [start]
+    for i in range(1, 5):
+        num = numbers[i-1] + step_1 + (step_increase * i)
+        numbers.append(num)
+
+    n = random.randint(0, 1)
+    if n == 1:
+        numbers.sort(reverse=True)
+
+    numbers = [str(j) for j in numbers]
+    answer = numbers[len(numbers) - 1]
+    numbers[len(numbers)-1] = "\\fillin[][1em]"
+
+    sequence = ",\\ ".join(numbers)
+    question = "Find the next number in the sequence. \n\n \\begin{center}" \
+               + sequence + "\\end{center}"
+    return [question, answer]
+
+
+def fr_32(difficulty):
+    """
+    Find missing number in a decimal sequence. Chrys
+    """
+    d_p = [1, 2, 2][difficulty - 1]
+
+    if difficulty > 2:
+        step = random.randint(10, 25) / 100
+    else:
+        step = random.randint(2, 9) / 10 ** difficulty
+    step = round(step, d_p)
+
+    start = random.randint(0, difficulty) + step * random.randint(0, 2)
+    start = round(start, d_p)
+
+    numbers = [start]
+    for i in range(1, 5):
+        previous = i - 1
+        num = numbers[previous] + step
+        numbers.append(round(num, d_p))
+
+    numbers = [round(m) if m % 1 == 0 else m for m in numbers]
+
+    n = random.randint(0, 1)
+    if n == 1:
+        numbers.sort(reverse=True)
+
+    numbers = [str(j) for j in numbers]
+
+    k = random.randint(0, len(numbers)-1)
+    answer = numbers[k]
+    numbers[k] = "\\fillin[][1em]"
+
+    sequence = ",\\ ".join(numbers)
+    question = "Find the next number in the sequence. \n\n \\begin{center}" \
+               + sequence + "\\end{center}"
+    return [question, answer]
+
+
+def st_7(difficulty):
+    """Find total using pictogram. Chrys."""
+    multiplier = [1, 2, 2][difficulty - 1]
+    key_value = random.randint(difficulty, 2 + difficulty) * multiplier
+    data = [['Week', 'Number Sold']]
+
+    square = mq.draw_square(0.1, 'cyan', rotate=45)
+    total = 0
+    for i in range(4):
+        n = random.randint(1, 5)
+        k = 0
+        if difficulty > 1:
+            k = random.randint(0, 1)
+        num = n * key_value + 0.5 * k * key_value
+        total = total + num
+
+        col_2 = []
+        for j in range(n):
+            col_2.append(square)
+        for r in range(k):
+            half = r'''\tikz 
+            \filldraw[fill=cyan, draw=cyan] (0,0.3) -- (0.3,0) -- (0.6,0.3);'''
+            col_2.append(half)
+
+        col_2 = "\\ ".join(col_2)
+        data.append([f"Week {i + 1}", col_2])
+
+    item = random.choice([['pet', 'hamsters'], ['jewellery', 'rings']])
+    key = r"\textbf{Key}: %s\textbf{ = %s %s}" \
+          % (square, key_value, item[1].capitalize())
+    table = mq.draw_table(data)
+    question = f"A {item[0]} shop made a pictogram to show how many {item[1]}"\
+               f" they sold in each week of last month. Find the total " \
+               f"amount of {item[1]} sold in the month. \n {table} \n {key}"
+    answer = mq.dollar(int(total))
     return [question, answer]
