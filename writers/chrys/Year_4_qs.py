@@ -1,6 +1,7 @@
 import random
 import roman
 
+
 from datetime import time, datetime, timedelta
 from math import floor, ceil
 from num2words import num2words
@@ -9,7 +10,7 @@ from statistics import mean
 from random import shuffle
 import names
 
-
+import numpy as np
 import matiq as mq
 
 
@@ -3599,4 +3600,122 @@ def st_7(difficulty):
                f" they sold in each week of last month. Find the total " \
                f"amount of {item[1]} sold in the month. \n {table} \n {key}"
     answer = mq.dollar(int(total))
+    return [question, answer]
+
+
+def as_18(difficulty):
+    """Addition Grid. Chrys."""
+    upper = 16 + 25 * (difficulty - 1)
+    nums = random.sample(range(2, upper), 6)
+    X = np.array([[nums[0]], [nums[1]], [nums[2]]])
+    Y = np.array([[nums[3], nums[4], nums[5]]])
+    result = np.add(X, Y)
+
+    title = ["$+$"]
+    for i in range(3):
+        title.append(r"\textbf{%s}" % nums[i+3])
+
+    data = [title]
+    for j in range(3):
+        row = [r"\textbf{%s}" % X[j][0]]
+        for a in range(3):
+            row.append(str(result[j][a]))
+        data.append(row)
+    answer = mq.draw_table(data)
+
+    if difficulty == 1:
+        for m in range(1, len(data)):
+            for i in range(1, len(data[m])):
+                data[m][i] = ""
+    elif difficulty > 1:
+        values = []
+        a = random.sample(range(1, 3), k=2)
+        b = random.randint(1, 3)
+        n = random.sample(range(1, 3), k=2)
+
+        check = []
+        # Hides values in first column of grid
+        for k in range(2):
+            data[a[k]][0] = ""
+            values.append(data[a[k]][n[k]])
+            check.append((a[k], n[k]))
+        if difficulty == 3:
+            data[0][b] = ""
+            while len(values) < 3:
+                n_2 = random.randint(1, 3)
+                if (n_2, b) not in check:
+                    values.append(data[n_2][b])
+                    n.append(n_2)
+        # Clears Grid elements
+        for m in range(1, len(data)):
+            for i in range(1, len(data[m])):
+                data[m][i] = ""
+        # Reinserts some values into clear grid
+        for k in range(2):
+            data[a[k]][n[k]] = values[k]
+        if difficulty == 3:
+            data[n[2]][b] = values[2]
+
+    table = mq.draw_table(data)
+    question = "Complete the addition grid. \n\n" + table
+    return [question, answer]
+
+
+def md_27(difficulty):
+    """Multiplication Grid. Chrys."""
+    upper = 6 + 2 * difficulty
+    nums_1 = random.sample(range(2, upper), 3)
+    nums_2 = random.sample(range(2, 12), 3)
+    nums = sorted(nums_1) + sorted(nums_2)
+    X = np.array([[nums[0]], [nums[1]], [nums[2]]])
+    Y = np.array([[nums[3], nums[4], nums[5]]])
+    result = np.multiply(X, Y)
+
+    title = ["$\\times$"]
+    for i in range(3):
+        title.append(r"\textbf{%s}" % nums[i+3])
+
+    data = [title]
+    for j in range(3):
+        row = [r"\textbf{%s}" % X[j][0]]
+        for a in range(3):
+            row.append(str(result[j][a]))
+        data.append(row)
+    answer = mq.draw_table(data)
+
+    if difficulty == 1:
+        for m in range(1, len(data)):
+            for i in range(1, len(data[m])):
+                data[m][i] = ""
+    elif difficulty > 1:
+        values = []
+        a = random.sample(range(1, 3), k=2)
+        b = random.randint(1, 3)
+        n = random.sample(range(1, 3), k=2)
+
+        check = []
+        # Hides values in first column of grid
+        for k in range(2):
+            data[a[k]][0] = ""
+            values.append(data[a[k]][n[k]])
+            check.append((a[k], n[k]))
+        if difficulty == 3:
+            data[0][b] = ""
+            while len(values) < 3:
+                n_2 = random.randint(1, 3)
+                if (n_2, b) not in check:
+                    values.append(data[n_2][b])
+                    n.append(n_2)
+        # Clears Grid elements
+        for m in range(1, len(data)):
+            for i in range(1, len(data[m])):
+                data[m][i] = ""
+        # Reinserts some values into clear grid
+        for k in range(2):
+            data[a[k]][n[k]] = values[k]
+        if difficulty == 3:
+            data[n[2]][b] = values[2]
+
+    table = mq.draw_table(data)
+    question = "Complete the addition grid. \n\n" + table
     return [question, answer]
