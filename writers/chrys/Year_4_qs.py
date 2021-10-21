@@ -231,7 +231,6 @@ def pv_9(difficulty):
     return [question, answer]
 
 
-# noinspection PyTypeChecker
 def pv_10(difficulty):
     """Pick the sign to complete the inequality. Chrys."""
     lower = 10 ** (difficulty-1)
@@ -921,7 +920,6 @@ def md_9(difficulty):
     return [question, answer]
 
 
-# noinspection PyTypeChecker
 def md_10(difficulty):
     """Find missing number in multiplication/division"""
     a = random.randint(2 + difficulty, 9 + difficulty)
@@ -1870,7 +1868,6 @@ def fr_19(difficulty):
     return [question, answer]
 
 
-# noinspection PyTypeChecker
 def fr_20(difficulty):
     """Find missing value in subtraction/addition of two fractions. Chrys."""
     b = random.randint(3, 9 + difficulty)
@@ -3713,5 +3710,5 @@ def md_27(difficulty):
             data[n[2]][b] = values[2]
 
     table = mq.draw_table(data)
-    question = "Complete the addition grid. \n\n" + table
+    question = "Complete the multiplication grid. \n\n" + table
     return [question, answer]
