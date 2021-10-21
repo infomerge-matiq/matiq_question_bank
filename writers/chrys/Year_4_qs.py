@@ -1,20 +1,16 @@
 import random
-import roman
-
-
+import numpy as np
 from datetime import time, datetime, timedelta
 from math import floor, ceil
-from num2words import num2words
 from statistics import mean
 
-from random import shuffle
-import names
-
-import numpy as np
 import matiq as mq
-
+import names
+from num2words import num2words
+import roman
 
 # NUMBER AND PLACE VALUE_______
+
 
 def pv_1(difficulty):
     """
@@ -900,7 +896,7 @@ def md_8(difficulty):
         rand = random.randint(2, round(0.5*num))
         if rand not in factor and rand not in choices:
             choices.append(str(rand))
-    shuffle(choices)
+    random.shuffle(choices)
     choices = ",\\ ".join([str(k) for k in choices])
 
     question = r'''
@@ -1177,7 +1173,7 @@ def md_21(difficulty):
         for k in choices:
             if rand / k != b and k / rand != b and rand not in choices:
                 choices.append(rand)
-    shuffle(choices)
+    random.shuffle(choices)
     choices = ",\\ ".join([str(i) for i in choices])
 
     question = r'''
@@ -1485,7 +1481,7 @@ def fr_6(difficulty):
             f"${mq.latex_frac(numerator[k], denominator[k])}$",
             numerator[k] / denominator[k]
         ))
-    shuffle(values)
+    random.shuffle(values)
 
     n = random.randint(0, 1)
     ordered = [
@@ -1700,7 +1696,7 @@ def fr_14(difficulty):
 
     choices = []
     colour = ["cyan", "red", "yellow", "orange"]
-    shuffle(colour)
+    random.shuffle(colour)
     for i in range(quantity):
         shaded_boxes = ""
         white_boxes = ""
@@ -1750,7 +1746,7 @@ def fr_15(difficulty):
                    r'text opacity=0, rotate=90,' \
                    r'draw=yellow,fill=yellow] (T) {};'
         order.append(triangle)
-    shuffle(order)
+    random.shuffle(order)
 
     r = ""
     if b <= 6 and b % 2 == 1:
@@ -2960,7 +2956,7 @@ def st_4(difficulty):
     if difficulty == 3:
         quant_1 = random.choices(range(1, 2), k=2)
         quant_1.append(max(quant_1) + 1)
-        shuffle(quant_1)
+        random.shuffle(quant_1)
         a = random.randint(1, 2)
         quant = random.choices((quant_1, [a, a, a]), weights=(5, 1))[0]
         choices.append('Triangle')
@@ -2976,7 +2972,7 @@ def st_4(difficulty):
         shapes.append(mq.draw_square())
     for k in range(quant[2]):
         shapes.append(mq.draw_triangle())
-    shuffle(shapes)
+    random.shuffle(shapes)
 
     n = quant[0] + quant[1] + quant[2]
     joined_shapes = '&'.join(map(str, [shapes[i] for i in range(n)]))
@@ -3048,7 +3044,7 @@ def fr_30(difficulty):
     n = random.randint(0, 1)
     op = ["$+$", "$-$"][n]
     if n == 0:
-        shuffle(values)
+        random.shuffle(values)
     else:
         values.sort(key=lambda x: x[1])
 
@@ -3607,9 +3603,9 @@ def as_18(difficulty):
     """Addition Grid. Chrys."""
     upper = 16 + 25 * (difficulty - 1)
     nums = random.sample(range(2, upper), 6)
-    X = np.array([[nums[0]], [nums[1]], [nums[2]]])
-    Y = np.array([[nums[3], nums[4], nums[5]]])
-    result = np.add(X, Y)
+    x = np.array([[nums[0]], [nums[1]], [nums[2]]])
+    y = np.array([[nums[3], nums[4], nums[5]]])
+    result = np.add(x, y)
 
     title = ["$+$"]
     for i in range(3):
@@ -3617,7 +3613,7 @@ def as_18(difficulty):
 
     data = [title]
     for j in range(3):
-        row = [r"\textbf{%s}" % X[j][0]]
+        row = [r"\textbf{%s}" % x[j][0]]
         for a in range(3):
             row.append(str(result[j][a]))
         data.append(row)
@@ -3667,9 +3663,9 @@ def md_27(difficulty):
     nums_1 = random.sample(range(2, upper), 3)
     nums_2 = random.sample(range(2, 12), 3)
     nums = sorted(nums_1) + sorted(nums_2)
-    X = np.array([[nums[0]], [nums[1]], [nums[2]]])
-    Y = np.array([[nums[3], nums[4], nums[5]]])
-    result = np.multiply(X, Y)
+    x = np.array([[nums[0]], [nums[1]], [nums[2]]])
+    y = np.array([[nums[3], nums[4], nums[5]]])
+    result = np.multiply(x, y)
 
     title = ["$\\times$"]
     for i in range(3):
@@ -3677,7 +3673,7 @@ def md_27(difficulty):
 
     data = [title]
     for j in range(3):
-        row = [r"\textbf{%s}" % X[j][0]]
+        row = [r"\textbf{%s}" % x[j][0]]
         for a in range(3):
             row.append(str(result[j][a]))
         data.append(row)
