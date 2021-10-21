@@ -9,8 +9,8 @@ import names
 from num2words import num2words
 import roman
 
-# NUMBER AND PLACE VALUE_______
 
+# NUMBER AND PLACE VALUE_______
 
 def pv_1(difficulty):
     """
@@ -33,7 +33,7 @@ def pv_1(difficulty):
         numbers[n] = "\\makebox[1em]{\\hrulefill}"
     else:
         numbers.append("\\fillin[][1em]")
-        answer = mq.dollar(step * (k + 1))
+        answer = mq.dollar(step * k)
 
     sequence = ",\\ ".join(numbers)
     question = f"Find the {['missing', 'next'][i]} number in the sequence. " \
@@ -105,7 +105,8 @@ def pv_4(difficulty):
         choice1 = places[i]
         choices.append(choice1)
     answer = choices[d-1]
-    return mq.multiple_choice(question, choices, answer)
+    return mq.multiple_choice(question, choices, answer,
+                              onepar=False, reorder=False)
 
 
 def pv_5(difficulty):
@@ -213,7 +214,7 @@ def pv_8(difficulty):
     else:
         c.sort(key=lambda x: x[1], reverse=True)
     answer = c[i - 1][0]
-    return mq.multiple_choice(question, choices, answer)
+    return mq.multiple_choice(question, choices, answer, onepar=False)
 
 
 def pv_9(difficulty):
@@ -246,7 +247,8 @@ def pv_10(difficulty):
         answer = choices[0]
     else:
         answer = choices[1]
-    return mq.multiple_choice(question, choices, answer)
+    return mq.multiple_choice(question, choices, answer,
+                              reorder=False, onepar=False)
 
 
 def pv_11(difficulty):
@@ -271,7 +273,8 @@ def pv_11(difficulty):
         answer = choices[0]
     else:
         answer = choices[1]
-    return mq.multiple_choice(question, choices, answer)
+    return mq.multiple_choice(question, choices, answer,
+                              reorder=False, onepar=False)
 
 
 def pv_12(difficulty):
@@ -767,7 +770,7 @@ def md_2(difficulty):
     for i in range(0, difficulty + 1):
         answer.append(sequence[n[i]])
         sequence[n[i]] = "\\makebox[0.025\\textwidth]{\\hrulefill}"
-
+    answer.sort()
     answer = ",\\ ".join(answer)
     sequence = ",\\ ".join(sequence)
     question = f"Fill in the missing numbers in the sequence: \n\n {sequence} "
@@ -800,9 +803,7 @@ def md_4(difficulty):
 
 
 def md_5(difficulty):
-    """
-    Factor pair multiple choice, Chrys.
-    """
+    """Factor pair multiple choice, Chrys."""
     while True:
         n = random.randint(1, 25 * difficulty)
         if len(mq.factors(n)) > 4:
@@ -874,7 +875,7 @@ def md_7(difficulty):
     answer = choices[(n + k) % 2]
     question = f"True or False, the number {a} is " \
                f"{is_not} a multiple of {num}?"
-    return mq.multiple_choice(question, choices, answer)
+    return mq.multiple_choice(question, choices, answer, reorder=False)
 
 
 def md_8(difficulty):
@@ -927,13 +928,13 @@ def md_10(difficulty):
     n = random.randint(0, 1)
     values = [[a, b, a * b], [a * b, a, b]][n]
     sign = ["$\\times$", "$\\div$"][n]
-
+    values = [str(i) for i in values]
     k = random.randint(0, 1)
-    answer = str(values[k])
+    answer = values[k]
     values[k] = "\\makebox[0.03\\textwidth]{\\hrulefill}"
 
-    question = "Fill in the missing value. \n\n \\begin{center}" \
-               f"{values[0]} {sign} {values[1]} = {values[2]} \\end{{center}}"
+    question = "Fill in the missing value. \n\n" \
+               f"{values[0]} {sign} {values[1]} = {values[2]}"
     return [question, answer]
 
 
@@ -1300,7 +1301,7 @@ def md_25(difficulty):
     choices = ["True", "False"]
     answer = choices[n]
     question = f"Is {a} divisible by {b}?"
-    return mq.multiple_choice(question, choices, answer)
+    return mq.multiple_choice(question, choices, answer, reorder=False)
 
 
 def md_26(difficulty):
@@ -1583,7 +1584,8 @@ def fr_10(difficulty):
         answer = choices[0]
     else:
         answer = choices[1]
-    return mq.multiple_choice(question, choices, answer)
+    return mq.multiple_choice(question, choices, answer,
+                              reorder=False, onepar=False)
 
 
 def fr_11(difficulty):
@@ -1613,7 +1615,7 @@ def fr_11(difficulty):
             choices.append(f"${mq.latex_frac(a_2, b_2)}$")
             my_list.append(a_2 / b_2)
 
-    question = "Which of these fractions is equivalent to " \
+    question = "Which fraction is equivalent to " \
                f"${mq.latex_frac(m, n)}$?"
     return mq.multiple_choice(question, choices, answer)
 
@@ -1716,7 +1718,7 @@ def fr_14(difficulty):
     question = f"What model has had ${mq.latex_frac_simplify(m[0], n[0])}$ " \
                f"of it shaded?"
     answer = choices[0]
-    return mq.multiple_choice(question, choices, answer)
+    return mq.multiple_choice(question, choices, answer, onepar=False)
 
 
 def fr_15(difficulty):
@@ -2014,7 +2016,8 @@ def fr_23(difficulty):
         choices.append(dec_places[j])
 
     answer = choices[(difficulty * k) + d - 1]
-    return mq.multiple_choice(question, choices, answer)
+    return mq.multiple_choice(question, choices, answer,
+                              onepar=False, reorder=False)
 
 
 def fr_24(difficulty):
@@ -2062,7 +2065,7 @@ def fr_25(difficulty):
     question = "Which number line has a coloured segment of length " \
                f"${mq.latex_frac(a[0],b[0])}$?"
     answer = choices[0]
-    return mq.multiple_choice(question, choices, answer)
+    return mq.multiple_choice(question, choices, answer, onepar=False)
 
 # MONEY QUESTIONS______________________
 
@@ -2255,7 +2258,7 @@ def me_6(difficulty):
 
     answer = mq.time_to_words(time_in[0] % 12, time_in[1])
     choices.extend([choice1, choice2, choice3, answer])
-    return mq.multiple_choice(question, choices, answer)
+    return mq.multiple_choice(question, choices, answer, onepar=False)
 
 
 def me_7(difficulty):
@@ -2290,9 +2293,9 @@ def me_7(difficulty):
         choices.append(choice1)
 
     if minutes[0] > 30:
-        choice2 = time(hour + 1, 60 - minutes[0])
+        choice2 = time((hour + 1) % 24, 60 - minutes[0])
     elif minutes[0] == 30 or minutes[0] == 0:
-        choice2 = time(hour + 1, minutes[4])
+        choice2 = time((hour + 1) % 24, minutes[4])
     else:
         choice2 = time(hour, 60 - minutes[0])
     choice2 = [choice2.strftime("%H:%M"), choice2.strftime("%I:%M %p")][n]
@@ -2306,7 +2309,7 @@ def me_7(difficulty):
 
     answer = [time_out.strftime("%H:%M"), time_out.strftime("%I:%M %p")][n]
     choices.extend([choice2, choice3, answer])
-    return mq.multiple_choice(question, choices, answer)
+    return mq.multiple_choice(question, choices, answer, onepar=False)
 
 
 def me_8(difficulty):
@@ -2354,7 +2357,7 @@ def me_8(difficulty):
     choices = choices + [choice1, answer]
     question = f"The time is {words_or_number[0]}, " \
                f"what time will it be in {words_or_number[1]} minutes?"
-    return mq.multiple_choice(question, choices, answer)
+    return mq.multiple_choice(question, choices, answer, onepar=False)
 
 
 def me_9(difficulty):
@@ -2438,7 +2441,7 @@ def me_10(difficulty):
             time(time_in[1] % 12, time_in[0]).strftime("%H:%M")
         ][n]
         choices.append(choice_2)
-    return mq.multiple_choice(question, choices, answer)
+    return mq.multiple_choice(question, choices, answer, onepar=False)
 
 
 def me_11(difficulty):
@@ -2677,7 +2680,7 @@ def pd_1(difficulty):
     question = f"What transformation has occurred? \n\n {pic}"
     choices = ["Translation", "Reflection"]
     answer = choices[m]
-    return mq.multiple_choice(question, choices, answer)
+    return mq.multiple_choice(question, choices, answer, reorder=False)
 
 
 def st_1(difficulty):
@@ -2846,7 +2849,7 @@ def sh_2(difficulty):
         answer = choices[1]
     else:
         answer = choices[2]
-    return mq.multiple_choice(question, choices, answer)
+    return mq.multiple_choice(question, choices, answer, reorder=False)
 
 
 def st_2(difficulty):
@@ -2991,7 +2994,7 @@ def st_4(difficulty):
 
     question = "If we were to select one of these shapes at random, " \
                f"which one are we most likely to choose? \n\n {model}"
-    return mq.multiple_choice(question, choices, answer)
+    return mq.multiple_choice(question, choices, answer, onepar=False)
 
 
 def st_5(difficulty):
@@ -3313,7 +3316,8 @@ def me_20(difficulty):
     answer = results[0][0]
     question = f"Which of these points on the ruler are {size} each other? " \
                + ruler
-    return mq.multiple_choice(question, choices, answer)
+    return mq.multiple_choice(question, choices, answer,
+                              reorder=False, onepar=False)
 
 
 def me_21(difficulty):
@@ -3362,11 +3366,13 @@ def me_21(difficulty):
     ruler = mq.ruler(length, additional, unit[0])
 
     m = random.randint(0, 2)
-    choice = values[m][1] * unit[1]
+    choice = round(values[m][1] * unit[1], 1)
+    if choice % 1 == 0:
+        choice = round(choice)
     question = "Which two points on the ruler are " \
                f"{choice}cm apart? \n\n {ruler}"
     answer = values[m][0]
-    return mq.multiple_choice(question, choices, answer)
+    return mq.multiple_choice(question, choices, answer, onepar=False)
 
 
 def me_22(difficulty):
@@ -3711,4 +3717,196 @@ def md_27(difficulty):
 
     table = mq.draw_table(data)
     question = "Complete the multiplication grid. \n\n" + table
+    return [question, answer]
+
+
+def as_19(difficulty):
+    """Do calculations using data from table to answer questions. Chrys."""
+    upper = 100 * difficulty
+    lower = 40 * difficulty
+    nums = random.sample(range(lower, upper), k=7)
+    days = ["Monday", "Tuesday", "Wednesday", "Thursday",
+            "Friday", "Saturday", "Sunday"]
+
+    data = [["Day", "Visitors"]]
+    values = []
+    for i in range(7):
+        data.append([days[i], str(nums[i])])
+        values.append([days[i], nums[i]])
+    table = mq.draw_table(data)
+
+    name = random.choice(["gym", "swimming pool"])
+    question = f"The table shows how many people visited a {name} in a week. "
+    n = random.randint(0, 2)
+
+    if n == 0:
+        result = 0
+        for j in range(5):
+            result = result + nums[j]
+        question += "How many people visited on weekdays " \
+                    "(Monday to Friday)? \n"
+    elif n == 1:
+        result = nums[5] + nums[6]
+        question += "How many people visited on the weekend " \
+                    "(Saturday and Sunday)? \n"
+    else:
+        values.sort(key=lambda x: x[1], reverse=True)
+        k = sorted(random.sample(range(7), k=2))
+        question += f"How many more people went on {values[k[0]][0]} " \
+                    f"than on {values[k[1]][0]}? \n"
+        result = values[k[0]][1] - values[k[1]][1]
+
+    answer = mq.dollar(result)
+    question = question + table
+    return [question, answer]
+
+
+def me_24(difficulty):
+    """Worded distance question. Chrys."""
+    n = random.randint(0, 1)
+    lower = [100, 400][n]
+    upper = [lower + 33 * difficulty, lower + 66 * difficulty][n]
+    nums = sorted(random.sample(range(lower, upper), k=2))
+
+    difference = nums[1] - nums[0]
+    k = random.choices([0, 1], weights=(difficulty, 1))[0]
+    difference = [difference, round(difference * 0.01, 2)][k]
+    cm_m = ["cm", "m"][k]
+    nums = [round(0.01 * i, 2) for i in nums]
+
+    sport = ["high jump", "long jump"][n]
+    high_far = [["high", "higher"], ["far", "further"]][n]
+    name = [names.get_first_name(), names.get_first_name()]
+
+    question = f"{name[0]} and {name[1]} are competing in the {sport}. " \
+               f"{name[0]} jumps {nums[0]}m. {name[1]} jumps " \
+               f"{difference}{cm_m} {high_far[1]} than {name[0]}. " \
+               f"How {high_far[0]} did {name[1]} jump?"
+    answer = f"{nums[1]}m"
+    return [question, answer]
+
+
+def me_25(difficulty):
+    """Worded question, find height by multiplying height of single item by
+    quantity. Chrys."""
+    n = random.randint(0, 2)
+    lower = [6, 10, 20][n]
+    upper = [10, 20, 40][n]
+    if n == 2:
+        lower_2 = 2 + difficulty
+        upper_2 = 9 + difficulty
+    else:
+        lower_2 = 3 * difficulty
+        upper_2 = 7 * difficulty
+
+    thickness = random.randint(lower, upper)
+    quantity = random.randint(lower_2, upper_2)
+
+    k = round(n * 0.4)
+    unit = ["mm", "cm", "m"]
+    unit_format = ["centimetres", "metres"][k]
+    items = [["books", "book"], ["tiles", "tile"], ["boxes", "box"]][n]
+
+    question = f"There are {quantity} {items[0]} in a stack. " \
+               f"Each {items[1]} is {thickness}{unit[k]} thick. " \
+               f"How high is the stack in {unit_format}?"
+    result = mq.convert_measurement(quantity * thickness, unit[k], unit[k+1])
+    result = round(result, 2)
+    if result % 1 == 0:
+        result = round(result)
+    answer = f"{result}{unit[k+1]}"
+    return [question, answer]
+
+
+def me_26(difficulty):
+    """Worded question, find how many items fit within a given width. Chrys."""
+    n = random.choices([0, 1, 2], weights=(difficulty, 1, 2), k=1)[0]
+    thickness = random.randint(3, 5)
+    quantity = random.randint(3 + difficulty, 9 + difficulty) * [1, 1, 3][n]
+    width = thickness * quantity
+    cm_m = ["cm", "m", "m"][n]
+    if n == 0:
+        width = round(0.1 * width, 1)
+        if width % 1 == 0:
+            width = round(width)
+    items = ["shelf", "bridge", "car park"][n]
+    objects = ["book", "lane", "parking space"][n]
+    question = f"A {items} is {width}m wide. Each {objects} is " \
+               f"{thickness}{cm_m} wide. How many {objects}s can we fit " \
+               f"across the {items}? Write your answer in metres."
+    answer = mq.dollar(quantity)
+    return [question, answer]
+
+
+def me_27(difficulty):
+    """Worded question, find distance travelled over a period of time by
+    firstly working out distance travelled per minute. Chrys."""
+    n = random.randint(0, 2)
+    lower = [250, 800, 10000][n]
+    upper = [500, 1000, 13000][n]
+
+    dist_per_min = random.randint(lower, upper)
+    if difficulty < 3:
+        dist_per_min = round(dist_per_min * 0.01) * 100 \
+                       + 50 * (difficulty - 1)
+
+    start_min = random.randint(1 + difficulty, 5 + difficulty)
+    start_distance = round((start_min * dist_per_min) * 0.001, 2)
+    if start_distance % 1 == 0:
+        start_distance = round(start_distance)
+
+    minute = "minute"
+    if difficulty == 3:
+        end_min = random.randint(1, round(0.5 * start_min))
+    else:
+        end_min = 1
+    if end_min > 1:
+        minute += "s"
+
+    result = end_min * dist_per_min
+    m_km = ["m", "metres"]
+    if result > 2500:
+        result = round(result * 0.001, 2)
+        m_km = ["km", "kilometres"]
+        if result % 1 == 0:
+            result = round(result)
+
+    item = ["cyclist", "train", "plane"][n]
+    they_it = ["they", "it", "it"][n]
+    question = f"A {item} travelled {start_distance}km in {start_min} " \
+               f"minutes. How far did {they_it} travel in " \
+               f"{end_min} {minute}?. Write your answer in {m_km[1]}."
+    answer = f"{result}{m_km[0]}"
+    return [question, answer]
+
+
+def me_28(difficulty):
+    """Worded question, find halfway or quarter distance between two locations.
+     Chrys."""
+    n = random.randint(0, 2)
+    vehicle = ["spacecraft", "plane", "train"][n]
+
+    k = random.randint(0, 1)
+    location = [
+        [["the moon", 38440], ["the international space station", 340]],
+        [["Athens", 2400], ["New York", 5400]],
+        [["Glasgow", 640], ["Manchester", 312]]
+    ][n][k]
+
+    if difficulty > 1:
+        location[1] = location[1] + 4 * random.randint(1, 1 + difficulty)
+
+    m = random.choices([0, 1, 2], weights=(2, difficulty + 1, difficulty), k=1
+                       )[0]
+    travelled = [
+        ["halfway", 0.5],
+        ["a quarter of the way", 0.25],
+        ["three quarters", 0.75]
+    ][m]
+
+    question = f"A {vehicle} is on a journey to {location[0]}. " \
+               f"The total distance of the journey is {location[1]}km. " \
+               f"The {vehicle} is {travelled[0]} into the journey. " \
+               f"How far has the {vehicle} travelled? Write your answer in km."
+    answer = f"{round(location[1] * travelled[1])}km"
     return [question, answer]
