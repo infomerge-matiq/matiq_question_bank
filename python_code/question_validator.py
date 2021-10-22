@@ -1,11 +1,7 @@
 import os
 import random
-import re
 
-from num2words import num2words
-import roman
-
-from functions import *
+import matiq as mq
 
 
 # Insert your question here.
@@ -18,6 +14,11 @@ def my_question(difficulty):
 # Do not edit the code after this line.
 questions_text = ""
 answers_text = ""
+
+# Test if function runs without errors.
+for _ in range(10000):
+    difficulty = random.randint(1, 3)
+    my_question(difficulty)
 
 for _ in range(20):
     difficulty = random.randint(1, 3)
