@@ -2010,12 +2010,16 @@ def fr_23(difficulty):
     question = f"What place is the digit {int(str(value)[- d])} " \
                f"in the number {mq.dollar(n)}?"
     choices = []
+    order = []
     for i in range(difficulty):
         choices.append(int_places[i])
     for j in reversed(range(difficulty)):
         choices.append(dec_places[j])
 
     answer = choices[(difficulty * k) + d - 1]
+    order = [choices[i] for i in range(difficulty, len(choices))]
+    order.extend([choices[j] for j in range(difficulty)])
+    choices = order
     return mq.multiple_choice(question, choices, answer,
                               onepar=False, reorder=False)
 
@@ -3909,4 +3913,187 @@ def me_28(difficulty):
                f"The {vehicle} is {travelled[0]} into the journey. " \
                f"How far has the {vehicle} travelled? Write your answer in km."
     answer = f"{round(location[1] * travelled[1])}km"
+    return [question, answer]
+
+
+def me_29(difficulty):
+    """Find quantity needed of an item to bake a cake or using left over amount
+     to find further quantities. Requires converting mass from kg to g. Chrys.
+    """
+    upper = [3, 9, 99][difficulty - 1]
+    a = [25, 10, 1][difficulty - 1]
+    num_1 = 100 * random.randint(1, 3) + a * random.randint(1, upper)
+    num_2 = random.choice([750, 1000, 2000])
+    quant = random.randint(1 + difficulty, 6 + difficulty)
+
+    item = random.choice(["sugar", "flour"])
+    gender = random.choice([['Male', 'He'], ['Female', 'She']])
+    name = names.get_first_name(gender=gender[0])
+    question = f"{name} is baking {quant} cakes. " \
+               f"Each cake needs {num_1}g of {item}. "
+
+    total = num_1 * quant
+    result_1 = ceil(total / num_2)
+    result_2 = floor((result_1 * num_2 - total) / num_1)
+
+    if result_2 > 0:
+        n = random.randint(0, 1)
+    else:
+        n = 0
+
+    answer = [str(result_1), str(result_2)][n]
+    num_2 = round(0.001 * num_2, 2)
+    if num_2 % 1 == 0:
+        num_2 = round(num_2)
+
+    num_3 = result_2 + random.randint(0, 1)
+    s = "s" if num_3 > 1 else ""
+    question = question + [
+        f"How many {num_2}kg bags of {item} does {name} need?",
+        f"{gender[1]} has {num_3} bag{s} of {num_2}kg {item}. "
+        f"How many more cakes could {name} bake with the left over {item}?"
+    ][n]
+    return [question, answer]
+
+
+def me_30(difficulty):
+    """Table, conversion of units and find quantity to match proportion. Chrys.
+    """
+    values_start = []
+    values_end = []
+    quant_start = 0
+    quant_end = 0
+    items = ["Flour", "Milk", "Eggs"]
+
+    flour = random.randint(50 * difficulty, 100 * difficulty)
+    a = [100, 10, 5][difficulty - 1]
+    lower = [1, 7, 14][difficulty - 1]
+    upper = [3, 25, 50][difficulty - 1]
+    milk = a * random.randint(lower, upper)
+    eggs = random.randint(1, 2)
+
+    while len(values_start) < 3:
+        quant_start = random.randint(4 + difficulty, 10 + difficulty)
+        quant_end = random.randint(2, quant_start - 1)
+        my_list = [flour, milk, eggs]
+        if quant_start % quant_end == 0:
+            quant_start = quant_start
+            quant_end = quant_end
+            for i in range(3):
+                values_start.append(my_list[i] * quant_start)
+                values_end.append(my_list[i] * quant_end)
+
+    units = [["g", "g"], [" litres", "ml"], ["", ""]]
+    values_start[1] = \
+        round(mq.convert_measurement(values_start[1], "ml", "l"), 2)
+    if values_start[0] > 1000:
+        values_start[0] = \
+            round(mq.convert_measurement(values_start[0], "g", "kg"), 3)
+        units[0][0] = "kg"
+    for n in range(2):
+        if values_start[n] % 1 == 0:
+            values_start[n] = round(values_start[n])
+
+    data = [["Ingredients", f"{quant_start} People", f"{quant_end} People"]]
+    for j in range(3):
+        data.append([
+            items[j],
+            str(values_start[j]) + units[j][0],
+            str(values_end[j]) + units[j][1]
+        ])
+    table = mq.draw_table(data)
+    answer = table
+    for m in range(1, 3):
+        data[m][2] = r"\makebox[1em]{\hrulefill}%s" % units[m - 1][1]
+    data[3][2] = ""
+    question = f"Change this recipe for {quant_start} people to a recipe for" \
+               f" {quant_end} people. \n {mq.draw_table(data)}"
+    return [question, answer]
+
+
+def me_31(difficulty):
+    """Choose suitable unit for measurements in certain scenarios. Chrys."""
+    n = random.choices(
+        [0, 1, 2, 3], weights=(difficulty, difficulty, 2, 4 - difficulty), k=1
+    )[0]
+    vehicle = random.choice(["plane", "train"])
+    items = [
+        ["size of an ant", "width of a pencil",
+         "thickness of a magazine", "width of a battery",
+         "length of a paperclip"],
+
+        ["length of a spoon", "length of a pen",
+         "width of a piece of paper", "width of a computer screen"],
+
+        ["height of a building", "length of a bus",
+         "length of a running track", "width of a football pitch",
+         "height of a tree", "width of a room"],
+
+        [f"length of a {vehicle} journey", "distance to the moon",
+         "length of a coastline", "length of a motorway"]
+    ][n]
+    item = random.choice(items)
+    choices = ["Millimetres", "Centimetres",
+               "Metres\\hspace{10.5ex}", "Kilometres"]
+    question = f"What metric unit is most suitable at measuring the {item}?"
+    answer = choices[n]
+    return mq.multiple_choice(question, choices, answer, reorder=False)
+
+
+def me_32(difficulty):
+    """Find price for single item using the price for a larger quantity. Chrys.
+    """
+    start_value = 0
+    result = ""
+    quantity = ""
+    while start_value < 1:
+        price = random.randint(2 * difficulty, 5 * difficulty)
+        quantity = random.randint(3 + difficulty, 7 * difficulty)
+        upper = [1, floor(0.5 * quantity), (quantity - 1)][difficulty - 1]
+        additional = random.randint(1, upper)
+        if (additional * 100) % quantity == 0:
+            quantity = quantity
+            start_value = price * quantity + additional
+            result = price + additional / quantity
+
+    item = random.choice(["shirt", "book", "game", "hat"])
+    name = names.get_first_name()
+    question = f"{name} buys {quantity} {item}s for " \
+               f"\\pounds{start_value:.2f}. How much does one {item} cost?"
+    answer = f"\\pounds{result:.2f}"
+    return [question, answer]
+
+
+def me_33(difficulty):
+    """Arrange different distances in ascending/descending order. Chrys.
+    """
+    n = random.randint(1, 2)
+    units = ["mm", "cm", "m", "km"]
+    size = [3, 4, 4][difficulty - 1]
+    nums = random.sample(range(10, 99), k=size)
+    values = []
+    for i in range(len(nums)):
+        convert = mq.convert_measurement(nums[i], units[n], units[i])
+        convert = round(convert, 4)
+        if convert % 1 == 0:
+            convert = round(convert)
+        values.append([convert, units[i], nums[i]])
+
+    convert_2 = mq.convert_measurement(nums[0], units[n-1], units[n])
+    values.append([nums[0], units[n-1], convert_2])
+    sequence_1 = ', '.join(
+        [str(values[i][0]) + values[i][1] for i in range(len(values))]
+    )
+    k = random.randint(0, 1)
+    order = ["ascending", "descending"][k]
+    if k == 1:
+        values.sort(key=lambda x: x[2], reverse=True)
+    else:
+        values.sort(key=lambda x: x[2])
+
+    sequence_2 = ', '.join(
+        [str(values[j][0]) + values[j][1] for j in range(len(values))]
+    )
+    question = f"Arrange these distances in {order} order. \n\n {sequence_1}"
+    answer = sequence_2
     return [question, answer]
