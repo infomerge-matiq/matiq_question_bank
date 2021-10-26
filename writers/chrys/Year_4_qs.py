@@ -3214,7 +3214,7 @@ def fr_31(difficulty):
         ''' % (a, length, b)
 
     question = "What decimal is shown on the number line? \n\n" \
-               + mq.num_line(b, additional=marker, length=length)
+               + mq.num_line(b, extra=marker, length=length)
     answer = str(round(a / b, 2))
     return [question, answer]
 
@@ -4138,7 +4138,7 @@ def me_34(difficulty):
     a = random.randint(1, values[0] - 1)
     marker = r'''\fill [shift={(%d * %f/%d, 7pt)}, color=red] (0,0) -- 
     (0.2cm, 0.4cm) -- (-0.2cm, 0.4cm) -- cycle;''' % (a, length, values[0])
-    line = mq.num_line(values[0], additional=marker,
+    line = mq.num_line(values[0], extra=marker,
                        length=length, start=start, end=end)
 
     result = values[1] + round((a / values[0]) * (values[2] - values[1]), 2)
@@ -4280,3 +4280,245 @@ def sh_7(difficulty):
 
     answer = choices[[0, 3][n]]
     return mq.multiple_choice(question, choices, answer, onepar=False)
+
+
+def sh_8(difficulty):
+    """Multiple Choice, Choose which shape is/isn't a regular polygon.
+    Chrys."""
+    n = random.randint(0, 1)
+    size = 1.3
+
+    rectangle = r"\tikz \draw (0,0) rectangle (1.5cm,1cm);"
+    rhombus = r"\tikz \draw (0,0) -- (%f,0) -- (%f,0.9) -- (%f,0.9) -- (0,0);"\
+              % (size-0.4, size + 0.4, 0.8)
+    shape_1 = r"""
+    \tikz \draw (0,0) -- (%f,0) -- (%f, 0.5) -- (%f,1) -- (0,1) -- (0, 0);
+    """ % (size-0.6, size + 0.4, size-0.6)
+    irregular_pent = r"""
+    \tikz \draw (0.5,0) -- (%f,0) -- (%f,0.8) -- (%f, 1.5) -- (0, 0.8) -- 
+    (0.5,0);""" % (size - 0.5, size, size * 0.5)
+
+    is_not = ["", "NOT"][n]
+
+    regular = [mq.draw_square(size + 2, "black", "white", rotate=45)]
+    non_reg = [
+        mq.draw_triangle(size=size+1, draw="black", fill="white"),
+        rhombus,
+        irregular_pent,
+        rectangle,
+        shape_1
+    ]
+    weights_1 = (72,)
+    for i in range(3, 5 + 2 * difficulty):
+        shape = mq.draw_regular_polygon(sides=i, size=size)
+        regular.append(shape)
+        weights_1 = weights_1 + (100 - 7 * i,)
+
+    weights_2 = (difficulty, difficulty, difficulty, 1, 1)
+
+    b = [2, 2, 3][difficulty - 1]
+    k = [[1, b], [b, 1]][n]
+    choices = []
+    while len(choices) != (k[0] + k[1]):
+        if difficulty == 1:
+            choices = random.sample(regular, k=k[0]) \
+                      + random.sample(non_reg, k=k[1])
+        else:
+            choices_1 = []
+            choices_2 = []
+            for i in range(k[0]):
+                shape_1 = random.choices(regular, weights=weights_1, k=1)[0]
+                if shape_1 not in choices_1:
+                    choices_1.append(shape_1)
+            for j in range(k[1]):
+                shape_2 = random.choices(non_reg, weights=weights_2, k=1)[0]
+                if shape_2 not in choices_2:
+                    choices_2.append(shape_2)
+            if len(choices_1) == k[0] and len(choices_2) == k[1]:
+                choices = choices_1 + choices_2
+
+    question = f"Which one of these shapes is {is_not} regular?"
+    answer = choices[[0, b][n]]
+    return mq.multiple_choice(question, choices, answer, onepar=False)
+
+
+def st_8(difficulty):
+    """Find mean using pictogram. Chrys."""
+    multiplier = [1, 2, 2][difficulty - 1]
+    key_value = random.randint(difficulty, 3 + difficulty) * multiplier
+
+    m = random.randint(0, 1)
+    item = [["zoo", "exhibit"], ["town", "park"]][m]
+    data = [[item[1].capitalize(), "Visitors"]]
+
+    col_1 = [
+        ["Lions", "Tigers", "Pandas", "Elephants"],
+        [
+            ["Mossy", "Gardens"], ["Castle", "Plaza"],
+            ["Willows", "Grounds"], ["Forest", "Lake"]
+         ]
+    ][m]
+    square = mq.draw_square(0.1, 'orange', 'orange', rotate=45)
+
+    result = 0
+    col_2 = []
+    while result < 1:
+        values = []
+        col_2 = []
+        for i in range(4):
+            n = random.randint(1, 5)
+            k = 0
+            if difficulty > 1:
+                k = random.randint(0, 1)
+            values.append(n * key_value + 0.5 * k * key_value)
+            my_list = []
+            for j in range(n):
+                my_list.append(square)
+            for r in range(k):
+                half = r'''\tikz \filldraw[fill=orange, draw=orange] 
+                (0,0.3) -- (0.3,0) -- (0.6,0.3);'''
+                my_list.append(half)
+            my_list = "\\ ".join(my_list)
+            col_2.append(my_list)
+        if mean(values) % 1 == 0:
+            result = int(mean(values))
+            col_2 = col_2
+
+    for h in range(4):
+        if m == 1:
+            data.append(
+                [r"\shortstack{%s\\%s}" % (col_1[h][0], col_1[h][1]), col_2[h]]
+            )
+        else:
+            data.append([col_1[h], col_2[h]])
+    key = r"\textbf{Key}: %s\textbf{ = %s %s}" \
+          % (square, key_value, 'Visitors')
+    table = mq.draw_table(data)
+    question = f"A {item[0]} made a pictogram to show how many visitors"\
+               f" each {item[1]} received in an hour. Find the mean " \
+               f"amount of visitors. \n {table} \n {key}"
+    answer = mq.dollar(result)
+    return [question, answer]
+
+
+def st_9(difficulty):
+    """Find range using pictogram. Chrys."""
+    multiplier = [1, 2, 2][difficulty - 1]
+    key_value = random.randint(difficulty * 3, 6 * difficulty) * multiplier
+
+    m = random.randint(0, 1)
+    item = [
+        ["farmer", "animals", "live on the farm"],
+        ["racing team", "points", "they won each race"]][m]
+    title = ["Animal", "Race"][m]
+    data = [[title, f"Number of {item[1].capitalize()}"]]
+
+    col_1 = [
+        ["Pigs", "Sheep", "Hens", "Cows"],
+        [["The", "Oval"], ["Bay", "Circuit"],
+         ["Heritage", "Track"], ["Bracknell", "Course"]]
+    ][m]
+    square = mq.draw_square(0.1, 'red', 'red', rotate=45)
+
+    values = []
+    for i in range(4):
+        n = random.randint(1, 5)
+        k = 0
+        if difficulty > 1:
+            k = random.randint(0, 1)
+        num = n * key_value + 0.5 * k * key_value
+        values.append(num)
+        col_2 = []
+        for j in range(n):
+            col_2.append(square)
+        for r in range(k):
+            half = r'''\tikz \filldraw[fill=red, draw=red] 
+            (0,0.3) -- (0.3,0) -- (0.6,0.3);'''
+            col_2.append(half)
+        col_2 = "\\ ".join(col_2)
+        if m == 1:
+            data.append(
+                [r"\shortstack{%s\\%s}" % (col_1[i][0], col_1[i][1]), col_2])
+        else:
+            data.append([col_1[i], col_2])
+    values.sort()
+    result = values[len(values) - 1] - values[0]
+
+    key = r"\textbf{Key}: %s\textbf{ = %s %s}" \
+          % (square, key_value, item[1].capitalize())
+    table = mq.draw_table(data)
+    question = f"A {item[0]} made a pictogram to show how many {item[1]}"\
+               f" {item[2]}. Find the range " \
+               f"of the data. \n {table} \n {key}"
+    answer = mq.dollar(int(result))
+    return [question, answer]
+
+
+def st_10(difficulty):
+    """Find nth Largest/Smallest value using pictogram. Chrys."""
+    power = 2 ** (difficulty - 1)
+    num_key = random.randint(1, 7 - power) * power
+    t = random.randint(0, 1)
+    item = [
+        ["research company", "scientists", "department"],
+        ["shipping company", "ships", "region"]
+    ][t]
+    col_1 = [
+        ["Physics", "Mathematics", "Engineering", "Chemistry"],
+        ["Europe", "Asia", "Africa", "Americas"]
+    ][t]
+    data = [[item[2].capitalize(), f"Number of {item[1].capitalize()}"]]
+
+    angle = [-90, 90, 180]
+    values = []
+    my_list = []
+    k = 0
+    choices = col_1
+    while len(values) < 4:
+        for i in range(4):
+            n = random.randint(1, 6)
+            if difficulty > 1:
+                k = random.randint(0, 1)
+            num = n * num_key + (1 - difficulty / 4) * k * num_key
+            col_2 = []
+            m = []
+            for j in range(n):
+                m.append(0)
+            for r in range(k):
+                m.append(difficulty - 1)
+            for h in range(len(m)):
+                circle = r'''\ \begin{tikzpicture} 
+                \filldraw[fill=red, draw=red] (0,0)  arc(%d:270:0.2) --cycle; 
+                \end{tikzpicture}''' % angle[m[h]]
+                if m[h] > 1:
+                    circle = r''' %s
+                    \filldraw[fill=red, draw=red] (0,0) -- (0.2,0) -- 
+                    (0.2, -0.2); %s ''' % (circle[:21], circle[21:])
+                col_2.append(circle)
+            if num not in values:
+                values.append(num)
+                col_2 = "\\ ".join(col_2)
+                data.append([col_1[i], col_2])
+                my_list.append([col_1[i], num])
+
+    key = r"\textbf{Key}: %s\textbf{ = %s %s}" \
+          % (mq.draw_circle(0.2, 'red', 'red'), num_key, item[1].capitalize())
+    table = mq.draw_table(data)
+
+    m = random.randint(0, len(my_list) - 2)
+    a = random.randint(0, 1)
+    order = ["smallest", "largest"][a]
+    if m == 0:
+        ordinal = ""
+    else:
+        ordinal = num2words(m + 1, ordinal=True)
+    if a == 0:
+        my_list.sort(key=lambda x: x[1])
+    else:
+        my_list.sort(key=lambda x: x[1], reverse=True)
+    question = f"A {item[0]} made a pictogram to show the number of " \
+               f"{item[1]} it has in each {item[2]}. What {item[2]} has " \
+               f"the {ordinal} {order} amount of {item[1]}? " \
+               f"\n {table} \n\n {key}"
+    answer = my_list[m][0]
+    return mq.multiple_choice(question, choices, answer, reorder=False)
