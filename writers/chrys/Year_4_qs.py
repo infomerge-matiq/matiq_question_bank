@@ -2010,7 +2010,6 @@ def fr_23(difficulty):
     question = f"What place is the digit {int(str(value)[- d])} " \
                f"in the number {mq.dollar(n)}?"
     choices = []
-    order = []
     for i in range(difficulty):
         choices.append(int_places[i])
     for j in reversed(range(difficulty)):
@@ -3574,7 +3573,7 @@ def st_7(difficulty):
     key_value = random.randint(difficulty, 2 + difficulty) * multiplier
     data = [['Week', 'Number Sold']]
 
-    square = mq.draw_square(0.1, 'cyan', rotate=45)
+    square = mq.draw_square(0.1, 'cyan', 'cyan', rotate=45)
     total = 0
     for i in range(4):
         n = random.randint(1, 5)
@@ -4012,7 +4011,8 @@ def me_30(difficulty):
 
 
 def me_31(difficulty):
-    """Choose suitable unit for measurements in certain scenarios. Chrys."""
+    """Choose suitable unit for distance measurements in certain scenarios.
+    Chrys."""
     n = random.choices(
         [0, 1, 2, 3], weights=(difficulty, difficulty, 2, 4 - difficulty), k=1
     )[0]
@@ -4097,3 +4097,186 @@ def me_33(difficulty):
     question = f"Arrange these distances in {order} order. \n\n {sequence_1}"
     answer = sequence_2
     return [question, answer]
+
+
+def me_34(difficulty):
+    """Estimate mass on number line. Chrys."""
+    n = random.choices([0, 1], weights=(1, difficulty))[0]
+    unit = ["g", "kg"][n]
+    length = 6
+
+    values = []
+    while len(values) < 1:
+        points = random.randint(2, 10)
+
+        upper = [1000, 100 + 50 * (difficulty - 1)][n]
+        lower = 2
+
+        point_diff = [2, 4, 5, 10, 20]
+        if difficulty == 1:
+            start = 0
+            end = random.randint(lower, upper)
+            if (end - start) / points in point_diff:
+                values.extend([points, start, end])
+        else:
+            k = random.choices([0, 1], weights=(12, n), k=1)[0]
+            m = random.choices([0, 1], weights=(7, (difficulty - 2) * n),
+                               k=1)[0]
+            end = [random.randint(lower, upper), 1][k]
+            start = [random.randint(0, end - 2 + n), end - 1][m]
+            point_diff = [5, 8, 25, 4, 3, 4]
+            if n == 1:
+                point_diff = [8, 25, 4, 0.5, 0.25]
+            if end - start == 1:
+                points = random.choice([2, 4, 5, 10])
+                values.extend([points, start, end])
+            elif end - start > 1 and (end - start) / points in point_diff:
+                values.extend([points, start, end])
+    start = f"{values[1]}{unit}"
+    end = f"{values[2]}{unit}"
+
+    a = random.randint(1, values[0] - 1)
+    marker = r'''\fill [shift={(%d * %f/%d, 7pt)}, color=red] (0,0) -- 
+    (0.2cm, 0.4cm) -- (-0.2cm, 0.4cm) -- cycle;''' % (a, length, values[0])
+    line = mq.num_line(values[0], additional=marker,
+                       length=length, start=start, end=end)
+
+    result = values[1] + round((a / values[0]) * (values[2] - values[1]), 2)
+    if result % 1 == 0:
+        result = int(result)
+    question = "Determine the value on the scale. " \
+               f"Give your answer in {unit}. \n\n {line}"
+    answer = f"{result}{unit}"
+    return [question, answer]
+
+
+def me_35(difficulty):
+    """Choose suitable unit for mass or volume measurements in certain
+    scenarios. Chrys."""
+    n = random.choices([0, 1], weights=(2, difficulty), k=1)[0]
+    unit_type = ["mass", "volume"][n]
+    choices = [["Grams", "Kilograms"], ["Millilitres", "Litres"]][n]
+    k = random.randint(0, 1)
+    items = [
+        [
+            ["an orange", "a mobile phone", "a ladybug",
+             "a screw", "a slice of cake"],
+            ["a piano", "a table", "a stack of bricks",
+             "a sack of potatoes", "a human"]
+        ],
+
+        [
+            ["a glass of water", "a can of soda", "a sachet of vinegar"],
+            ["an aquarium", "a swimming pool", "a tank of fuel", "a pond"]
+        ]
+    ][n][k]
+    item = random.choice(items)
+    question = f"What metric unit would you use to measure the {unit_type} " \
+               f"of {item}?"
+    answer = choices[k]
+    return mq.multiple_choice(question, choices, answer, reorder=False)
+
+
+def me_36(difficulty):
+    """complete inequalities with volume/mass. Chrys."""
+    n = random.randint(0, 1)
+    unit = [["g", "kg"], ["ml", "l"]][n]
+
+    k = random.choices([0, 1], weights=(1, 3))[0]
+    lower = 201 * difficulty
+    upper = 2000 * difficulty
+    a = random.randint(lower, upper)
+    a = [round(a / 1000, difficulty) * 1000, a][k]
+    if a % 1 == 0:
+        a = round(a)
+
+    limit = lower - 1
+    difference = [0, random.randint(-limit, limit)][k]
+    b = random.choices([a + difference, a * 10], weights=(7, difficulty-1))[0]
+    b = round(b / 1000, difficulty) * 1000
+    b_convert = round(mq.convert_measurement(b, unit[0], unit[1]), difficulty)
+    if b_convert % 1 == 0:
+        b_convert = round(b_convert)
+    question = "Choose the sign that correctly completes the statement. \n\n" \
+               r"\begin{center} %s%s $\square$ %s%s \end{center}" \
+               % (a, unit[0], b_convert, unit[1])
+    choices = ["$<$", "$=$", "$>$"]
+    if a > b:
+        answer = choices[2]
+    elif a < b:
+        answer = choices[0]
+    else:
+        answer = choices[1]
+    return mq.multiple_choice(question, choices, answer,
+                              reorder=False, onepar=False)
+
+
+def sh_6(difficulty):
+    """Order shape into quadrilateral or not."""
+    n = random.randint(0, 1)
+    size = 3
+    rectangle = r"\tikz \draw (0,0) rectangle (3cm,1.5cm);"
+    rhombus = r"\tikz \draw (0,0) -- (%f,0) -- (%f, 1) -- (0.5,1) -- (0,0);" \
+              % (size - 0.5, size)
+    shape_1 = r"""
+    \tikz \draw (0,0) -- (%f,0) -- (%f, 0.5) -- (%f,1) -- (0,1) -- (0, 0);
+    """ % (size - 0.5, size, size - 0.5)
+
+    quad = random.choice([
+        mq.draw_regular_polygon(4, size),
+        rectangle,
+        rhombus,
+        mq.draw_square(size=size, draw='black', fill="white", rotate=45)
+    ])
+
+    non_quad = random.choices([
+        mq.draw_semi_circle(radius=size / 2),
+        mq.draw_regular_polygon(sides=random.randint(5, 8), size=size),
+        mq.draw_triangle(size=size, fill='white', draw='black'),
+        shape_1
+    ], weights=(1, 5, 1, 1))[0]
+
+    k = random.choices([0, 1], weights=(1, difficulty))[0]
+    shape = [quad, non_quad][n]
+    is_not = ["", "NOT"][k]
+    choices = ["True", "False"]
+    question = f"The shape below is {is_not} a quadrilateral? \n\n" \
+               r"\begin{center} %s \end{center}" % shape
+    answer = choices[(n + k) % 2]
+    return mq.multiple_choice(question, choices, answer, reorder=False)
+
+
+def sh_7(difficulty):
+    """Multiple Choice, Choose which shape is/isn't a quadrilateral. Chrys."""
+    n = random.choices([0, 1], weights=(difficulty, 2), k=1)[0]
+    size = 1.5
+
+    rectangle = r"\tikz \draw (0,0) rectangle (1.5cm,1cm);"
+    rhombus = r"\tikz \draw (0,0) -- (%f,0) -- (%f, 1) -- (0.5,1) -- (0,0);" \
+              % (size-0.5, size)
+    shape_1 = r"""
+    \tikz \draw (0,0) -- (%f,0) -- (%f, 0.5) -- (%f,1) -- (0,1) -- (0, 0);
+    """ % (size-0.5, size, size-0.5)
+
+    is_not = ["", "NOT"][n]
+    k = [[1, 3], [3, 1]][n]
+    quad = [
+        mq.draw_regular_polygon(4, size),
+        rectangle,
+        rhombus,
+        mq.draw_square(size=size, draw='black', fill="white", rotate=45)
+    ]
+    non_quad = [
+        mq.draw_circle(size=3.2, fill='white', draw='black'),
+        mq.draw_regular_polygon(3, size),
+        shape_1
+    ]
+    for i in range(5, 9):
+        shape = mq.draw_regular_polygon(sides=random.randint(5, 8), size=size)
+        non_quad.append(shape)
+
+    choices = random.sample(quad, k=k[0]) + random.sample(non_quad, k=k[1])
+    question = f"Which one of these shapes is {is_not} a quadrilateral?"
+
+    answer = choices[[0, 3][n]]
+    return mq.multiple_choice(question, choices, answer, onepar=False)
