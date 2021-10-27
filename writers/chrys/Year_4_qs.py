@@ -4337,7 +4337,7 @@ def sh_8(difficulty):
             if len(choices_1) == k[0] and len(choices_2) == k[1]:
                 choices = choices_1 + choices_2
 
-    question = f"Which one of these shapes is {is_not} regular?"
+    question = f"Which one of these shapes is {is_not} a regular polygon?"
     answer = choices[[0, b][n]]
     return mq.multiple_choice(question, choices, answer, onepar=False)
 
@@ -4522,3 +4522,72 @@ def st_10(difficulty):
                f"\n {table} \n\n {key}"
     answer = my_list[m][0]
     return mq.multiple_choice(question, choices, answer, reorder=False)
+
+
+def sh_9(difficulty):
+    """Decide Whether a shape is a polygon or not. Chrys."""
+    n = random.randint(0, 1)
+    true_false = [True, False]
+    polygon = true_false[n]
+    if difficulty < 2:
+        k = 0
+        sides = 4
+    else:
+        k = random.randint(0, 1)
+        sides = random.randint(3, 4)
+    shape = mq.draw_random_shape(polygon, curves=(4 - difficulty), sides=sides)
+    is_not = ["", "NOT"][k]
+    question = f"True or False, this shape is {is_not} a polygon? \n\n {shape}"
+    answer = str(true_false[(n + k) % 2])
+    choices = [str(i) for i in true_false]
+    return mq.multiple_choice(question, choices, answer)
+
+
+def sh_10(difficulty):
+    """Multiple Choice, choose the shape that is/isn't a polygon. Chrys."""
+    n = random.randint(0, 1)
+    is_not = ["", "not"][n]
+    k = [[1, 3], [3, 1]][n]
+    poly = []
+    non_poly = []
+
+    for i in range(4):
+        sides_1 = random.randint(3, 4)
+        poly.append(mq.draw_random_shape(polygon=True, sides=sides_1))
+    if difficulty < 3:
+        b = random.sample(range(5, 10), k=(5-difficulty))
+        for j in range(len(b)):
+            poly.append(mq.draw_regular_polygon(b[j]))
+    for m in range(4):
+        sides_2 = random.randint(3, 4)
+        non_poly.append(mq.draw_random_shape(polygon=False, sides=sides_2))
+
+    a = random.randint(0, 1)
+    flip = random.choices(["", "-"], k=2)
+    parabola_line = [["parabola", "--", "parabola", "--"],
+                     ["--", "--", "--", "--"]][a]
+    x = []
+    while len(x) < 4:
+        nums = random.choices([1, 2, 3, 4, 5], k=4)
+        nums.sort(reverse=True)
+        if nums[3] != nums[2] and nums[2] != nums[1]:
+            x = nums
+    y = random.choice([[3, 3, 2], [1, 2, 3], [1, 4, 3], [3, 2, 3]])
+    x = [i/2 for i in x]
+    y = [j/2 for j in y]
+    shape_1 = r"""\begin{tikzpicture} 
+    \draw (0,0) -- (%s%s,0) %s (%s%s,%s%s) %s 
+    (%s%s,%s%s) %s (%s%s, %s%s) %s cycle; \end{tikzpicture}
+    """ % (flip[0], x[0], parabola_line[0],
+           flip[0], x[1], flip[1], y[0], parabola_line[1],
+           flip[0], x[2], flip[1], y[1], parabola_line[2],
+           flip[0], x[3], flip[1], y[2], parabola_line[3])
+    if a == 0:
+        poly.append(shape_1)
+    else:
+        non_poly.append(shape_1)
+
+    choices = random.sample(poly, k=k[0]) + random.sample(non_poly, k=k[1])
+    question = f"Which one of these shapes is {is_not} a polygon?"
+    answer = choices[[0, 3][n]]
+    return mq.multiple_choice(question, choices, answer, onepar=False)
