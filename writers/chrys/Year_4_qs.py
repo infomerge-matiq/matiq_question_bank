@@ -4591,3 +4591,135 @@ def sh_10(difficulty):
     question = f"Which one of these shapes is {is_not} a polygon?"
     answer = choices[[0, 3][n]]
     return mq.multiple_choice(question, choices, answer, onepar=False)
+
+
+def sh_11(difficulty):
+    """Multiple Choice, choose the shape that is/isn't a polygon. Chrys."""
+    n = random.randint(0, 1)
+    options = ["perpendicular", "parallel"][n]
+    k = random.randint(0, 1)
+    true_false = [[True, False], [False, True]][(n + k) % 2]
+    if k == 1:
+        if difficulty < 2:
+            is_false = [False, False]
+        else:
+            is_false = random.choices([true_false, [False, False]],
+                                      weights=(5, difficulty), k=1)[0]
+        true_false = is_false
+
+    upper = [0, 9, 270][difficulty - 1]
+    rotate = [1, 10][(difficulty - 1) % 2] * random.randint(0, upper)
+    size = 2
+    choices = ["Yes", "No"]
+    drawing = mq.draw_two_lines(size, rotate, true_false[0], true_false[1])
+    question = f"Are these lines {options}? \n\n" \
+               r"\begin{center} %s \end{center}" % drawing
+    answer = choices[k]
+    return mq.multiple_choice(question, choices, answer)
+
+
+def sh_12 (difficulty):
+    """Multiple Choice, True or false if lines are perpendicular or parallel.
+    Chrys."""
+    n = random.randint(0, 1)
+    options = ["perpendicular", "parallel"][n]
+    k = random.randint(0, 1)
+    true_false = [[True, False], [False, True]][(n + k) % 2]
+    if k == 1:
+        is_false = random.choices(
+            [true_false, [False, False]], weights=(difficulty, 3), k=1)[0]
+        true_false = is_false
+
+    upper = [0, 9, 270][difficulty - 1]
+    rotate = [1, 10][(difficulty - 1) % 2] * random.randint(0, upper)
+    m = 0
+    if difficulty == 1:
+        choices = ["Yes", "No"]
+        question = f"Are these lines {options}? \n\n"
+    else:
+        choices = ["True", "False"]
+        m = random.randint(0, 1)
+        is_not = ["", "NOT"][m]
+        question = f"True or False, the two lines are {is_not} {options}? \n\n"
+
+    drawing = mq.draw_two_lines(1.5, rotate, true_false[0], true_false[1])
+    question += r"\hspace{2em} %s" % drawing
+    answer = choices[(k + m) % 2]
+    return mq.multiple_choice(question, choices, answer, reorder=False)
+
+
+def sh_13(difficulty):
+    """Multiple Choice, decide whether lines are perpendicular, parallel or
+    neither. Chrys."""
+    upper = [1, 45, 270][difficulty - 1]
+    rotate = [90, 6, 1][difficulty - 1] * random.randint(0, upper)
+    choices = ["Perpendicular", "Parallel"]
+    n = random.randint(0, 1)
+    if difficulty > 1:
+        n = random.randint(0, 2)
+        choices.append("Neither Parallel or Perpendicular")
+    true_false = [[True, False], [False, True], [False, False]][n]
+    drawing = mq.draw_two_lines(1.5, rotate, true_false[0], true_false[1])
+    question = "Choose the option that best describes these lines. \n\n" \
+               r"\begin{center} %s \end{center}" % drawing
+    answer = choices[n]
+    return mq.multiple_choice(question, choices, answer, False, False)
+
+
+def sh_14(difficulty):
+    """Multiple Choice. Choose out of a selection which lines are either
+    parallel perpendicular or neither. Chrys."""
+    upper = [1, 45, 270][difficulty - 1]
+    rotate = [90, 6, 1][difficulty - 1] * random.randint(0, upper)
+
+    b = 1
+    option = ["perpendicular", "parallel"]
+    if difficulty == 3:
+        option.append("neither parallel nor perpendicular")
+        b = 2
+    n = random.randint(0, b)
+    true_false = [[True, False], [False, True], [False, False]]
+    choices = [
+        mq.draw_two_lines(1, rotate, true_false[n][0], true_false[n][1])]
+    true_false.remove(true_false[n])
+    for j in range(2):
+        rotate = [90, 6, 1][difficulty - 1] * random.randint(0, upper)
+        if n == 2:
+            k = true_false[j]
+        else:
+            k = random.choice(true_false)
+        drawing = mq.draw_two_lines(1, rotate, k[0], k[1])
+        choices.append(drawing)
+    question = f"Which option contains {option[n]} lines. "
+    answer = choices[0]
+    return mq.multiple_choice(question, choices, answer)
+
+
+def st_11(difficulty):
+    """Multiple Choice. Choose out of a selection which lines are either
+    parallel perpendicular or neither. Chrys."""
+    k = random.randint(0, 1)
+    months = [["May", "June", "July", "August"],
+              ["Thursday", "Friday", "Saturday", "Sunday"]][k]
+    data = []
+    a = random.sample(range(difficulty, 10 * difficulty), k=len(months))
+    a = [i * 20 for i in a]
+    for i in range(len(months)):
+        data.append([r'\small %s' % months[i], str(a[i])])
+    bar_chart = mq.bar_chart(data, size=(6, 7), horizontal=False, label="Trees Planted")
+    n = random.randint(0, 1)
+    least_most = ["least", "most"][n]
+    true_false= [False, True][n]
+    data.sort(key=lambda x: x[1], reverse=true_false)
+
+    items = [
+        ["wildlife charity", "trees they planted in each month of summer",
+         "month", f"plant the {least_most} trees"],
+        ["coffee shop", "coffees they sold each day", "day",
+         f"sell the {least_most} coffees"]
+        ][k]
+    question = f"A {items[0]} made a bar chart showing the number of " \
+               f"{items[1]}. What {items[2]} did they {items[3]}? \n\n" \
+               + bar_chart
+    answer = str(data[0][0])
+    return [question, answer]
