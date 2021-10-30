@@ -3214,7 +3214,7 @@ def fr_31(difficulty):
         ''' % (a, length, b)
 
     question = "What decimal is shown on the number line? \n\n" \
-               + mq.num_line(b, additional=marker, length=length)
+               + mq.num_line(b, extra=marker, length=length)
     answer = str(round(a / b, 2))
     return [question, answer]
 
@@ -4138,7 +4138,7 @@ def me_34(difficulty):
     a = random.randint(1, values[0] - 1)
     marker = r'''\fill [shift={(%d * %f/%d, 7pt)}, color=red] (0,0) -- 
     (0.2cm, 0.4cm) -- (-0.2cm, 0.4cm) -- cycle;''' % (a, length, values[0])
-    line = mq.num_line(values[0], additional=marker,
+    line = mq.num_line(values[0], extra=marker,
                        length=length, start=start, end=end)
 
     result = values[1] + round((a / values[0]) * (values[2] - values[1]), 2)
@@ -4280,3 +4280,446 @@ def sh_7(difficulty):
 
     answer = choices[[0, 3][n]]
     return mq.multiple_choice(question, choices, answer, onepar=False)
+
+
+def sh_8(difficulty):
+    """Multiple Choice, Choose which shape is/isn't a regular polygon.
+    Chrys."""
+    n = random.randint(0, 1)
+    size = 1.3
+
+    rectangle = r"\tikz \draw (0,0) rectangle (1.5cm,1cm);"
+    rhombus = r"\tikz \draw (0,0) -- (%f,0) -- (%f,0.9) -- (%f,0.9) -- (0,0);"\
+              % (size-0.4, size + 0.4, 0.8)
+    shape_1 = r"""
+    \tikz \draw (0,0) -- (%f,0) -- (%f, 0.5) -- (%f,1) -- (0,1) -- (0, 0);
+    """ % (size-0.6, size + 0.4, size-0.6)
+    irregular_pent = r"""
+    \tikz \draw (0.5,0) -- (%f,0) -- (%f,0.8) -- (%f, 1.5) -- (0, 0.8) -- 
+    (0.5,0);""" % (size - 0.5, size, size * 0.5)
+
+    is_not = ["", "NOT"][n]
+
+    regular = [mq.draw_square(size + 2, "black", "white", rotate=45)]
+    non_reg = [
+        mq.draw_triangle(size=size+1, draw="black", fill="white"),
+        rhombus,
+        irregular_pent,
+        rectangle,
+        shape_1
+    ]
+    weights_1 = (72,)
+    for i in range(3, 5 + 2 * difficulty):
+        shape = mq.draw_regular_polygon(sides=i, size=size)
+        regular.append(shape)
+        weights_1 = weights_1 + (100 - 7 * i,)
+
+    weights_2 = (difficulty, difficulty, difficulty, 1, 1)
+
+    b = [2, 2, 3][difficulty - 1]
+    k = [[1, b], [b, 1]][n]
+    choices = []
+    while len(choices) != (k[0] + k[1]):
+        if difficulty == 1:
+            choices = random.sample(regular, k=k[0]) \
+                      + random.sample(non_reg, k=k[1])
+        else:
+            choices_1 = []
+            choices_2 = []
+            for i in range(k[0]):
+                shape_1 = random.choices(regular, weights=weights_1, k=1)[0]
+                if shape_1 not in choices_1:
+                    choices_1.append(shape_1)
+            for j in range(k[1]):
+                shape_2 = random.choices(non_reg, weights=weights_2, k=1)[0]
+                if shape_2 not in choices_2:
+                    choices_2.append(shape_2)
+            if len(choices_1) == k[0] and len(choices_2) == k[1]:
+                choices = choices_1 + choices_2
+
+    question = f"Which one of these shapes is {is_not} a regular polygon?"
+    answer = choices[[0, b][n]]
+    return mq.multiple_choice(question, choices, answer, onepar=False)
+
+
+def st_8(difficulty):
+    """Find mean using pictogram. Chrys."""
+    multiplier = [1, 2, 2][difficulty - 1]
+    key_value = random.randint(difficulty, 3 + difficulty) * multiplier
+
+    m = random.randint(0, 1)
+    item = [["zoo", "exhibit"], ["town", "park"]][m]
+    data = [[item[1].capitalize(), "Visitors"]]
+
+    col_1 = [
+        ["Lions", "Tigers", "Pandas", "Elephants"],
+        [
+            ["Mossy", "Gardens"], ["Castle", "Plaza"],
+            ["Willows", "Grounds"], ["Forest", "Lake"]
+         ]
+    ][m]
+    square = mq.draw_square(0.1, 'orange', 'orange', rotate=45)
+
+    result = 0
+    col_2 = []
+    while result < 1:
+        values = []
+        col_2 = []
+        for i in range(4):
+            n = random.randint(1, 5)
+            k = 0
+            if difficulty > 1:
+                k = random.randint(0, 1)
+            values.append(n * key_value + 0.5 * k * key_value)
+            my_list = []
+            for j in range(n):
+                my_list.append(square)
+            for r in range(k):
+                half = r'''\tikz \filldraw[fill=orange, draw=orange] 
+                (0,0.3) -- (0.3,0) -- (0.6,0.3);'''
+                my_list.append(half)
+            my_list = "\\ ".join(my_list)
+            col_2.append(my_list)
+        if mean(values) % 1 == 0:
+            result = int(mean(values))
+            col_2 = col_2
+
+    for h in range(4):
+        if m == 1:
+            data.append(
+                [r"\shortstack{%s\\%s}" % (col_1[h][0], col_1[h][1]), col_2[h]]
+            )
+        else:
+            data.append([col_1[h], col_2[h]])
+    key = r"\textbf{Key}: %s\textbf{ = %s %s}" \
+          % (square, key_value, 'Visitors')
+    table = mq.draw_table(data)
+    question = f"A {item[0]} made a pictogram to show how many visitors"\
+               f" each {item[1]} received in an hour. Find the mean " \
+               f"amount of visitors. \n {table} \n {key}"
+    answer = mq.dollar(result)
+    return [question, answer]
+
+
+def st_9(difficulty):
+    """Find range using pictogram. Chrys."""
+    multiplier = [1, 2, 2][difficulty - 1]
+    key_value = random.randint(difficulty * 3, 6 * difficulty) * multiplier
+
+    m = random.randint(0, 1)
+    item = [
+        ["farmer", "animals", "live on the farm"],
+        ["racing team", "points", "they won each race"]][m]
+    title = ["Animal", "Race"][m]
+    data = [[title, f"Number of {item[1].capitalize()}"]]
+
+    col_1 = [
+        ["Pigs", "Sheep", "Hens", "Cows"],
+        [["The", "Oval"], ["Bay", "Circuit"],
+         ["Heritage", "Track"], ["Bracknell", "Course"]]
+    ][m]
+    square = mq.draw_square(0.1, 'red', 'red', rotate=45)
+
+    values = []
+    for i in range(4):
+        n = random.randint(1, 5)
+        k = 0
+        if difficulty > 1:
+            k = random.randint(0, 1)
+        num = n * key_value + 0.5 * k * key_value
+        values.append(num)
+        col_2 = []
+        for j in range(n):
+            col_2.append(square)
+        for r in range(k):
+            half = r'''\tikz \filldraw[fill=red, draw=red] 
+            (0,0.3) -- (0.3,0) -- (0.6,0.3);'''
+            col_2.append(half)
+        col_2 = "\\ ".join(col_2)
+        if m == 1:
+            data.append(
+                [r"\shortstack{%s\\%s}" % (col_1[i][0], col_1[i][1]), col_2])
+        else:
+            data.append([col_1[i], col_2])
+    values.sort()
+    result = values[len(values) - 1] - values[0]
+
+    key = r"\textbf{Key}: %s\textbf{ = %s %s}" \
+          % (square, key_value, item[1].capitalize())
+    table = mq.draw_table(data)
+    question = f"A {item[0]} made a pictogram to show how many {item[1]}"\
+               f" {item[2]}. Find the range " \
+               f"of the data. \n {table} \n {key}"
+    answer = mq.dollar(int(result))
+    return [question, answer]
+
+
+def st_10(difficulty):
+    """Find nth Largest/Smallest value using pictogram. Chrys."""
+    power = 2 ** (difficulty - 1)
+    num_key = random.randint(1, 7 - power) * power
+    t = random.randint(0, 1)
+    item = [
+        ["research company", "scientists", "department"],
+        ["shipping company", "ships", "region"]
+    ][t]
+    col_1 = [
+        ["Physics", "Mathematics", "Engineering", "Chemistry"],
+        ["Europe", "Asia", "Africa", "Americas"]
+    ][t]
+    data = [[item[2].capitalize(), f"Number of {item[1].capitalize()}"]]
+
+    angle = [-90, 90, 180]
+    values = []
+    my_list = []
+    k = 0
+    choices = col_1
+    while len(values) < 4:
+        for i in range(4):
+            n = random.randint(1, 6)
+            if difficulty > 1:
+                k = random.randint(0, 1)
+            num = n * num_key + (1 - difficulty / 4) * k * num_key
+            col_2 = []
+            m = []
+            for j in range(n):
+                m.append(0)
+            for r in range(k):
+                m.append(difficulty - 1)
+            for h in range(len(m)):
+                circle = r'''\ \begin{tikzpicture} 
+                \filldraw[fill=red, draw=red] (0,0)  arc(%d:270:0.2) --cycle; 
+                \end{tikzpicture}''' % angle[m[h]]
+                if m[h] > 1:
+                    circle = r''' %s
+                    \filldraw[fill=red, draw=red] (0,0) -- (0.2,0) -- 
+                    (0.2, -0.2); %s ''' % (circle[:21], circle[21:])
+                col_2.append(circle)
+            if num not in values:
+                values.append(num)
+                col_2 = "\\ ".join(col_2)
+                data.append([col_1[i], col_2])
+                my_list.append([col_1[i], num])
+
+    key = r"\textbf{Key}: %s\textbf{ = %s %s}" \
+          % (mq.draw_circle(0.2, 'red', 'red'), num_key, item[1].capitalize())
+    table = mq.draw_table(data)
+
+    m = random.randint(0, len(my_list) - 2)
+    a = random.randint(0, 1)
+    order = ["smallest", "largest"][a]
+    if m == 0:
+        ordinal = ""
+    else:
+        ordinal = num2words(m + 1, ordinal=True)
+    if a == 0:
+        my_list.sort(key=lambda x: x[1])
+    else:
+        my_list.sort(key=lambda x: x[1], reverse=True)
+    question = f"A {item[0]} made a pictogram to show the number of " \
+               f"{item[1]} it has in each {item[2]}. What {item[2]} has " \
+               f"the {ordinal} {order} amount of {item[1]}? " \
+               f"\n {table} \n\n {key}"
+    answer = my_list[m][0]
+    return mq.multiple_choice(question, choices, answer, reorder=False)
+
+
+def sh_9(difficulty):
+    """Decide Whether a shape is a polygon or not. Chrys."""
+    n = random.randint(0, 1)
+    true_false = [True, False]
+    polygon = true_false[n]
+    if difficulty < 2:
+        k = 0
+        sides = 4
+    else:
+        k = random.randint(0, 1)
+        sides = random.randint(3, 4)
+    shape = mq.draw_random_shape(polygon, curves=(4 - difficulty), sides=sides)
+    is_not = ["", "NOT"][k]
+    question = f"True or False, this shape is {is_not} a polygon? \n\n {shape}"
+    answer = str(true_false[(n + k) % 2])
+    choices = [str(i) for i in true_false]
+    return mq.multiple_choice(question, choices, answer)
+
+
+def sh_10(difficulty):
+    """Multiple Choice, choose the shape that is/isn't a polygon. Chrys."""
+    n = random.randint(0, 1)
+    is_not = ["", "not"][n]
+    k = [[1, 3], [3, 1]][n]
+    poly = []
+    non_poly = []
+
+    for i in range(4):
+        sides_1 = random.randint(3, 4)
+        poly.append(mq.draw_random_shape(polygon=True, sides=sides_1))
+    if difficulty < 3:
+        b = random.sample(range(5, 10), k=(5-difficulty))
+        for j in range(len(b)):
+            poly.append(mq.draw_regular_polygon(b[j]))
+    for m in range(4):
+        sides_2 = random.randint(3, 4)
+        non_poly.append(mq.draw_random_shape(polygon=False, sides=sides_2))
+
+    a = random.randint(0, 1)
+    flip = random.choices(["", "-"], k=2)
+    parabola_line = [["parabola", "--", "parabola", "--"],
+                     ["--", "--", "--", "--"]][a]
+    x = []
+    while len(x) < 4:
+        nums = random.choices([1, 2, 3, 4, 5], k=4)
+        nums.sort(reverse=True)
+        if nums[3] != nums[2] and nums[2] != nums[1]:
+            x = nums
+    y = random.choice([[3, 3, 2], [1, 2, 3], [1, 4, 3], [3, 2, 3]])
+    x = [i/2 for i in x]
+    y = [j/2 for j in y]
+    shape_1 = r"""\begin{tikzpicture} 
+    \draw (0,0) -- (%s%s,0) %s (%s%s,%s%s) %s 
+    (%s%s,%s%s) %s (%s%s, %s%s) %s cycle; \end{tikzpicture}
+    """ % (flip[0], x[0], parabola_line[0],
+           flip[0], x[1], flip[1], y[0], parabola_line[1],
+           flip[0], x[2], flip[1], y[1], parabola_line[2],
+           flip[0], x[3], flip[1], y[2], parabola_line[3])
+    if a == 0:
+        poly.append(shape_1)
+    else:
+        non_poly.append(shape_1)
+
+    choices = random.sample(poly, k=k[0]) + random.sample(non_poly, k=k[1])
+    question = f"Which one of these shapes is {is_not} a polygon?"
+    answer = choices[[0, 3][n]]
+    return mq.multiple_choice(question, choices, answer, onepar=False)
+
+
+def sh_11(difficulty):
+    """Multiple Choice, choose the shape that is/isn't a polygon. Chrys."""
+    n = random.randint(0, 1)
+    options = ["perpendicular", "parallel"][n]
+    k = random.randint(0, 1)
+    true_false = [[True, False], [False, True]][(n + k) % 2]
+    if k == 1:
+        if difficulty < 2:
+            is_false = [False, False]
+        else:
+            is_false = random.choices([true_false, [False, False]],
+                                      weights=(5, difficulty), k=1)[0]
+        true_false = is_false
+
+    upper = [0, 9, 270][difficulty - 1]
+    rotate = [1, 10][(difficulty - 1) % 2] * random.randint(0, upper)
+    size = 2
+    choices = ["Yes", "No"]
+    drawing = mq.draw_two_lines(size, rotate, true_false[0], true_false[1])
+    question = f"Are these lines {options}? \n\n" \
+               r"\begin{center} %s \end{center}" % drawing
+    answer = choices[k]
+    return mq.multiple_choice(question, choices, answer)
+
+
+def sh_12 (difficulty):
+    """Multiple Choice, True or false if lines are perpendicular or parallel.
+    Chrys."""
+    n = random.randint(0, 1)
+    options = ["perpendicular", "parallel"][n]
+    k = random.randint(0, 1)
+    true_false = [[True, False], [False, True]][(n + k) % 2]
+    if k == 1:
+        is_false = random.choices(
+            [true_false, [False, False]], weights=(difficulty, 3), k=1)[0]
+        true_false = is_false
+
+    upper = [0, 9, 270][difficulty - 1]
+    rotate = [1, 10][(difficulty - 1) % 2] * random.randint(0, upper)
+    m = 0
+    if difficulty == 1:
+        choices = ["Yes", "No"]
+        question = f"Are these lines {options}? \n\n"
+    else:
+        choices = ["True", "False"]
+        m = random.randint(0, 1)
+        is_not = ["", "NOT"][m]
+        question = f"True or False, the two lines are {is_not} {options}? \n\n"
+
+    drawing = mq.draw_two_lines(1.5, rotate, true_false[0], true_false[1])
+    question += r"\hspace{2em} %s" % drawing
+    answer = choices[(k + m) % 2]
+    return mq.multiple_choice(question, choices, answer, reorder=False)
+
+
+def sh_13(difficulty):
+    """Multiple Choice, decide whether lines are perpendicular, parallel or
+    neither. Chrys."""
+    upper = [1, 45, 270][difficulty - 1]
+    rotate = [90, 6, 1][difficulty - 1] * random.randint(0, upper)
+    choices = ["Perpendicular", "Parallel"]
+    n = random.randint(0, 1)
+    if difficulty > 1:
+        n = random.randint(0, 2)
+        choices.append("Neither Parallel or Perpendicular")
+    true_false = [[True, False], [False, True], [False, False]][n]
+    drawing = mq.draw_two_lines(1.5, rotate, true_false[0], true_false[1])
+    question = "Choose the option that best describes these lines. \n\n" \
+               r"\begin{center} %s \end{center}" % drawing
+    answer = choices[n]
+    return mq.multiple_choice(question, choices, answer, False, False)
+
+
+def sh_14(difficulty):
+    """Multiple Choice. Choose out of a selection which lines are either
+    parallel perpendicular or neither. Chrys."""
+    upper = [1, 45, 270][difficulty - 1]
+    rotate = [90, 6, 1][difficulty - 1] * random.randint(0, upper)
+
+    b = 1
+    option = ["perpendicular", "parallel"]
+    if difficulty == 3:
+        option.append("neither parallel nor perpendicular")
+        b = 2
+    n = random.randint(0, b)
+    true_false = [[True, False], [False, True], [False, False]]
+    choices = [
+        mq.draw_two_lines(1, rotate, true_false[n][0], true_false[n][1])]
+    true_false.remove(true_false[n])
+    for j in range(2):
+        rotate = [90, 6, 1][difficulty - 1] * random.randint(0, upper)
+        if n == 2:
+            k = true_false[j]
+        else:
+            k = random.choice(true_false)
+        drawing = mq.draw_two_lines(1, rotate, k[0], k[1])
+        choices.append(drawing)
+    question = f"Which option contains {option[n]} lines. "
+    answer = choices[0]
+    return mq.multiple_choice(question, choices, answer)
+
+
+def st_11(difficulty):
+    """Multiple Choice. Choose out of a selection which lines are either
+    parallel perpendicular or neither. Chrys."""
+    k = random.randint(0, 1)
+    months = [["May", "June", "July", "August"],
+              ["Thursday", "Friday", "Saturday", "Sunday"]][k]
+    data = []
+    a = random.sample(range(difficulty, 10 * difficulty), k=len(months))
+    a = [i * 20 for i in a]
+    for i in range(len(months)):
+        data.append([r'\small %s' % months[i], str(a[i])])
+    bar_chart = mq.bar_chart(data, size=(6, 7), horizontal=False, label="Trees Planted")
+    n = random.randint(0, 1)
+    least_most = ["least", "most"][n]
+    true_false= [False, True][n]
+    data.sort(key=lambda x: x[1], reverse=true_false)
+
+    items = [
+        ["wildlife charity", "trees they planted in each month of summer",
+         "month", f"plant the {least_most} trees"],
+        ["coffee shop", "coffees they sold each day", "day",
+         f"sell the {least_most} coffees"]
+        ][k]
+    question = f"A {items[0]} made a bar chart showing the number of " \
+               f"{items[1]}. What {items[2]} did they {items[3]}? \n\n" \
+               + bar_chart
+    answer = str(data[0][0])
+    return [question, answer]
