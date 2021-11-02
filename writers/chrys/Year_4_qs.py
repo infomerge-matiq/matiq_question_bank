@@ -2084,11 +2084,12 @@ def me_1(difficulty):
         d_p = 2
     x = round(random.uniform(0.1 * y0, 2 * y0 / 3), d_p)
     question = f"{names.get_first_name(gender='female')} has " \
-               f"\\pounds {y0:.2f} in pocket money. " \
-               f"She spends \\pounds {x:.2f}. " \
+               r"\pounds" + f"{y0:.2f} in pocket money. She spends " \
+               r"\pounds" + f"{x:.2f}. " \
                f"How much money does she have left over?"
-    answer = f"\\pounds {round(y0 - x, 2):.2f}"
+    answer = r"\pounds" + f"{round(y0 - x, 2):.2f}"
     return [question, answer]
+
 
 # CLOCK QUESTIONS______________________
 
@@ -2718,7 +2719,7 @@ def fr_26(difficulty):
     \end{array}$} 
     \\ \\ \vspace{1.2ex}
     ''' % (f'{b:.2f}', op, f'{a:.2f}', op, f'{a:.2f}')
-    answer = f'\\pounds {result:.2f}'
+    answer = r"\pounds" + f"{result:.2f}"
     return [question, answer]
 
 
@@ -2728,9 +2729,10 @@ def fr_27(difficulty):
     a = round(random.uniform(0.51, limit), 2)
     b = round(random.uniform(1, limit), 1)
     c = round(random.uniform(round(a + b) + 1, 10), difficulty - 1)
-    question = r"%s $-$ %s $-$ %s = ?" % (f'{c:.2f}',  f'{b:.2f}', f'{a:.2f}')
+    question = r"\pounds%s $-$ \pounds%s $-$ \pounds%s = ?" \
+               % (f'{c:.2f}',  f'{b:.2f}', f'{a:.2f}')
     result = c - b - a
-    answer = f"\\pounds {result:.2f}"
+    answer = r"\pounds" + f"{result:.2f}"
     return [question, answer]
 
 
@@ -2763,17 +2765,15 @@ def fr_28(difficulty):
                           "a book"
                           ])
     n = random.randint(0, 1)
-    gender = [names.get_first_name(gender='Male'),
-              names.get_first_name(gender='Female')][n]
+    name = [names.get_first_name(gender='male'),
+              names.get_first_name(gender='female')][n]
     pronoun = ['He', 'She'][n]
-    name = names.get_first_name(gender=gender)
-
-    question = f"{name} has \\pounds{start_value:.2f} in pocket money. " \
-               f"{pronoun} decides to buy {item}. Afterwards, " \
-               f"{pronoun.lower()} has \\pounds{end_value:.2f} left over. " \
-               f"How much did {name} spend in total?"
+    question = f"{name} has " + r"\pounds" + f"{start_value:.2f} in pocket " \
+               f"money. {pronoun} decides to buy {item}. Afterwards, " \
+               f"{pronoun.lower()} has " + r"\pounds" + f"{end_value:.2f} " \
+               f"left over. How much did {name} spend in total?"
     result = start_value - end_value
-    answer = f"\\pounds{result:.2f}"
+    answer = r"\pounds" + f"{result:.2f}"
     return [question, answer]
 
 
@@ -2784,9 +2784,10 @@ def me_16(difficulty):
     total = pounds + (pence / 100)
     n = random.randint(0, 1)
     num_words = [f"{num2words(pounds)} pounds and {num2words(pence)} pence",
-                 f"\\pounds{total:.2f}"
+                 r"\pounds" + f"{total:.2f}"
                  ]
-    question = f"Write down {num_words[n]} {['in numbers',' in words'][n]}."
+    question = f"Write down {num_words[n]} " \
+               f"{[' using numbers',' using words'][n]}."
     answer = num_words[(n + 1) % 2]
     return [question, answer]
 
@@ -2831,7 +2832,7 @@ def me_17(difficulty):
 
     question = f"{name[0]} has {amount_format}. How much money does " \
                f"{name[1]} have in total?"
-    answer = f"\\pounds{sum(sums):.2f}"
+    answer = r"\pounds" + f"{sum(sums):.2f}"
     return [question, answer]
 
 
@@ -2916,7 +2917,7 @@ def fr_29(difficulty):
         price.append(random.uniform(boundaries[i][1], boundaries[i][0]))
 
     for j in range(len(items)):
-        my_list.append([items[j], f"\\pounds{price[j]:.2f}"])
+        my_list.append([items[j], r"\pounds" + f"{price[j]:.2f}"])
     table = mq.draw_table(my_list)
 
     choice_list = []
@@ -2945,7 +2946,7 @@ def fr_29(difficulty):
     question = f"Here are the prices for some items at at a {place[n]}. " \
                f"\n\n {table} \n\n {name} buys {spend}. " \
                f"How much will {['he', 'she'][k]} have to pay in total?"
-    answer = f"\\pounds{sum(value):.2f}"
+    answer = r"\pounds" + f"{sum(value):.2f}"
     return [question, answer]
 
 
@@ -3183,19 +3184,19 @@ def as_16(difficulty):
     values = [round((a + b) / 100, 2), round(b / 100, 2), round(a / 100, 2)]
     n = random.randint(0, 1)
 
-    values[n] = f"\\pounds{values[n]:.2f}"
+    values[n] = r"\pounds" + f"{values[n]:.2f}"
     values[(n + 1) % 2] = f"{round(values[(n + 1) % 2] * 100)}p"
 
     j = random.randint(0, 1)
-    answer = [f"\\pounds{values[2]:.2f}", f"{round(values[2] * 100)}p"][j]
+    answer = [r"\pounds" + f"{values[2]:.2f}", f"{round(values[2] * 100)}p"][j]
 
     choices = []
-    choices.extend([answer, f"\\pounds{round((a + b) / 100, 2):.2f}"])
+    choices.extend([answer, r"\pounds" + f"{round((a + b) / 100, 2):.2f}"])
     while len(choices) < 5:
         num = random.randint(1, 30)
         k = random.randint(0, 1)
         c_0 = a + (-1) ** k * num
-        c_1 = f"\\pounds{round(c_0 / 100, 2):.2f}"
+        c_1 = r"\pounds" + f"{round(c_0 / 100, 2):.2f}"
         if c_0 > 0 and num not in choices:
             choices.append(random.choice([str(c_0) + "p", c_1]))
 
@@ -3260,6 +3261,10 @@ def me_19(difficulty):
 
     for j in range(difficulty):
         result = values[j][1] * unit[2]
+        if n == 0:
+            result = int(result)
+        else:
+            result = round(result, 1)
         if result % 1 == 0:
             result = round(result)
         question += r"%s = \makebox[1.5em]{\hrulefill} %s \\" \
@@ -4059,8 +4064,9 @@ def me_32(difficulty):
     item = random.choice(["shirt", "book", "game", "hat"])
     name = names.get_first_name()
     question = f"{name} buys {quantity} {item}s for " \
-               f"\\pounds{start_value:.2f}. How much does one {item} cost?"
-    answer = f"\\pounds{result:.2f}"
+               r"\pounds" + f"{start_value:.2f}. " \
+               f"How much does one {item} cost?"
+    answer = r"\pounds" + f"{result:.2f}"
     return [question, answer]
 
 
@@ -4690,14 +4696,14 @@ def sh_14(difficulty):
             k = random.choice(true_false)
         drawing = mq.draw_two_lines(1, rotate, k[0], k[1])
         choices.append(drawing)
-    question = f"Which option contains {option[n]} lines. "
+    question = f"Which option contains two lines which are {option[n]} " \
+               "to each other? "
     answer = choices[0]
     return mq.multiple_choice(question, choices, answer)
 
 
 def st_11(difficulty):
-    """Multiple Choice. Choose out of a selection which lines are either
-    parallel perpendicular or neither. Chrys."""
+    """Identify smallest/largest value from bar chart. Chrys."""
     k = random.randint(0, 1)
     months = [["May", "June", "July", "August"],
               ["Thursday", "Friday", "Saturday", "Sunday"]][k]
@@ -4706,7 +4712,8 @@ def st_11(difficulty):
     a = [i * 20 for i in a]
     for i in range(len(months)):
         data.append([r'\small %s' % months[i], str(a[i])])
-    bar_chart = mq.bar_chart(data, size=(6, 7), horizontal=False, label="Trees Planted")
+    label = ["Trees Planted", "Coffees Sold"][k]
+    bar_chart = mq.bar_chart(data, size=(6, 7), horizontal=False, label=label)
     n = random.randint(0, 1)
     least_most = ["least", "most"][n]
     true_false= [False, True][n]
@@ -4723,3 +4730,44 @@ def st_11(difficulty):
                + bar_chart
     answer = str(data[0][0])
     return [question, answer]
+
+
+def md_28(difficulty):
+    """Worded division question. How many x are there in y. Chrys."""
+    a = random.randint(1 + difficulty, 12)
+    if a < 6 or a == 10:
+        b = random.randint(5 * difficulty, 15 * difficulty)
+    else:
+        b = random.randint(2 * difficulty, 11 + difficulty)
+    question = f"How many {a}'s are there in {a * b}?"
+    answer = str(b)
+    return [question, answer]
+
+
+def st_12(difficulty):
+    """Bar chart, identify value of given entry on bar chart. Chrys."""
+    data = []
+    upper = [10, 10, 20][difficulty-1]
+    power = [10, 10, 5][difficulty-1]
+    steps = [10, 20, 10][difficulty-1]
+    name_bank = []
+    for i in range(4):
+        a = power * random.randint(1, upper)
+        name = names.get_first_name()
+        data.append([r'\small %s' % name, str(a)])
+        name_bank.append(name)
+    n = random.randint(0, len(data) - 1)
+    k = random.randint(0, 1)
+    horizontal_or_vertical = [True, False][k]
+    x_or_y = ["x","y"][k]
+    axis_scale = r'''%stick={0,%s,...,100}, %smin=0, %smajorgrids=true, 
+    %s tick label style={font=\small}
+    ''' % (x_or_y, steps, x_or_y, x_or_y, x_or_y)
+    chart = mq.bar_chart(data, horizontal=horizontal_or_vertical,
+                         axis_adj=axis_scale, sym_axis=True, size=(6.5, 7.5))
+    question = "The bar chart shows the number of laps swum by " \
+               "different swimmers this weekend. How many laps did " \
+               f"{name_bank[n]} swim? \n\n {chart}"
+    answer = data[n][1]
+    return [question, answer]
+
