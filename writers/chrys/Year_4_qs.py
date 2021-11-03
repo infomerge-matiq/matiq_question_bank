@@ -2766,7 +2766,7 @@ def fr_28(difficulty):
                           ])
     n = random.randint(0, 1)
     name = [names.get_first_name(gender='male'),
-              names.get_first_name(gender='female')][n]
+            names.get_first_name(gender='female')][n]
     pronoun = ['He', 'She'][n]
     question = f"{name} has " + r"\pounds" + f"{start_value:.2f} in pocket " \
                f"money. {pronoun} decides to buy {item}. Afterwards, " \
@@ -3123,13 +3123,12 @@ def sh_3(difficulty):
 
 
 def sh_4(difficulty):
-    """Guess how many sides/vertices a 2d shape has. Chrys."""
+    """Guess how many sides a 2d shape has. Chrys."""
     upper = [5, 7, 10][difficulty - 1]
     n = random.choices([1, random.randint(2, upper)],
                        weights=(difficulty, upper))[0]
     if n == 1:
         shape = mq.draw_circle(4, 'white', 'black')
-        vertices = 0
     elif n == 2:
         shape = r"""
         \begin{tikzpicture} 
@@ -3137,7 +3136,6 @@ def sh_4(difficulty):
         \draw (-1.5,0) -- (1.5,0) arc(0:180:1.5) --cycle; 
         \end{tikzpicture}
         """
-        vertices = n
     else:
         shape = r"""
         \begin{tikzpicture} 
@@ -3145,12 +3143,10 @@ def sh_4(difficulty):
         draw] at (0, 0) {};
         \end{tikzpicture}
         """ % n
-        vertices = n
-    k = random.randint(0, 1)
-    choice = ["sides", "vertices"][k]
+    choice = "sides"
     question = f"How many {choice} does this shape have? \n\n " \
                f"\\begin{{center}} {shape} \\end{{center}}"
-    answer = [str(n), str(vertices)][k]
+    answer = str(n)
     return [question, answer]
 
 
@@ -4624,7 +4620,7 @@ def sh_11(difficulty):
     return mq.multiple_choice(question, choices, answer)
 
 
-def sh_12 (difficulty):
+def sh_12(difficulty):
     """Multiple Choice, True or false if lines are perpendicular or parallel.
     Chrys."""
     n = random.randint(0, 1)
@@ -4716,7 +4712,7 @@ def st_11(difficulty):
     bar_chart = mq.bar_chart(data, size=(6, 7), horizontal=False, label=label)
     n = random.randint(0, 1)
     least_most = ["least", "most"][n]
-    true_false= [False, True][n]
+    true_false = [False, True][n]
     data.sort(key=lambda x: x[1], reverse=true_false)
 
     items = [
@@ -4759,7 +4755,7 @@ def st_12(difficulty):
     n = random.randint(0, len(data) - 1)
     k = random.randint(0, 1)
     horizontal_or_vertical = [True, False][k]
-    x_or_y = ["x","y"][k]
+    x_or_y = ["x", "y"][k]
     axis_scale = r'''%stick={0,%s,...,100}, %smin=0, %smajorgrids=true, 
     %s tick label style={font=\small}
     ''' % (x_or_y, steps, x_or_y, x_or_y, x_or_y)
@@ -4771,3 +4767,159 @@ def st_12(difficulty):
     answer = data[n][1]
     return [question, answer]
 
+
+def st_13(difficulty):
+    """Bar chart. Two step money question where student has o work out money
+    left over using bar chart. Chrys.
+    """
+    data = []
+    upper = [7, 12, 14][difficulty-1]
+    power = [10, 5, 5][difficulty-1]
+    steps = [10, 5, 10][difficulty-1]
+    lower = [2, 4, 4][difficulty-1]
+    cities = ["York", "Glasgow", "Liverpool", "Cardiff"]
+    a = random.sample(range(lower, upper+1), k=4)
+    a = [power * i for i in a]
+    for i in range(4):
+        data.append([r'\scriptsize %s' % cities[i], a[i]])
+    k = random.randint(0, 1)
+    horizontal_or_vertical = [True, False][k]
+    x_or_y = ["x", "y"][k]
+    axis_scale = r'''%stick={0,%s,...,80}, %smin=0, %smajorgrids=true, 
+    %s tick label style={font=\small}
+    ''' % (x_or_y, steps, x_or_y, x_or_y, x_or_y)
+    chart = mq.bar_chart(data, horizontal=horizontal_or_vertical,
+                         axis_adj=axis_scale, sym_axis=True, size=(6.5, 7),
+                         label="\\small Price in \\textsterling", fill='red')
+    data.sort(key=lambda x: x[1])
+    option = ["cheapest", "most expensive"]
+    if difficulty == 1:
+        m = random.randint(0, 2)
+        values = [data[0][1], data[3][1]]
+        if m < 2:
+            price = values[m]
+            choice = f"the {option[m]}"
+            s = ""
+        else:
+            price = sum(values)
+            choice = f"both the {option[0]} and the {option[1]}"
+            s = "s"
+    else:
+        n = random.sample(range(len(data)), k=2)
+        order = []
+        choice = []
+        s = "s"
+        for i in n:
+            if i+1 in [1, 4]:
+                order.append(option[i % 2])
+                choice.append("")
+            else:
+                if i+1 < 3:
+                    choice.append(option[0])
+                    order.append(mq.ordinal(i + 1))
+                else:
+                    choice.append(option[1])
+                    order.append(mq.ordinal(4-i))
+        price = data[n[0]][1] + data[n[1]][1]
+        choice = f"both the {order[0]} {choice[0]} and the " \
+                 f"{order[1]} {choice[1]}"
+    num = random.randint(price + 1, 2 * price)
+    result = num - price
+    gender = random.choice([['male', 'he'], ['female', 'she']])
+    name = names.get_first_name(gender=gender[0])
+    question = f"{name} has \\textsterling{num:.2f} to spend on travelling. " \
+               f"The bar chart shows the prices it will cost to travel to " \
+               f"different cities. \n {chart} \nHow much money will " \
+               f"{gender[1]} have left over if {gender[1]} travels to " \
+               f"{choice} destination{s}."
+    answer = f"\\textsterling{result:.2f}"
+    return [question, answer]
+
+
+def st_14(difficulty):
+    """Bar chart, identify value of given entry on bar chart. Chrys."""
+    data = []
+
+    n = random.randint(0, 1)
+    power = [2, 1, 5][difficulty - 1]
+    upper = [12, 25, 10][difficulty - 1]
+    lower = [3, 6, 1][difficulty - 1]
+    steps = [2, 2, 10][difficulty - 1]
+
+    nums = random.sample(range(lower, upper + 1), k=4)
+    today = datetime.today()
+    for i in range(4):
+        if n == 1:
+            day = today - timedelta(days=(i+1))
+            title = day.strftime("%A")
+        else:
+            title = names.get_first_name()
+        data.append([r"\footnotesize %s" % title, nums[i]])
+    label = ["Number of Articles read", "Number of new customers"][n]
+
+    k = random.randint(0, 1)
+    horizontal_or_vertical = [True, False][k]
+    x_or_y = ["x","y"][k]
+    axis_scale = r'''%stick={0,%s,...,80}, %smin=0, %smajorgrids=true, 
+    %s tick label style={font=\footnotesize}
+    ''' % (x_or_y, steps, x_or_y, x_or_y, x_or_y)
+    chart = mq.bar_chart(data, horizontal=horizontal_or_vertical,
+                         axis_adj=axis_scale, sym_axis=True, size=(6.5, 7),
+                         label=r"\footnotesize %s" % label, fill='yellow')
+    item = [
+        ["Some students", "in preperation for science fair",
+         "articles were read by"],
+        ["An electricity company analyst", "they received the past few days",
+         "new customers did they receive on"]
+    ][n]
+    m_1 = random.randint(0, 1)
+    values = random.sample(data, k=2)
+    by_on = ["by", "on"][n]
+
+    if m_1 == 1:
+        m_2 = random.randint(0, 1)
+        is_true = [False, True][m_2]
+        more_less = ["more", "fewer"][m_2]
+        values.sort(key=lambda x: x[1], reverse=is_true)
+        item[2] = f"{more_less} {item[2]} {values[1][0]} " \
+                  f"than {by_on} {values[0][0]}"
+    else:
+        item[2] += f" {values[0][0]} and {values[1][0]}"
+
+    result = [values[0][1] + values[1][1],
+              abs(values[1][1] - values[0][1])][m_1]
+
+    question = f"{item[0]} kept track of the {label.lower()} {item[1]}. " \
+               f"How many {item[2]}? \n" + chart
+    answer = mq.dollar(result)
+    return [question, answer]
+
+
+def sh_15(difficulty):
+    """Guess how many vertices a 2d shape has. Chrys."""
+    upper = [5, 7, 10][difficulty - 1]
+    n = random.choices([1, random.randint(2, upper)],
+                       weights=(difficulty, upper))[0]
+    if n == 1:
+        shape = mq.draw_circle(4, 'white', 'black')
+        vertices = 0
+    elif n == 2:
+        shape = r"""
+        \begin{tikzpicture} 
+        [baseline=(current bounding box.north)] 
+        \draw (-1.5,0) -- (1.5,0) arc(0:180:1.5) --cycle; 
+        \end{tikzpicture}
+        """
+        vertices = n
+    else:
+        shape = r"""
+        \begin{tikzpicture} 
+        \node[regular polygon, regular polygon sides=%s, minimum size=2cm, 
+        draw] at (0, 0) {};
+        \end{tikzpicture}
+        """ % n
+        vertices = n
+    question = f"How many vertices does this shape have? \n\n " \
+               f"\\begin{{center}} {shape} \\end{{center}}"
+    answer = str(vertices)
+    return [question, answer]
