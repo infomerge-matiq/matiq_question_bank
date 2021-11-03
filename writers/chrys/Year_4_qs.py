@@ -4837,7 +4837,7 @@ def st_13(difficulty):
 
 
 def st_14(difficulty):
-    """Bar chart, identify value of given entry on bar chart. Chrys."""
+    """Bar chart, difference of two values on bar chart. Chrys."""
     data = []
 
     n = random.randint(0, 1)
@@ -4922,4 +4922,155 @@ def sh_15(difficulty):
     question = f"How many vertices does this shape have? \n\n " \
                f"\\begin{{center}} {shape} \\end{{center}}"
     answer = str(vertices)
+    return [question, answer]
+
+
+def st_15(difficulty):
+    """Bar chart, Find range. Chrys."""
+    data = []
+    n = random.randint(0, 1)
+    upper = [[7, 7, 14], [15, 15, 30]][n][difficulty - 1]
+    power = [[1000, 1000, 500], [1, 1, 0.5]][n][difficulty - 1]
+    lower = [[1, 1, 2], [11, 11, 22]][n][difficulty - 1]
+    steps = [[1000, 2000, 1000], [1, 2, 1]][n][difficulty - 1]
+    limit = [8000, 15][n]
+
+    nums = random.choices(range(lower, upper + 1), k=4)
+    nums = [power * i for i in nums]
+
+    today = datetime.today()
+    for i in range(4):
+        if n == 0:
+            col_1 = today - timedelta(days=365 * (i + 1))
+            col_1 = col_1.strftime("%Y")
+        else:
+            col_1 = r"Lap %s" % (i + 1)
+        data.append([r'\scriptsize %s' % col_1, nums[i]])
+
+    item = random.choice(["wind turbines", "solar panels"])
+    label = "\\footnotesize " \
+            + [f"Number of {item.title()}", "Time (Seconds)"][n]
+    k = random.randint(0, 1)
+    horizontal_or_vertical = [True, False][k]
+    x_or_y = ["x", "y"][k]
+    axis_scale = r'''%stick={0,%s,...,%s}, %smin=0, %smajorgrids=true, 
+    %s tick label style={font=\scriptsize}
+    ''' % (x_or_y, steps, limit, x_or_y, x_or_y, x_or_y)
+    chart = mq.bar_chart(data, horizontal=horizontal_or_vertical, label=label,
+                         axis_adj=axis_scale, sym_axis=True, size=(6.5, 7.5))
+
+    question = [
+        "An engineering company wants to find out how many "
+        f"{item} they created in the past few years. ",
+        "A sprinter times how fast how fast they can do a 100m sprint. "][n]
+    question += f"What is the range of the {['data', 'timings'][n]}?\n" + chart
+    result = round(max(nums) - min(nums), n)
+    if result % 1 == 0:
+        result = int(result)
+    answer = str(result)
+    return [question, answer]
+
+
+def st_16(difficulty):
+    """Bar chart, Find the frequency of values more / less than a given number.
+    Chrys."""
+    data = []
+    n = random.randint(0, 1)
+    upper = [5, 10, 20][difficulty - 1]
+    lower = [1, 1, 2][difficulty - 1]
+    power = [4, 2, 1][difficulty - 1]
+    steps = [4, 2, 2][difficulty - 1]
+    limit = 32
+
+    nums = random.choices(range(lower, upper + 1), k=6)
+    nums = [power * i for i in nums]
+
+    for i in range(len(nums)):
+        col_1 = i + n
+        data.append([r'\scriptsize %s' % col_1, nums[i]])
+
+    label = "\\footnotesize Frequency"
+    label_x = "\\footnotesize " + ["Goals", "Dice Number"][n]
+
+    k = random.randint(0, 1)
+    horizontal_or_vertical = [True, False][k]
+    x_y = ["x", "y"]
+    x_or_y = x_y[k]
+    axis_scale = r'''%stick={0,%s,...,%s}, %smin=0, %smajorgrids=true, 
+    %s tick label style={font=\scriptsize}, %slabel=%s
+    ''' % (x_or_y, steps, limit, x_or_y, x_or_y,
+           x_or_y, x_y[(k + 1) % 2], label_x)
+    colour = random.choice(["red", "blue", "green", "teal"])
+    chart = mq.bar_chart(data, horizontal=horizontal_or_vertical, label=label,
+                         axis_adj=axis_scale, sym_axis=True, size=(6.5, 7.5),
+                         fill=colour)
+
+    a = random.randint(1, 4)
+    m = random.randint(0, 1)
+    more_less = ["less", "more"][m]
+    result = 0
+    for j in range(a + m):
+            result = result + nums[j]
+    result = [result, sum(nums) - result][m]
+
+    question = "The bar chart shows the number of "
+
+    question += [
+        "goals scored by athletes in a sports competition.",
+        "times each number was thrown when a dice was thrown repeatedly."][n]
+    item = [["people scored", " goals"], ["times did they role", ""]][n]
+    question += f"How many {item[0]} {more_less} than {a + n}{item[1]}? \n" \
+                + chart
+    answer = str(result)
+    return [question, answer]
+
+
+def st_17(difficulty):
+    """Bar chart, find mean using bar chart. Chrys."""
+    data = []
+    n = random.randint(0, 1)
+    upper = [[12, 10, 20], [10, 10, 15]][n][difficulty - 1]
+    power = [[1, 2, 1], [10, 10, 5]][n][difficulty - 1]
+    lower = [2, 1, 2][difficulty - 1]
+    steps = [[1, 2, 2], [10, 20, 10]][n][difficulty - 1]
+    limit = [32, 120][n]
+
+    nums = []
+    while len(nums) < 4:
+        values = random.choices(range(lower, upper + 1), k=4)
+        values = [power * i for i in values]
+        if mean(values) % 1 == 0:
+            nums = values
+
+    book_genre = random.sample(["Sci-Fi", "Fantasy", "Action",
+                                "History", "Mythology", "Science"], k=4)
+    for i in range(len(nums)):
+        if n == 0:
+            col_1 = names.get_first_name()
+        else:
+            col_1 = book_genre[i]
+        data.append([r'\scriptsize %s' % col_1, nums[i]])
+
+    label = "\\footnotesize " \
+            + ["Distance (Kilometres)", "Number of Books Sold"][n]
+
+    k = random.randint(0, 1)
+    horizontal_or_vertical = [True, False][k]
+    x_or_y = ["x", "y"][k]
+    axis_scale = r'''%stick={0,%s,...,%s}, %smin=0, %smajorgrids=true, 
+    %s tick label style={font=\scriptsize}
+    ''' % (x_or_y, steps, limit, x_or_y, x_or_y, x_or_y)
+    colour = random.choice(["red", "blue", "green", "teal"])
+    chart = mq.bar_chart(data, horizontal=horizontal_or_vertical, label=label,
+                         axis_adj=axis_scale, sym_axis=True, size=(6.5, 7.5),
+                         fill=colour)
+    item = [
+        ["group of cyclists", "distance they cycled today", "distance cycled"],
+        ["bookshop",
+         "amount of books sold today from their most popular genres",
+         "amount of books sold"]
+    ][n]
+    question = f"A {item[0]} made a bar chart recording the {item[1]}." \
+               f"What is the mean {item[2]}? \n" + chart
+    answer = str(mean(nums))
     return [question, answer]
