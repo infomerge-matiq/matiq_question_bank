@@ -4535,12 +4535,13 @@ def st_14(difficulty):
     data = []
 
     n = random.randint(0, 1)
-    power = [2, 1, 5][difficulty - 1]
-    upper = [12, 25, 10][difficulty - 1]
+    power = [1, 1, 2][difficulty - 1]
+    upper = [14, 25, 12][difficulty - 1]
     lower = [3, 6, 1][difficulty - 1]
-    steps = [2, 2, 10][difficulty - 1]
+    steps = [2, 2, 4][difficulty - 1]
 
     nums = random.sample(range(lower, upper + 1), k=4)
+    nums = [i * power for i in nums]
     today = datetime.today()
     for i in range(4):
         if n == 1:
@@ -4548,15 +4549,15 @@ def st_14(difficulty):
             title = day.strftime("%A")
         else:
             title = names.get_first_name()
-        data.append([r"\footnotesize %s" % title, nums[i]])
+        data.append([r"%s" % title, nums[i]])
     label = ["Number of Articles read", "Number of new customers"][n]
 
     k = random.randint(0, 1)
     horizontal_or_vertical = [True, False][k]
     x_or_y = ["x", "y"][k]
     axis_scale = r'''%stick={0,%s,...,80}, %smin=0, %smajorgrids=true, 
-    %s tick label style={font=\footnotesize}
-    ''' % (x_or_y, steps, x_or_y, x_or_y, x_or_y)
+    tick label style={font=\footnotesize}
+    ''' % (x_or_y, steps, x_or_y, x_or_y)
     chart = mq.bar_chart(data, horizontal=horizontal_or_vertical,
                          axis_adj=axis_scale, sym_axis=True, size=(6.5, 7),
                          label=r"\footnotesize %s" % label, fill='yellow')
@@ -5060,4 +5061,123 @@ def st_9(difficulty):
                f" {item[2]}. Find the range " \
                f"of the data. \n {table} \n {key}"
     answer = mq.dollar(int(result))
+    return [question, answer]
+
+
+def st_18(difficulty):
+    """Find mean from tally chart. Chrys."""
+    data = []
+    n = random.randint(2 + difficulty, 3 + difficulty)
+    towns = ["Northfield", "Lunatown", "Postport", "Highborough",
+             "Hardstead", "Roseville", "Fayview", "Capville", "Maytown"]
+    towns = random.sample(towns, k=n)
+    item = random.choice([["Train", "train operator"],
+                          ["Fire", "fire service"]])
+
+    k = random.randint(0, 1)
+    title = [["Name", "Score"], ["Town", f"Number of {item[0]} Stations"]][k]
+    data.append(title)
+    col_2 = []
+    while len(col_2) < n:
+        nums = random.sample(range(2, 10 * difficulty), k=n)
+        if mean(nums) % 1 == 0:
+            col_2 = nums
+    colour = random.choice(['blue', 'red', 'teal'])
+    for i in range(n):
+        if k == 0:
+            col_1 = names.get_first_name()
+        else:
+            col_1 = towns[i]
+        tally = mq.draw_tally(col_2[i], colour)
+        data.append([col_1, tally])
+    table = mq.draw_table(data)
+
+    items = [
+        ["Some friends", "their scores in a quiz"],
+        [f"A {item[1]}",
+         f"the amount of {item[0].lower()} stations they have in some cities"]
+    ][k]
+    question = f"{items[0]} recorded {items[1]}. " \
+               f"What is the mean of the results? \n\n" + table
+    answer = mq.dollar(mean(col_2))
+    return [question, answer]
+
+
+def st_19(difficulty):
+    """Find range from tally chart. Chrys."""
+    data = []
+    k = random.randint(0, 1)
+    col_1 = [["North", "East", "South", "West", "Central"],
+             ["Ice Valley", "Eastfield", "Stellar City",
+              "Metro Town", "Mountain North"]][k]
+    title = [["Region", "Number of Hotels"], ["Town", "Number of Houses"]][k]
+    data.append(title)
+
+    nums = random.choices(range(4 * difficulty, 11 * difficulty), k=5)
+    colour = random.choice(['blue', 'red', 'teal'])
+    for i in range(5):
+        tally = mq.draw_tally(nums[i], colour)
+        data.append([col_1[i], tally])
+    table = mq.draw_table(data)
+    question = ["A tourism company wanted to find out how"
+                " many hotels are in each region in a town.",
+                "An estate agent records how many houses "
+                "have been sold in different towns."][k]
+    question += " What is the range of the results? \n\n" + table
+    answer = mq.dollar(max(nums) - min(nums))
+    return [question, answer]
+
+
+def st_20(difficulty):
+    """Tally Chart, Find quantity of entryies more/less than a given amount.
+    Chrys."""
+    data = []
+    k = random.randint(0, 1)
+    col_1 = [
+        ["Robins", "Squirrels", "Rabbits",
+         "Butterflies", "Blackbirds", "Deers"],
+        ["Maths", "Science", "Art", "Music",
+         "English", "Physical Education"]][k]
+
+    title = [["Animal", "Amount Seen"], ["Subject", "Exam Score"]][k]
+    data.append(title)
+
+    nums = random.sample(range(4 * difficulty, 10 * difficulty), k=5)
+    colour = random.choice(['blue', 'red', 'teal'])
+    values = []
+    for i in range(5):
+        tally = mq.draw_tally(nums[i], colour)
+        data.append([col_1[i], tally])
+        values.append([col_1[i], nums[i]])
+    table = mq.draw_table(data)
+    values.sort(key=lambda x: x[1])
+    a = random.randint(min(nums) + 1, max(nums) - 1)
+    m = random.randint(0, 1)
+    more_less = ["more", "less"][m]
+    result = 0
+    if m == 1:
+        for j in range(5):
+            if nums[j] < a:
+                result = result + 1
+            else:
+                result = result
+    else:
+        for j in range(5):
+            if nums[j] > a:
+                result = result + 1
+            else:
+                result = result
+    gender = random.choice([["male", "his", "he"], ["female", "her", "she"]])
+    name = names.get_first_name(gender=gender[0])
+    question = f"{name} records"
+    question += ["the different types of animal seen "
+                 "whilst on a walk through through the forest. ",
+                 f"{gender[1]} exam scores for different subjects. "][k]
+    item = [
+        f"different animals did {gender[2]} "
+        f"see {more_less} than {a} times",
+        f"times did {gender[2]} score {more_less} than {a} marks?"
+    ][k]
+    question += f"How many {item} \n\n" + table
+    answer = str(result)
     return [question, answer]
