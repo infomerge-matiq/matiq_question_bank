@@ -5129,8 +5129,8 @@ def st_19(difficulty):
 
 
 def st_20(difficulty):
-    """Tally Chart, Find quantity of entryies more/less than a given amount.
-    Chrys."""
+    """Tally Chart, Find quantity of entries that are more/less than a given
+    amount. Chrys."""
     data = []
     k = random.randint(0, 1)
     col_1 = [
@@ -5181,3 +5181,324 @@ def st_20(difficulty):
     question += f"How many {item} \n\n" + table
     answer = str(result)
     return [question, answer]
+
+
+def st_21(difficulty):
+    """Find nth highest and different between two values. Chrys."""
+    data = []
+    k = random.randint(0, 1)
+    col_1 = [
+        ["Red", "Yellow", "Blue", "Green", "Purple", "Pink", "Grey"],
+        ["Apple", "Banana", "Mango", "Pear", "Orange", "Melon", "Pineapple"]
+    ][k]
+    col_1 = random.sample(col_1, k=5)
+    title = [["Colour", "Frequency"],
+             ["Fruit", "Frequency"]][k]
+    data.append(title)
+
+    nums = random.sample(range(4 * difficulty, 15 * difficulty), k=5)
+    colour = random.choice(['blue', 'red', 'teal'])
+    values = []
+    for i in range(5):
+        tally = mq.draw_tally(nums[i], colour)
+        data.append([col_1[i], tally])
+        values.append([col_1[i], nums[i]])
+    table = mq.draw_table(data)
+
+    item = ["colour", "fruit"][k]
+    question = f"Some people were asked what their favourite {item} is. " \
+               "The results are presented in a tally chart. "
+
+    values.sort(key=lambda x: x[1], reverse=True)
+    n = random.sample(range(0, 4), k=2)
+    n.sort(reverse=True)
+    ordinal = []
+    order = []
+    for j in range(2):
+        if n[j] > 2:
+            order.append("least")
+            if n[j] == 3:
+                ordinal.append("2nd")
+            else:
+                ordinal.append("")
+        else:
+            order.append("most")
+            if n[j] == 0:
+                ordinal.append("")
+            else:
+                ordinal.append(mq.ordinal(n[j]+1))
+
+    if difficulty == 1:
+        question += f"What is the {ordinal[0]} {order[0]} popular {item}?"
+        result = values[n[0]][0]
+    else:
+        question += f"How much more people prefer the {ordinal[1]} " \
+                    f"{order[1]} popular {item} than the {ordinal[0]} " \
+                    f"{order[0]} popular {item}?"
+        result = values[n[1]][1] - values[n[0]][1]
+    question += "\n\n" + table
+    answer = mq.dollar(result)
+    return [question, answer]
+
+
+def me_37(difficulty):
+    """Find journey time using timetable"""
+    no_trains = difficulty + 3
+    departures = []
+    durations = []
+
+    trains = [['Train', 'Departure', 'Arrival']]
+
+    while len(durations) < no_trains:
+        check = []
+        start_time = random.sample(range(0, 1438), k=no_trains)
+        start_time.sort()
+        for i in range(no_trains):
+            length = random.randint(1, 1439 - start_time[i])
+            if length not in check:
+                check.append(length)
+        if len(check) == no_trains:
+            durations = check
+            departures = start_time
+    values = []
+    for j in range(no_trains):
+        trains.append([str(j + 1), mq.minutes_to_time(departures[j]),
+                       mq.minutes_to_time(departures[j] + durations[j])])
+        values.append([str(j + 1), mq.minutes_to_time(departures[j]),
+                       mq.minutes_to_time(departures[j] + durations[j]),
+                       durations[j]])
+    table = mq.draw_table(trains)
+    n = random.randint(0, 1)
+    if n == 1:
+        choice = random.choice(values)
+        question = f"In minutes, how long is the journey for " \
+                   f"Train {choice[0]}?"
+        hour = floor(choice[3] / 60)
+        minutes = choice[3] - hour * 60
+        if hour == 0:
+            answer = f"{choice[3]} minutes"
+        elif hour == 1:
+            answer = f"{hour} hour and {minutes} minutes"
+        else:
+            answer = f"{hour} hours and {minutes} minutes"
+    else:
+        choice = random.choice(['shortest', 'longest'])
+        question = f"Which train has the {choice} journey time?"
+        values.sort(key=lambda x: x[3])
+        if choice == 'shortest':
+            answer = f"Train {values[0][0]}"
+        else:
+            answer = f"Train {values[no_trains-1][0]}"
+    question += f"\n\n {table}"
+    return [question, answer]
+
+
+def me_38(difficulty):
+    """Identify start/end time of a given event from a timetable. Chrys."""
+    no_events = difficulty + 2
+    durations = []
+
+    data = [['Event', 'Start', 'End']]
+    events = ['Ski Jumping', 'Snowboarding', 'Bobsled', 'Curling', 'Biathlon',
+              'Figure Skating', 'Hockey', 'Speed Skating', 'Cross Country']
+    events = random.sample(events, k=no_events)
+
+    start_time = random.sample(range(540, 1080), k=no_events)
+    start_time.sort()
+    end_time = []
+    while len(end_time) < no_events:
+        list_1 = []
+        list_2 = []
+        for i in range(no_events):
+            length = random.randint(30, 120 + 60 * difficulty)
+            end = start_time[i] + length
+            if end not in list_1:
+                list_1.append(end)
+                list_2.append(length)
+        if len(list_1) == no_events:
+            durations = list_2
+            end_time = list_1
+
+    values = []
+    for j in range(no_events):
+        data.append([events[j], mq.minutes_to_time(start_time[j]),
+                       mq.minutes_to_time(end_time[j])])
+        values.append([events[j], mq.minutes_to_time(start_time[j]),
+                       mq.minutes_to_time(end_time[j])])
+    table = mq.draw_table(data)
+
+    choice = random.choice(values)
+    n = random.randint(0, 1)
+    result = [['start', choice[1]], ['end', choice[2]]][n]
+    question = f"When does the {choice[0]} event {result[0]}? \n\n {table}"
+    answer = result[1]
+    return [question, answer]
+
+
+def me_39(difficulty):
+    """Find gap between two events on a timetable. Chrys."""
+    no_events = 4 + difficulty
+
+    start = []
+    end = []
+    durations = []
+    gap = []
+
+    data = [['Class', 'Start', 'End']]
+    n = random.randint(0, 1)
+    col_1 = [['Tennis', 'Badminton', 'Gymnastics', 'Boxing'
+              'Squash', 'Spin', 'Dance', 'Rock Climbing', 'Yoga'],
+             ['Math', 'Physics', 'Chemistry', 'Biology', 'Computing', 'P.E.',
+              'English', 'Psychology', 'Religion', 'Philosophy', 'Business']
+             ][n]
+    col_1 = random.sample(col_1, k=no_events)
+
+    start_0 = random.randint(420, 480)
+    my_list = [start_0]
+    lengths = random.sample(range(20, 80), k=2*no_events - 1)
+    for i in range(2 * no_events - 1):
+        my_list.append(my_list[i] + lengths[i])
+    for j in range(0, len(my_list), 2):
+        start.append(my_list[j])
+        end.append(my_list[j+1])
+    for m in range(0, len(lengths), 2):
+        durations.append(lengths[m])
+    for k in range(1, len(lengths), 2):
+        gap.append(lengths[k])
+    values = []
+    for q in range(no_events):
+        data.append([col_1[q], mq.minutes_to_time(start[q]),
+                    mq.minutes_to_time(end[q])])
+        values.append([col_1[q], mq.minutes_to_time(start[q]),
+                      mq.minutes_to_time(end[q])])
+    table = mq.draw_table(data)
+    choice_1 = random.randint(0, len(values) - 1 - difficulty)
+    choice_2 = choice_1 + difficulty
+    gender = random.choice([['male', 'his', 'he'],['female', 'her','she']])
+    name = names.get_first_name(gender=gender[0])
+    question = f"{name} has just finished {values[choice_1][0]} class. How " \
+               f"long will {gender[2]} have to wait until {gender[1]} " \
+               f"{values[choice_2][0]} class starts? Write your answer in " \
+               f"minutes. \n\n {table}"
+    result = start[choice_2] - end[choice_1]
+    answer = f"{result} minutes."
+    return [question, answer]
+
+
+def me_40(difficulty):
+    """Find time until an event on a timetable. Chrys."""
+    no_events = 5 + difficulty
+
+    start = []
+    end = []
+    n = random.randint(0, 1)
+    item = [['Flight', 'airport'], ['Train', 'station']][n]
+    col_1 = [['Athens', 'Rome', 'Madrid', 'Prague', 'Sydney', 'Manila',
+              'Dubai', 'Dublin', 'Toronto', 'Cape Town', 'Mexico City',
+              'Moscow', 'Nairobi', 'Lisbon', 'Hong Kong'],
+             ['Glasgow', 'Edinburgh', 'Manchester', 'Liverpool', 'Canterbury',
+              'Brighton', 'Cambridge', 'Oxford', 'Leeds', 'Bradford', 'Hull',
+              'Nottingham', 'Sunderland', 'Newcastle', 'Leicester']][n]
+    col_1 = random.sample(col_1, k=no_events)
+
+    option = random.choice([['Departure', 'depart', 'Destination', 'to'],
+                            ['Arrival', 'arrive', 'Arriving From', 'from']])
+    data = [[f'{option[2]}', f'{option[0]} Time']]
+    start = random.sample(range(240, 1339), k=no_events)
+    start.sort()
+    values = []
+    for i in range(no_events):
+        data.append([col_1[i], mq.minutes_to_time(start[i])])
+        values.append([col_1[i], mq.minutes_to_time(start[i])])
+    choice = random.randint(0, len(values) - 1)
+    length = random.randint(30 * difficulty, 60 * difficulty)
+    x = mq.minutes_to_time(start[choice] - length)
+
+    hour = floor(length / 60)
+    minutes = length - hour * 60
+    if hour == 0:
+        time = f"{minutes} minute"
+    else:
+        if hour == 1:
+            time = f"{hour} hour"
+        else:
+            time = f"{hour} hours"
+        if minutes > 0:
+            time += f" and {minutes} minute"
+    if minutes > 1:
+        time += 's'
+
+    gender = random.choice([['male', 'He'], ['female', 'She']])
+    name = names.get_first_name(gender=gender[0])
+    table = mq.draw_table(data)
+    question = f"{name} is waiting for the {item[0].lower()} {option[3]} " \
+               f"{values[choice][0]} to {option[1]}. {gender[1]} arrives at " \
+               f"the {item[1]} at {x}. How long will {gender[1].lower()} " \
+               f"have to wait until the {item[0].lower()} " \
+               f"{option[1]}s? \n\n {table}"
+    answer = time
+    return [question, answer]
+
+
+def sh_16(difficulty):
+    angle = random.randint(10, 50 * difficulty)
+    shape = r'''
+    \begin{tikzpicture}
+    \draw[fill=blue!30] (0,0) -- (%d:.8cm) arc (%d:180:.8cm);
+    \draw[fill=green!30] (0,0) -- (0:.8cm) arc (0:%d:.8cm);
+    \draw (0,0) -- (%d:2.5cm);
+    \draw (-2,0) -- (2,0);
+    \draw(%f:0.4cm) node {$%d\degree$};
+    \draw(%f:0.5cm) node {$x$};
+    \end{tikzpicture}
+    ''' % (angle, angle, angle, angle, (180 + angle) / 2, 180 - angle,
+           angle / 2)
+    question = "Calculate the missing angle.\n\n" \
+               + shape
+    answer = mq.dollar(f"{angle}\\degree")
+    return [question, answer]
+
+
+def st_22(difficulty):
+    """Probability question, chance of selecting a specified shape. Chrys."""
+    r = 'r'
+    shapes = []
+    no_shapes = [3, 5, 7][difficulty - 1]
+
+    quant_0 = random.randint(0, no_shapes)
+    quant = [quant_0, no_shapes - quant_0]
+
+    colour = random.sample(['red', 'blue', 'green', 'yellow'], k=2)
+
+    for i in range(quant[0] + quant[1]):
+        r += 'r'
+    for j in range(quant[0]):
+        shapes.append(mq.draw_circle(fill=colour[0]))
+    for m in range(quant[1]):
+        shapes.append(mq.draw_circle(fill=colour[1]))
+
+    random.shuffle(shapes)
+    n = quant[0] + quant[1]
+    joined_shapes = '&'.join(map(str, [shapes[i] for i in range(n)]))
+
+    model = r'''
+    \begin{center}
+    {\arraycolsep=2pt\LARGE$\begin{array}{%s} %s \end{array}$} 
+    \end{center}
+    ''' % (r, joined_shapes)
+
+    choices = ['Certain', 'Probable', 'Unlikely', 'Impossible']
+    if quant[0] == no_shapes:
+        result = choices[0]
+    elif quant[0] == 0:
+        result = choices[3]
+    elif 0 < quant[0] < quant[1]:
+        result = choices[2]
+    else:
+        result = choices[1]
+
+    question = "If you were to pick one circle, how likely is it that the " \
+               f"circle would be coloured {colour[0]}? \n\n {model}"
+    answer = result
+    return mq.multiple_choice(question, choices, answer, reorder=False)
+
