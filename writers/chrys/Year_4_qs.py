@@ -5460,7 +5460,8 @@ def sh_16(difficulty):
 
 
 def st_22(difficulty):
-    """Probability question, chance of selecting a specified shape. Chrys."""
+    """Probability question, how likely is it to select a certain colour.
+    Multiple choice. Chrys."""
     r = 'r'
     shapes = []
     no_shapes = [3, 5, 7][difficulty - 1]
@@ -5502,3 +5503,288 @@ def st_22(difficulty):
     answer = result
     return mq.multiple_choice(question, choices, answer, reorder=False)
 
+
+def st_23(difficulty):
+    """Interpret line graph to find value for specific x parameter. Chrys."""
+    data = []
+    n = random.randint(0, 1)
+    months = [['January', 'February', 'March', 'April'],
+              ['September', 'October', 'November', 'December']][n]
+    time_of_year = ['first', 'last'][n]
+
+    for i in range(len(months)):
+        if difficulty == 1:
+            a = random.randint(1, 10)
+        elif difficulty == 2:
+            a = round(random.randint(1, 10) / 2, 1)
+        else:
+            a = round(random.randint(2, 14) / 2, 1)
+        data.append([months[i], a])
+    increments = [1, 0.5, 1][difficulty - 1]
+
+    axis_adj = r'''
+    ytick={0,%s,...,10}, ymin=0, 
+    x tick label style={font=\small, rotate=45}, 
+    y tick label style={font=\small},
+    y label style={font=\small, yshift=-12pt}, height=7cm, width = 9cm
+    ''' % increments
+    title = '\\normalsize \\textbf{Average Monthly Rainfall in London}'
+    y_label = 'Average Rainfall (cm)'
+    model = mq.draw_line_graph(data, sym_axis=True, scale=0.85, grid=True,
+                               axis_adj=axis_adj, title=title, y_label=y_label)
+
+    choice = random.choice(data)
+
+    question = f"A meteorologist keeps track of the average monthly " \
+               f"rainfall in london for the {time_of_year} four months of " \
+               f"the year. On average, how much did it rain in {choice[0]}?" \
+               f"\n\n {model}"
+    if choice[1] % 1 == 0:
+        choice[1] = round(choice[1])
+    answer = f"{choice[1]}cm"
+    return [question, answer]
+
+
+def st_24(difficulty):
+    """Interpret line chart to find largest/smallest of two given values and
+    find difference in size. Chrys."""
+    data = []
+    n = random.randint(0, 1)
+    day = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+
+    upper = [10, 6, 10][difficulty - 1]
+    nums = random.sample(range(1, upper), k=5)
+    a = [2, 5, 5][difficulty - 1]
+    nums = [i * a for i in nums]
+
+    for i in range(len(day)):
+        data.append([day[i], nums[i]])
+    increments = [2, 5, 10][difficulty - 1]
+
+    axis_adj = r'''
+    ytick={0,%s,...,100}, ymin=0, 
+    x tick label style={font=\small, rotate=45}, 
+    y tick label style={font=\small},
+    y label style={font=\small, yshift=-12pt}, height=7cm, width = 9cm
+    ''' % increments
+    title = '\\normalsize \\textbf{Cakes Left Over Each Day}'
+    y_label = 'Number of Cakes'
+    model = mq.draw_line_graph(data, sym_axis=True, scale=0.85, grid=True,
+                               axis_adj=axis_adj, title=title, y_label=y_label)
+
+    values = random.sample(data, k=2)
+    values.sort(key=lambda x: x[1])
+
+    question = "A bakery keeps track of the cakes they have left " \
+               "over in the past week. "
+
+    n = random.randint(0, 1)
+    more_less = ["less", 'more'][n]
+
+    additional_text = [f"What day has {more_less} cakes left over, "
+                       f"{values[0][0]} or {values[1][0]}?",
+                       f"How many {more_less} cakes are left over "
+                       f"on {values[n][0]} than on {values[(n + 1) % 2][0]}?"]
+    result = [[values[0][0], values[1][0]][n], values[1][1] - values[0][1]]
+
+    k = [0, random.choices([0, 1], weights=(1, 4), k=1)[0], 1][difficulty - 1]
+    question += additional_text[k]
+
+    answer = str(result[k])
+    question = question + model
+    return [question, answer]
+
+
+def st_25(difficulty):
+    """Find range using line graph. Chrys."""
+    data = []
+
+    no_years = 4
+    upper = [10, 10, 10][difficulty - 1]
+    nums = random.choices(range(1, upper), k=5)
+    a = [5, 10, 20][difficulty - 1]
+    nums = [i * a for i in nums]
+
+    today = datetime.today()
+    for i in range(no_years):
+        year = today - timedelta(weeks=52 * i)
+        year = year.strftime("%Y")
+        data.append([year, nums[i]])
+    increments = [5, 10, 20][difficulty - 1]
+
+    item = random.choice(["chess competition", "football tournament",
+                          "science fair"])
+    axis_adj = r'''
+    ytick={0,%s,...,200}, ymin=0, 
+    x tick label style={font=\small, rotate=45}, 
+    y tick label style={font=\small},
+    y label style={font=\small, yshift=-12pt}, height=7cm, width = 9cm
+    ''' % increments
+    title = r'\small \textbf{%s Entries Per Year.}' \
+            % item.title()
+    y_label = 'Number of People'
+    model = mq.draw_line_graph(data, sym_axis=True, scale=0.85, grid=True,
+                               axis_adj=axis_adj, title=title, y_label=y_label)
+
+    name = names.get_first_name()
+
+    question = f"{name} keeps track of the number of people who take part in" \
+               f"a {item} over the past 4 years. Find the range of the data." \
+               f"\n{model}"
+    answer = str(max(nums) - min(nums))
+    return [question, answer]
+
+
+def st_26(difficulty):
+    """Interpret line graph to find which x entry matches a given y value.
+    Chrys."""
+    data = []
+
+    no_months = 2 + difficulty
+    upper = [7, 12, 12][difficulty - 1]
+    nums = random.sample(range(1, upper), k=5)
+    a = [100, 50, 50][difficulty - 1]
+    nums = [i * a for i in nums]
+
+    months = ["January", "February", "March", "April", "May"]
+    for i in range(no_months):
+        data.append([months[i], nums[i]])
+    increments = [100, 50, 50][difficulty - 1]
+
+    axis_adj = r'''
+    ytick={0,%s,...,1000}, ymin=0, 
+    x tick label style={font=\small, rotate=0}, 
+    y tick label style={font=\small},
+    y label style={font=\small, yshift=-12pt}, height=8.5cm, width = 9cm
+    ''' % increments
+    title = r'\small \textbf{Cost of Bills by Month}'
+
+    y_label = 'Amount Spent (\\textsterling)'
+    model = mq.draw_line_graph(data, sym_axis=True, scale=0.85, grid=True,
+                               axis_adj=axis_adj, title=title, y_label=y_label)
+
+    gender = random.choice([['male', 'he'], ['female', 'she']])
+    name = names.get_first_name(gender=gender[0])
+    choices = [months[i] for i in range(no_months)]
+    result = random.choice(data)
+
+    question = f"{name} is keeping track of the amount {gender[1]} spends on" \
+               f" bills in the first {no_months} months of the year. " \
+               f"On what month did {gender[1]} spend " \
+               f"\\textsterling{result[1]} on bills? \n{model}"
+    answer = result[0]
+    return mq.multiple_choice(question, choices, answer, reorder=False)
+
+
+def st_27(difficulty):
+    """Use line graph to find nth largest/smallest value. Chrys."""
+    data = []
+
+    no_weeks = 4
+    upper = [8, 8, 12][difficulty - 1]
+    nums = random.sample(range(1, upper), k=5)
+    a = [200, 1000, 500][difficulty - 1]
+    nums = [i * a for i in nums]
+
+    weeks = ["Week 1", "Week 2", "Week 3", "Week 4"]
+
+    for i in range(no_weeks):
+        data.append([weeks[i], nums[i]])
+    increments = [200, 1000, 500][difficulty - 1]
+    item = random.choice(['cars', 'fridges', 'telephones', 'tablets'])
+
+    axis_adj = r'''
+    ytick={0,%s,...,10000}, ymin=0, 
+    x tick label style={font=\small, rotate=0}, 
+    y tick label style={font=\small},
+    y label style={font=\small, yshift=-2.5pt}, height=8.5cm, width = 8.2cm
+    ''' % increments
+    title = r'\small \textbf{Amount of %s Sold in a Month}' % item.title()
+
+    y_label = 'Number Sold'
+    model = mq.draw_line_graph(data, sym_axis=True, scale=0.85, grid=True,
+                               axis_adj=axis_adj, title=title, y_label=y_label)
+    data.sort(key=lambda x: x[1])
+    n = random.randint(0, len(data) - 1)
+    if n == 1 or n == 2:
+        ordinal = mq.ordinal(2)
+    else:
+        ordinal = ''
+    if n < 2:
+        order = 'least'
+    else:
+        order = 'most'
+    choices = weeks
+    question = f"A salesman keeps track of the amount of {item} sold over " \
+               f"a month. What week did the salesman sell the {ordinal} " \
+               f"{order} {item}? \n{model}"
+    answer = data[n][0]
+    return mq.multiple_choice(question, choices, answer, reorder=False)
+
+
+def st_28(difficulty):
+    """Find mean using data from line graph. Chrys."""
+    data = []
+
+    no_days = 3 + difficulty
+    upper = [10, 12, 12][difficulty - 1]
+    nums = []
+    while len(nums) < no_days:
+        values = random.choices(range(1, upper), k=no_days)
+        a = [2, 1, 1][difficulty - 1]
+        values = [i * a for i in values]
+        if mean(values) % 1 == 0:
+            nums = values
+
+    for i in range(no_days):
+        data.append([f"{i + 1}", nums[i]])
+    increments = [2, 1, 1][difficulty - 1]
+    item = random.choice(['cycled', 'walked', 'swam'])
+
+    axis_adj = r'''
+    ytick={0,%s,...,40}, ymin=0, 
+    x tick label style={font=\small, rotate=0}, 
+    y tick label style={font=\small},
+    y label style={font=\normalsize, yshift=-12pt}, height=8.5cm, width=8.2cm,
+    x label style = {font=\normalsize}
+    ''' % increments
+    title = r'\normalsize \textbf{Distance Travelled Each Day}'
+
+    y_label = 'Distance (km)'
+    x_label = 'Day'
+    model = mq.draw_line_graph(data, sym_axis=True, scale=0.85, grid=True,
+                               axis_adj=axis_adj, title=title, y_label=y_label,
+                               x_label=x_label)
+    gender = random.choice([['male', 'he', 'his'], ['female', 'she', 'her']])
+    name = names.get_first_name(gender=gender[0])
+    question = f"{name} keeps track of the distance {gender[1]} {item} on " \
+               f"each day of {gender[2]} holiday. What is the mean of the " \
+               f"data? \n{model}"
+    answer = mq.dollar(mean(nums))
+    return [question, answer]
+
+
+def pv_16(difficulty):
+    """Are the values in a sequence increasing or decreasing. Multiple Choice.
+     Chrys."""
+    no_values = 3+ difficulty
+    if difficulty <= 2:
+        nums = random.sample(range(1, 10 * 10 ** difficulty), k=no_values)
+    else:
+        nums = random.sample(range(1, 50), k=no_values)
+        nums = [round(i / 10, 1) for i in nums]
+        for j in range(len(nums)):
+            if nums[j] % 1 == 0:
+                nums[j] = round(nums[j])
+    n = random.randint(0, 1)
+    if n == 0:
+        nums.sort()
+    else:
+        nums.sort(reverse=True)
+    sequence = ",\\ ".join(str(j) for j in nums)
+    choices = ['Increasing', 'Decreasing']
+    question = f"Are the numbers in the sequence increasing or " \
+               f"decreasing in size? \n" \
+               r"\begin{center} %s \end{center}" % sequence
+    answer = choices[n]
+    return mq.multiple_choice(question, choices, answer, reorder=False)
