@@ -4383,7 +4383,7 @@ def st_10(difficulty):
 
     key = r"\textbf{Key}: %s\textbf{ = %s %s}" \
           % (mq.draw_circle(0.2, 'red', 'red'), num_key, item[1].capitalize())
-    table = mq.draw_table(data)
+    table = mq.draw_table(data, centered=False)
 
     m = random.randint(0, len(my_list) - 2)
     a = random.randint(0, 1)
@@ -4476,15 +4476,12 @@ def st_13(difficulty):
     a = [power * i for i in a]
     for i in range(4):
         data.append([r'\scriptsize %s' % cities[i], a[i]])
-    k = random.randint(0, 1)
-    horizontal_or_vertical = [True, False][k]
-    x_or_y = ["x", "y"][k]
-    axis_scale = r'''%stick={0,%s,...,80}, %smin=0, %smajorgrids=true, 
-    %s tick label style={font=\small}
-    ''' % (x_or_y, steps, x_or_y, x_or_y, x_or_y)
-    chart = mq.bar_chart(data, horizontal=horizontal_or_vertical,
-                         axis_adj=axis_scale, sym_axis=True, size=(6.5, 7),
-                         label="\\small Price in \\textsterling", fill='red')
+    axis_scale = r'''xtick={0,%s,...,80}, xmin=0, xmajorgrids=true, 
+    x tick label style={font=\small}, bar width = 10pt, enlarge y limits=0.25
+    ''' % steps
+    chart = mq.bar_chart(data, horizontal=True, axis_adj=axis_scale,
+                         sym_axis=True, size=(4, 7), fill='red',
+                         label="\\small Price in \\textsterling")
     data.sort(key=lambda x: x[1])
     option = ["cheapest", "most expensive"]
     if difficulty == 1:
@@ -4904,7 +4901,7 @@ def st_6(difficulty):
 
     key = r"\textbf{Key}: %s\textbf{ = %s Pizzas}" \
           % (mq.draw_circle(0.2, 'red', 'red'), num_key)
-    table = mq.draw_table(data)
+    table = mq.draw_table(data, centered=False)
 
     a = random.randint(0, 6)
     question = "A restaurant made a pictogram to show the number of pizzas " \
@@ -4944,7 +4941,7 @@ def st_7(difficulty):
     item = random.choice([['pet', 'hamsters'], ['jewellery', 'rings']])
     key = r"\textbf{Key}: %s\textbf{ = %s %s}" \
           % (square, key_value, item[1].capitalize())
-    table = mq.draw_table(data)
+    table = mq.draw_table(data, centered=False)
     question = f"A {item[0]} shop made a pictogram to show how many {item[1]}"\
                f" they sold in each week of last month. Find the total " \
                f"amount of {item[1]} sold in the month. \n {table} \n {key}"
@@ -5003,7 +5000,7 @@ def st_8(difficulty):
             data.append([col_1[h], col_2[h]])
     key = r"\textbf{Key}: %s\textbf{ = %s %s}" \
           % (square, key_value, 'Visitors')
-    table = mq.draw_table(data)
+    table = mq.draw_table(data, centered=False)
     question = f"A {item[0]} made a pictogram to show how many visitors"\
                f" each {item[1]} received in an hour. Find the mean " \
                f"amount of visitors. \n {table} \n {key}"
@@ -5056,7 +5053,7 @@ def st_9(difficulty):
 
     key = r"\textbf{Key}: %s\textbf{ = %s %s}" \
           % (square, key_value, item[1].capitalize())
-    table = mq.draw_table(data)
+    table = mq.draw_table(data, centered=False)
     question = f"A {item[0]} made a pictogram to show how many {item[1]}"\
                f" {item[2]}. Find the range " \
                f"of the data. \n {table} \n {key}"
@@ -5075,7 +5072,7 @@ def st_18(difficulty):
                           ["Fire", "fire service"]])
 
     k = random.randint(0, 1)
-    title = [["Name", "Score"], ["Town", f"Number of {item[0]} Stations"]][k]
+    title = [["Name", "Score"], ["Town", f"Number of Stations"]][k]
     data.append(title)
     col_2 = []
     while len(col_2) < n:
@@ -5090,7 +5087,7 @@ def st_18(difficulty):
             col_1 = towns[i]
         tally = mq.draw_tally(col_2[i], colour)
         data.append([col_1, tally])
-    table = mq.draw_table(data)
+    table = mq.draw_table(data, centered=False)
 
     items = [
         ["Some friends", "their scores in a quiz"],
@@ -5118,7 +5115,7 @@ def st_19(difficulty):
     for i in range(5):
         tally = mq.draw_tally(nums[i], colour)
         data.append([col_1[i], tally])
-    table = mq.draw_table(data)
+    table = mq.draw_table(data, centered=False)
     question = ["A tourism company wanted to find out how"
                 " many hotels are in each region in a town.",
                 "An estate agent records how many houses "
@@ -5129,8 +5126,8 @@ def st_19(difficulty):
 
 
 def st_20(difficulty):
-    """Tally Chart, Find quantity of entryies more/less than a given amount.
-    Chrys."""
+    """Tally Chart, Find quantity of entries that are more/less than a given
+    amount. Chrys."""
     data = []
     k = random.randint(0, 1)
     col_1 = [
@@ -5149,7 +5146,7 @@ def st_20(difficulty):
         tally = mq.draw_tally(nums[i], colour)
         data.append([col_1[i], tally])
         values.append([col_1[i], nums[i]])
-    table = mq.draw_table(data)
+    table = mq.draw_table(data, centered=False)
     values.sort(key=lambda x: x[1])
     a = random.randint(min(nums) + 1, max(nums) - 1)
     m = random.randint(0, 1)
@@ -5181,3 +5178,1317 @@ def st_20(difficulty):
     question += f"How many {item} \n\n" + table
     answer = str(result)
     return [question, answer]
+
+
+def st_21(difficulty):
+    """Find nth highest and different between two values. Chrys."""
+    data = []
+    k = random.randint(0, 1)
+    col_1 = [
+        ["Red", "Yellow", "Blue", "Green", "Purple", "Pink", "Grey"],
+        ["Apple", "Banana", "Mango", "Pear", "Orange", "Melon", "Pineapple"]
+    ][k]
+    col_1 = random.sample(col_1, k=5)
+    title = [["Colour", "Frequency"],
+             ["Fruit", "Frequency"]][k]
+    data.append(title)
+
+    nums = random.sample(range(4 * difficulty, 15 * difficulty), k=5)
+    colour = random.choice(['blue', 'red', 'teal'])
+    values = []
+    for i in range(5):
+        tally = mq.draw_tally(nums[i], colour)
+        data.append([col_1[i], tally])
+        values.append([col_1[i], nums[i]])
+    table = mq.draw_table(data, centered=False)
+
+    item = ["colour", "fruit"][k]
+    question = f"Some people were asked what their favourite {item} is. " \
+               "The results are presented in a tally chart. "
+
+    values.sort(key=lambda x: x[1], reverse=True)
+    n = random.sample(range(0, 4), k=2)
+    n.sort(reverse=True)
+    ordinal = []
+    order = []
+    for j in range(2):
+        if n[j] > 2:
+            order.append("least")
+            if n[j] == 3:
+                ordinal.append("2nd")
+            else:
+                ordinal.append("")
+        else:
+            order.append("most")
+            if n[j] == 0:
+                ordinal.append("")
+            else:
+                ordinal.append(mq.ordinal(n[j]+1))
+
+    if difficulty == 1:
+        question += f"What is the {ordinal[0]} {order[0]} popular {item}?"
+        result = values[n[0]][0]
+    else:
+        question += f"How much more people prefer the {ordinal[1]} " \
+                    f"{order[1]} popular {item} than the {ordinal[0]} " \
+                    f"{order[0]} popular {item}?"
+        result = values[n[1]][1] - values[n[0]][1]
+    question += "\n\n" + table
+    answer = mq.dollar(result)
+    return [question, answer]
+
+
+def me_37(difficulty):
+    """Find journey time using timetable"""
+    no_trains = difficulty + 3
+    departures = []
+    durations = []
+
+    trains = [['Train', 'Departure', 'Arrival']]
+
+    while len(durations) < no_trains:
+        check = []
+        start_time = random.sample(range(0, 1438), k=no_trains)
+        start_time.sort()
+        for i in range(no_trains):
+            length = random.randint(1, 1439 - start_time[i])
+            if length not in check:
+                check.append(length)
+        if len(check) == no_trains:
+            durations = check
+            departures = start_time
+    values = []
+    for j in range(no_trains):
+        trains.append([str(j + 1), mq.minutes_to_time(departures[j]),
+                       mq.minutes_to_time(departures[j] + durations[j])])
+        values.append([str(j + 1), mq.minutes_to_time(departures[j]),
+                       mq.minutes_to_time(departures[j] + durations[j]),
+                       durations[j]])
+    table = mq.draw_table(trains)
+    n = random.randint(0, 1)
+    if n == 1:
+        choice = random.choice(values)
+        question = f"In minutes, how long is the journey for " \
+                   f"Train {choice[0]}?"
+        hour = floor(choice[3] / 60)
+        minutes = choice[3] - hour * 60
+        if hour == 0:
+            answer = f"{choice[3]} minutes"
+        elif hour == 1:
+            answer = f"{hour} hour and {minutes} minutes"
+        else:
+            answer = f"{hour} hours and {minutes} minutes"
+    else:
+        choice = random.choice(['shortest', 'longest'])
+        question = f"Which train has the {choice} journey time?"
+        values.sort(key=lambda x: x[3])
+        if choice == 'shortest':
+            answer = f"Train {values[0][0]}"
+        else:
+            answer = f"Train {values[no_trains-1][0]}"
+    question += f"\n\n {table}"
+    return [question, answer]
+
+
+def me_38(difficulty):
+    """Identify start/end time of a given event from a timetable. Chrys."""
+    no_events = difficulty + 2
+
+    data = [['Event', 'Start', 'End']]
+    events = ['Ski Jumping', 'Snowboarding', 'Bobsled', 'Curling', 'Biathlon',
+              'Figure Skating', 'Hockey', 'Speed Skating', 'Cross Country']
+    events = random.sample(events, k=no_events)
+
+    start_time = random.sample(range(540, 1080), k=no_events)
+    start_time.sort()
+    end_time = []
+    while len(end_time) < no_events:
+        list_1 = []
+        list_2 = []
+        for i in range(no_events):
+            length = random.randint(30, 120 + 60 * difficulty)
+            end = start_time[i] + length
+            if end not in list_1:
+                list_1.append(end)
+                list_2.append(length)
+        if len(list_1) == no_events:
+            end_time = list_1
+
+    values = []
+    for j in range(no_events):
+        data.append([events[j], mq.minutes_to_time(start_time[j]),
+                    mq.minutes_to_time(end_time[j])])
+        values.append([events[j], mq.minutes_to_time(start_time[j]),
+                       mq.minutes_to_time(end_time[j])])
+    table = mq.draw_table(data)
+
+    choice = random.choice(values)
+    n = random.randint(0, 1)
+    result = [['start', choice[1]], ['end', choice[2]]][n]
+    question = f"When does the {choice[0]} event {result[0]}? \n\n {table}"
+    answer = result[1]
+    return [question, answer]
+
+
+def me_39(difficulty):
+    """Find gap between two events on a timetable. Chrys."""
+    no_events = 4 + difficulty
+
+    start = []
+    end = []
+    durations = []
+    gap = []
+
+    data = [['Class', 'Start', 'End']]
+    n = random.randint(0, 1)
+    col_1 = [['Tennis', 'Badminton', 'Gymnastics', 'Boxing'
+              'Squash', 'Spin', 'Dance', 'Rock Climbing', 'Yoga'],
+             ['Math', 'Physics', 'Chemistry', 'Biology', 'Computing', 'P.E.',
+              'English', 'Psychology', 'Religion', 'Philosophy', 'Business']
+             ][n]
+    col_1 = random.sample(col_1, k=no_events)
+
+    start_0 = random.randint(420, 480)
+    my_list = [start_0]
+    lengths = random.sample(range(20, 80), k=2*no_events - 1)
+    for i in range(2 * no_events - 1):
+        my_list.append(my_list[i] + lengths[i])
+    for j in range(0, len(my_list), 2):
+        start.append(my_list[j])
+        end.append(my_list[j+1])
+    for m in range(0, len(lengths), 2):
+        durations.append(lengths[m])
+    for k in range(1, len(lengths), 2):
+        gap.append(lengths[k])
+    values = []
+    for q in range(no_events):
+        data.append([col_1[q], mq.minutes_to_time(start[q]),
+                    mq.minutes_to_time(end[q])])
+        values.append([col_1[q], mq.minutes_to_time(start[q]),
+                      mq.minutes_to_time(end[q])])
+    table = mq.draw_table(data)
+    choice_1 = random.randint(0, len(values) - 1 - difficulty)
+    choice_2 = choice_1 + difficulty
+    gender = random.choice([['male', 'his', 'he'], ['female', 'her', 'she']])
+    name = names.get_first_name(gender=gender[0])
+    question = f"{name} has just finished {values[choice_1][0]} class. How " \
+               f"long will {gender[2]} have to wait until {gender[1]} " \
+               f"{values[choice_2][0]} class starts? Write your answer in " \
+               f"minutes. \n\n {table}"
+    result = start[choice_2] - end[choice_1]
+    answer = f"{result} minutes."
+    return [question, answer]
+
+
+def me_40(difficulty):
+    """Find time until an event on a timetable. Chrys."""
+    no_events = 5 + difficulty
+    n = random.randint(0, 1)
+    item = [['Flight', 'airport'], ['Train', 'station']][n]
+    col_1 = [['Athens', 'Rome', 'Madrid', 'Prague', 'Sydney', 'Manila',
+              'Dubai', 'Dublin', 'Toronto', 'Cape Town', 'Mexico City',
+              'Moscow', 'Nairobi', 'Lisbon', 'Hong Kong'],
+             ['Glasgow', 'Edinburgh', 'Manchester', 'Liverpool', 'Canterbury',
+              'Brighton', 'Cambridge', 'Oxford', 'Leeds', 'Bradford', 'Hull',
+              'Nottingham', 'Sunderland', 'Newcastle', 'Leicester']][n]
+    col_1 = random.sample(col_1, k=no_events)
+
+    option = random.choice([['Departure', 'depart', 'Destination', 'to'],
+                            ['Arrival', 'arrive', 'Arriving From', 'from']])
+    data = [[f'{option[2]}', f'{option[0]} Time']]
+    start = random.sample(range(240, 1339), k=no_events)
+    start.sort()
+    values = []
+    for i in range(no_events):
+        data.append([col_1[i], mq.minutes_to_time(start[i])])
+        values.append([col_1[i], mq.minutes_to_time(start[i])])
+    choice = random.randint(0, len(values) - 1)
+    length = random.randint(30 * difficulty, 60 * difficulty)
+    x = mq.minutes_to_time(start[choice] - length)
+
+    hour = floor(length / 60)
+    minutes = length - hour * 60
+    if hour == 0:
+        time_1 = f"{minutes} minute"
+    else:
+        if hour == 1:
+            time_1 = f"{hour} hour"
+        else:
+            time_1 = f"{hour} hours"
+        if minutes > 0:
+            time_1 += f" and {minutes} minute"
+    if minutes > 1:
+        time_1 += 's'
+
+    gender = random.choice([['male', 'He'], ['female', 'She']])
+    name = names.get_first_name(gender=gender[0])
+    table = mq.draw_table(data)
+    question = f"{name} is waiting for the {item[0].lower()} {option[3]} " \
+               f"{values[choice][0]} to {option[1]}. {gender[1]} arrives at " \
+               f"the {item[1]} at {x}. How long will {gender[1].lower()} " \
+               f"have to wait until the {item[0].lower()} " \
+               f"{option[1]}s? \n\n {table}"
+    answer = time_1
+    return [question, answer]
+
+
+def sh_16(difficulty):
+    angle = random.randint(10, 50 * difficulty)
+    shape = r'''
+    \begin{tikzpicture}
+    \draw[fill=blue!30] (0,0) -- (%d:.8cm) arc (%d:180:.8cm);
+    \draw[fill=green!30] (0,0) -- (0:.8cm) arc (0:%d:.8cm);
+    \draw (0,0) -- (%d:2.5cm);
+    \draw (-2,0) -- (2,0);
+    \draw(%f:0.4cm) node {$%d\degree$};
+    \draw(%f:0.5cm) node {$x$};
+    \end{tikzpicture}
+    ''' % (angle, angle, angle, angle, (180 + angle) / 2, 180 - angle,
+           angle / 2)
+    question = "Calculate the missing angle.\n\n" \
+               + shape
+    answer = mq.dollar(f"{angle}\\degree")
+    return [question, answer]
+
+
+def st_22(difficulty):
+    """Probability question, how likely is it to select a certain colour.
+    Multiple choice. Chrys."""
+    r = 'r'
+    shapes = []
+    no_shapes = [3, 5, 7][difficulty - 1]
+
+    quant_0 = random.randint(0, no_shapes)
+    quant = [quant_0, no_shapes - quant_0]
+
+    colour = random.sample(['red', 'blue', 'green', 'yellow'], k=2)
+
+    for i in range(quant[0] + quant[1]):
+        r += 'r'
+    for j in range(quant[0]):
+        shapes.append(mq.draw_circle(fill=colour[0]))
+    for m in range(quant[1]):
+        shapes.append(mq.draw_circle(fill=colour[1]))
+
+    random.shuffle(shapes)
+    n = quant[0] + quant[1]
+    joined_shapes = '&'.join(map(str, [shapes[i] for i in range(n)]))
+
+    model = r'''
+    \begin{center}
+    {\arraycolsep=2pt\LARGE$\begin{array}{%s} %s \end{array}$} 
+    \end{center}
+    ''' % (r, joined_shapes)
+
+    choices = ['Certain', 'Probable', 'Unlikely', 'Impossible']
+    if quant[0] == no_shapes:
+        result = choices[0]
+    elif quant[0] == 0:
+        result = choices[3]
+    elif 0 < quant[0] < quant[1]:
+        result = choices[2]
+    else:
+        result = choices[1]
+
+    question = "If you were to pick one circle, how likely is it that the " \
+               f"circle would be coloured {colour[0]}? \n\n {model}"
+    answer = result
+    return mq.multiple_choice(question, choices, answer, reorder=False)
+
+
+def st_23(difficulty):
+    """Interpret line graph to find value for specific x parameter. Chrys."""
+    data = []
+    n = random.randint(0, 1)
+    months = [['January', 'February', 'March', 'April'],
+              ['September', 'October', 'November', 'December']][n]
+    time_of_year = ['first', 'last'][n]
+
+    for i in range(len(months)):
+        if difficulty == 1:
+            a = random.randint(1, 10)
+        elif difficulty == 2:
+            a = round(random.randint(1, 10) / 2, 1)
+        else:
+            a = round(random.randint(2, 14) / 2, 1)
+        data.append([months[i], a])
+    increments = [1, 0.5, 1][difficulty - 1]
+
+    axis_adj = r'''
+    ytick={0,%s,...,10}, ymin=0, 
+    x tick label style={font=\small, rotate=45}, 
+    y tick label style={font=\small},
+    y label style={font=\small, yshift=-12pt}, height=7cm, width = 9cm
+    ''' % increments
+    title = '\\normalsize \\textbf{Average Monthly Rainfall in London}'
+    y_label = 'Average Rainfall (cm)'
+    model = mq.draw_line_graph(data, sym_axis=True, scale=0.85, grid=True,
+                               axis_adj=axis_adj, title=title, y_label=y_label)
+
+    choice = random.choice(data)
+
+    question = f"A meteorologist keeps track of the average monthly " \
+               f"rainfall in london for the {time_of_year} four months of " \
+               f"the year. On average, how much did it rain in {choice[0]}?" \
+               f"\n\n {model}"
+    if choice[1] % 1 == 0:
+        choice[1] = round(choice[1])
+    answer = f"{choice[1]}cm"
+    return [question, answer]
+
+
+def st_24(difficulty):
+    """Interpret line chart to find largest/smallest of two given values and
+    find difference in size. Chrys."""
+    data = []
+    day = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+
+    upper = [10, 6, 10][difficulty - 1]
+    nums = random.sample(range(1, upper), k=5)
+    a = [2, 5, 5][difficulty - 1]
+    nums = [i * a for i in nums]
+
+    for i in range(len(day)):
+        data.append([day[i], nums[i]])
+    increments = [2, 5, 10][difficulty - 1]
+
+    axis_adj = r'''
+    ytick={0,%s,...,100}, ymin=0, 
+    x tick label style={font=\small, rotate=45}, 
+    y tick label style={font=\small},
+    y label style={font=\small, yshift=-12pt}, height=7cm, width = 9cm
+    ''' % increments
+    title = '\\normalsize \\textbf{Cakes Left Over Each Day}'
+    y_label = 'Number of Cakes'
+    model = mq.draw_line_graph(data, sym_axis=True, scale=0.85, grid=True,
+                               axis_adj=axis_adj, title=title, y_label=y_label)
+
+    values = random.sample(data, k=2)
+    values.sort(key=lambda x: x[1])
+
+    question = "A bakery keeps track of the cakes they have left " \
+               "over in the past week. "
+
+    n = random.randint(0, 1)
+    more_less = ["less", 'more'][n]
+
+    additional_text = [f"What day has {more_less} cakes left over, "
+                       f"{values[0][0]} or {values[1][0]}?",
+                       f"How many {more_less} cakes are left over "
+                       f"on {values[n][0]} than on {values[(n + 1) % 2][0]}?"]
+    result = [[values[0][0], values[1][0]][n], values[1][1] - values[0][1]]
+
+    k = [0, random.choices([0, 1], weights=(1, 4), k=1)[0], 1][difficulty - 1]
+    question += additional_text[k]
+
+    answer = str(result[k])
+    question = question + model
+    return [question, answer]
+
+
+def st_25(difficulty):
+    """Find range using line graph. Chrys."""
+    data = []
+
+    no_years = 4
+    upper = [10, 10, 10][difficulty - 1]
+    nums = random.choices(range(1, upper), k=5)
+    a = [5, 10, 20][difficulty - 1]
+    nums = [i * a for i in nums]
+
+    today = datetime.today()
+    for i in range(no_years):
+        year = today - timedelta(weeks=52 * i)
+        year = year.strftime("%Y")
+        data.append([year, nums[i]])
+    increments = [5, 10, 20][difficulty - 1]
+
+    item = random.choice(["chess competition", "football tournament",
+                          "science fair"])
+    axis_adj = r'''
+    ytick={0,%s,...,200}, ymin=0, 
+    x tick label style={font=\small, rotate=45}, 
+    y tick label style={font=\small},
+    y label style={font=\small, yshift=-12pt}, height=7cm, width = 9cm
+    ''' % increments
+    title = r'\small \textbf{%s Entries Per Year.}' \
+            % item.title()
+    y_label = 'Number of People'
+    model = mq.draw_line_graph(data, sym_axis=True, scale=0.85, grid=True,
+                               axis_adj=axis_adj, title=title, y_label=y_label)
+
+    name = names.get_first_name()
+
+    question = f"{name} keeps track of the number of people who take part in" \
+               f"a {item} over the past 4 years. Find the range of the data." \
+               f"\n{model}"
+    answer = str(max(nums) - min(nums))
+    return [question, answer]
+
+
+def st_26(difficulty):
+    """Interpret line graph to find which x entry matches a given y value.
+    Chrys."""
+    data = []
+
+    no_months = 2 + difficulty
+    upper = [7, 12, 12][difficulty - 1]
+    nums = random.sample(range(1, upper), k=5)
+    a = [100, 50, 50][difficulty - 1]
+    nums = [i * a for i in nums]
+
+    months = ["January", "February", "March", "April", "May"]
+    for i in range(no_months):
+        data.append([months[i], nums[i]])
+    increments = [100, 50, 50][difficulty - 1]
+
+    axis_adj = r'''
+    ytick={0,%s,...,1000}, ymin=0, 
+    x tick label style={font=\small, rotate=0}, 
+    y tick label style={font=\small},
+    y label style={font=\small, yshift=-12pt}, height=8.5cm, width = 9cm
+    ''' % increments
+    title = r'\small \textbf{Cost of Bills by Month}'
+
+    y_label = 'Amount Spent (\\textsterling)'
+    model = mq.draw_line_graph(data, sym_axis=True, scale=0.85, grid=True,
+                               axis_adj=axis_adj, title=title, y_label=y_label)
+
+    gender = random.choice([['male', 'he'], ['female', 'she']])
+    name = names.get_first_name(gender=gender[0])
+    choices = [months[i] for i in range(no_months)]
+    result = random.choice(data)
+
+    question = f"{name} is keeping track of the amount {gender[1]} spends on" \
+               f" bills in the first {no_months} months of the year. " \
+               f"On what month did {gender[1]} spend " \
+               f"\\textsterling{result[1]} on bills? \n{model}"
+    answer = result[0]
+    return mq.multiple_choice(question, choices, answer, reorder=False)
+
+
+def st_27(difficulty):
+    """Use line graph to find nth largest/smallest value. Chrys."""
+    data = []
+
+    no_weeks = 4
+    upper = [8, 8, 12][difficulty - 1]
+    nums = random.sample(range(1, upper), k=5)
+    a = [200, 1000, 500][difficulty - 1]
+    nums = [i * a for i in nums]
+
+    weeks = ["Week 1", "Week 2", "Week 3", "Week 4"]
+
+    for i in range(no_weeks):
+        data.append([weeks[i], nums[i]])
+    increments = [200, 1000, 500][difficulty - 1]
+    item = random.choice(['cars', 'fridges', 'telephones', 'tablets'])
+
+    axis_adj = r'''
+    ytick={0,%s,...,10000}, ymin=0, 
+    x tick label style={font=\small, rotate=0}, 
+    y tick label style={font=\small},
+    y label style={font=\small, yshift=-2.5pt}, height=8.5cm, width = 8.2cm
+    ''' % increments
+    title = r'\small \textbf{Amount of %s Sold in a Month}' % item.title()
+
+    y_label = 'Number Sold'
+    model = mq.draw_line_graph(data, sym_axis=True, scale=0.85, grid=True,
+                               axis_adj=axis_adj, title=title, y_label=y_label)
+    data.sort(key=lambda x: x[1])
+    n = random.randint(0, len(data) - 1)
+    if n == 1 or n == 2:
+        ordinal = mq.ordinal(2)
+    else:
+        ordinal = ''
+    if n < 2:
+        order = 'least'
+    else:
+        order = 'most'
+    choices = weeks
+    question = f"A salesman keeps track of the amount of {item} sold over " \
+               f"a month. What week did the salesman sell the {ordinal} " \
+               f"{order} {item}? \n{model}"
+    answer = data[n][0]
+    return mq.multiple_choice(question, choices, answer, reorder=False)
+
+
+def st_28(difficulty):
+    """Find mean using data from line graph. Chrys."""
+    data = []
+
+    no_days = 3 + difficulty
+    upper = [10, 12, 12][difficulty - 1]
+    nums = []
+    while len(nums) < no_days:
+        values = random.choices(range(1, upper), k=no_days)
+        a = [2, 1, 1][difficulty - 1]
+        values = [i * a for i in values]
+        if mean(values) % 1 == 0:
+            nums = values
+
+    for i in range(no_days):
+        data.append([f"{i + 1}", nums[i]])
+    increments = [2, 1, 1][difficulty - 1]
+    item = random.choice(['cycled', 'walked', 'swam'])
+
+    axis_adj = r'''
+    ytick={0,%s,...,40}, ymin=0, 
+    x tick label style={font=\small, rotate=0}, 
+    y tick label style={font=\small},
+    y label style={font=\normalsize, yshift=-12pt}, height=8.5cm, width=8.2cm,
+    x label style = {font=\normalsize}
+    ''' % increments
+    title = r'\normalsize \textbf{Distance Travelled Each Day}'
+
+    y_label = 'Distance (km)'
+    x_label = 'Day'
+    model = mq.draw_line_graph(data, sym_axis=True, scale=0.85, grid=True,
+                               axis_adj=axis_adj, title=title, y_label=y_label,
+                               x_label=x_label)
+    gender = random.choice([['male', 'he', 'his'], ['female', 'she', 'her']])
+    name = names.get_first_name(gender=gender[0])
+    question = f"{name} keeps track of the distance {gender[1]} {item} on " \
+               f"each day of {gender[2]} holiday. What is the mean of the " \
+               f"data? \n{model}"
+    answer = mq.dollar(mean(nums))
+    return [question, answer]
+
+
+def pv_16(difficulty):
+    """Are the values in a sequence increasing or decreasing. Multiple Choice.
+     Chrys."""
+    no_values = 3 + difficulty
+    if difficulty <= 2:
+        nums = random.sample(range(1, 10 * 10 ** difficulty), k=no_values)
+    else:
+        nums = random.sample(range(1, 50), k=no_values)
+        nums = [round(i / 10, 1) for i in nums]
+        for j in range(len(nums)):
+            if nums[j] % 1 == 0:
+                nums[j] = round(nums[j])
+    n = random.randint(0, 1)
+    if n == 0:
+        nums.sort()
+    else:
+        nums.sort(reverse=True)
+    sequence = ",\\ ".join(str(j) for j in nums)
+    choices = ['Increasing', 'Decreasing']
+    question = f"Are the numbers in the sequence increasing or " \
+               f"decreasing in size? \n" \
+               r"\begin{center} %s \end{center}" % sequence
+    answer = choices[n]
+    return mq.multiple_choice(question, choices, answer, reorder=False)
+
+
+def st_29(difficulty):
+    """Determine if the values in the graph have an increasing or
+    decreasing trend. Chrys."""
+    no_values = 4
+    data = []
+    k = random.randint(0, 1)
+
+    if k == 0:
+        upper = [10, 6, 13][difficulty - 1]
+        a = [1, 2, 2][difficulty - 1]
+        increments = [1, 2, 2][difficulty - 1]
+    else:
+        upper = [6, 8, 10][difficulty - 1]
+        a = [5, 4, 2][difficulty - 1]
+        increments = [5, 4, 2][difficulty - 1]
+
+    nums = random.sample(range(1, upper), k=no_values)
+    nums = [i * a for i in nums]
+    n = random.randint(0, 1)
+    nums.sort() if n == 0 else nums.sort(reverse=True)
+
+    months = ["May", "June", "July", "August"]
+    week_month = ['week', 'month'][k]
+    for i in range(no_values):
+        col_1 = [f"Week {i + 1}", months[i]][k]
+        data.append([col_1, nums[i]])
+
+    m = random.choices([0, 1], weights=(2, difficulty), k=1)[0]
+    item = random.choice(["number of books read", "number of tests completed"])
+    y_label = item.title()
+    title = r"\textbf{%s per %s}" % (item.title(), week_month.title())
+    colour = random.choice(['red', 'blue', 'green'])
+    if m == 0:
+        axis_scale = r'''ytick={0,%s,...,100}, ymin=0, ymajorgrids=true,
+        y label style={font=\small, yshift=-12pt}, 
+        y tick label style={font=\small},
+        x tick label style={font=\small},
+        title={%s}, title style={font=\small}''' % (increments, title)
+        chart = mq.bar_chart(data, axis_adj=axis_scale, label=y_label,
+                             sym_axis=True, size=(6.5, 7.5), fill=colour)
+    else:
+        axis_adj = r'''
+        ytick={0,%s,...,100}, ymin=0, 
+        x tick label style={font=\small}, 
+        y tick label style={font=\small}, title style={font=\small},
+        y label style={font=\small, yshift=-12pt}, height=7.5cm, width = 8.2cm,
+        ''' % increments
+        chart = mq.draw_line_graph(data, sym_axis=True, scale=0.85, grid=True,
+                                   axis_adj=axis_adj, title=title,
+                                   y_label=y_label, colour=colour)
+    chart_type = ["bar chart", "line graph"][m]
+    choices = ['Increasing', 'Decreasing']
+    question = f"Are the values in the {chart_type} increasing or " \
+               f"decreasing in size as the {week_month}s progress? \n {chart}"
+    answer = choices[n]
+    return mq.multiple_choice(question, choices, answer, reorder=False)
+
+
+def md_29(difficulty):
+    """Fill in missing number to balance multiplication and division equation.
+     Chrys."""
+    box = r"\makebox[2.5em]{\hrulefill}"
+
+    n = random.choices([2, 3], weights=(3, -2 + difficulty))[0]
+    if 1 < difficulty and n == 3:
+        s = 's'
+    else:
+        s = ''
+    question = f"Find the missing number{s} to balance the equation. \n" \
+               "\\begin{center}"
+
+    nums = random.sample(range(2, 12), k=2)
+    nums.append(nums[0] * nums[1])
+    if difficulty == 1:
+        n = random.choice([1, 2])
+        result = nums[n]
+        nums[n] = box
+        question += r"""%s $\times$ %s $=$ %s \\ %s $\div$ %s $=$ %s""" \
+                    % (nums[0], nums[1], nums[2], nums[2],  nums[1], nums[0])
+    else:
+        a = random.randint(2, 5)
+        nums.extend([nums[2] * a, a])
+        result = [nums[2], ",\\ ".join([str(nums[2]), str(nums[3])])][n - 2]
+        nums[2] = box
+        question += r"%s $\times$ %s $=$ %s " % (nums[0], nums[1], nums[2])
+        if n == 3:
+            nums[3] = box
+            question += r"$=$ %s $\div$ %s" % (nums[3], nums[4])
+        else:
+            question += r"\\ %s $=$ %s $\div$ %s" % (nums[2], nums[3], nums[4])
+    question += r"\end{center}"
+    answer = str(result)
+    return [question, answer]
+
+
+def st_30(difficulty):
+    """Determine frequency by finding how many times a word appears in a text.
+     Chrys."""
+    base = 5
+    no_values = base * difficulty
+    no_colours = [2, 3, 4][difficulty - 1]
+
+    freq = []
+    while len(freq) < no_colours:
+        values = random.choices(range(1, no_values), k=no_colours)
+        if int(sum(values)) == no_values:
+            freq = values
+    colours = random.sample(["Red", "Blue", "Yellow", "Green", "Black"],
+                            k=no_colours)
+    list_1 = []
+    for i in range(freq[0]):
+        list_1.append(colours[0])
+    for j in range(freq[1]):
+        list_1.append(colours[1])
+    if no_colours > 2:
+        for m in range(freq[2]):
+            list_1.append(colours[2])
+    if no_colours > 3:
+        for m in range(freq[3]):
+            list_1.append(colours[3])
+    random.shuffle(list_1)
+
+    m = no_values // base
+    list_2 = []
+    for i in range(m):
+        end = base * (i + 1)
+        start = i * base
+        my_list = list_1[start:end]
+        row = " & \\ ".join(my_list)
+        list_2.append(row)
+
+    rows = r"\\ \hline ".join(list_2)
+    array = r'''{\footnotesize $\begin{tabular}{|c|c|c|c|c|}
+    \hline %s \\ \hline \end{tabular}$ }''' % rows
+    choice = random.randint(0, len(colours) - 1)
+
+    gender = random.choice([['male', 'he'], ['female', 'she']])
+    name = names.get_first_name(gender=gender[0])
+    question = f"{name} writes down all the different colours of cars " \
+               f"{gender[1]} sees passing her by. " \
+               f"\n \\begin{{center}} {array} \\end{{center}} \n " \
+               f"How many {colours[choice]} cars did {name} see?"
+    answer = str(freq[choice])
+    return [question, answer]
+
+
+def st_31(difficulty):
+    """Complete frequency chart using raw data. Chrys."""
+    base = 4
+    no_values = base * (difficulty+1)
+    no_colours = [3, 3, 4][difficulty - 1]
+
+    freq = []
+    while len(freq) < no_colours:
+        values = random.choices(range(1, no_values + 1), k=no_colours)
+        if int(sum(values)) == no_values:
+            freq = values
+    colours = random.sample(["Fox", "Deer", "Squirrel", "Rabbit", "Hedgehog",
+                             "Vole", "Mouse"],
+                            k=no_colours)
+    list_1 = []
+    data = [["Animal", "Frequency"]]
+    for i in range(no_colours):
+        data.append([colours[i], str(freq[i])])
+    for i in range(freq[0]):
+        list_1.append(colours[0])
+    for j in range(freq[1]):
+        list_1.append(colours[1])
+    if no_colours > 2:
+        for m in range(freq[2]):
+            list_1.append(colours[2])
+    if no_colours > 3:
+        for m in range(freq[3]):
+            list_1.append(colours[3])
+    random.shuffle(list_1)
+
+    m = no_values // base
+    list_2 = []
+    for i in range(m):
+        end = base * (i + 1)
+        start = i * base
+        my_list = list_1[start:end]
+        row = " & \\ ".join(my_list)
+        list_2.append(row)
+
+    rows = r"\\ \hline ".join(list_2)
+    array = r'''{\footnotesize $\begin{tabular}{|c|c|c|c|}
+    \hline %s \\ \hline \end{tabular}$ }''' % rows
+
+    answer = mq.draw_table(data)
+    k = random.sample(range(1, len(data) - 1), k=[1, 2, 3][difficulty - 1])
+    for j in k:
+        data[j][1] = r'\phantom{10}'
+    chart = mq.draw_table(data)
+    gender = random.choice([['male', 'he'], ['female', 'she']])
+    name = names.get_first_name(gender=gender[0])
+    question = f"{name} writes down all the different animals " \
+               f"{gender[1]} sees while on a hike in the forest. " \
+               f"\n \\begin{{center}} {array} \\end{{center}} \n " \
+               f"Using the table above, complete the frequency chart. " \
+               f"\n {chart}"
+    return [question, answer]
+
+
+def st_32(difficulty):
+    """Find nth most/least occuring frequency from raw data. Chrys."""
+    base = 4
+    no_values = base * (difficulty+2)
+    no_colours = [3, 4, 5][difficulty - 1]
+
+    freq = []
+    while len(freq) < no_colours:
+        values = random.sample(range(1, no_values + 1), k=no_colours)
+        if int(sum(values)) == no_values:
+            freq = values
+    colours = random.sample(["Bulldog", "Beagle", "Labrador", "Spaniel",
+                             "Poodle", "Terrier", "Pug"], k=no_colours)
+    list_1 = []
+    data = []
+    for i in range(no_colours):
+        data.append([colours[i], freq[i]])
+    for i in range(freq[0]):
+        list_1.append(colours[0])
+    for j in range(freq[1]):
+        list_1.append(colours[1])
+    if no_colours > 2:
+        for m in range(freq[2]):
+            list_1.append(colours[2])
+    if no_colours > 3:
+        for m in range(freq[3]):
+            list_1.append(colours[3])
+    if no_colours > 4:
+        for m in range(freq[4]):
+            list_1.append(colours[4])
+    random.shuffle(list_1)
+
+    m = no_values // base
+    list_2 = []
+    for i in range(m):
+        end = base * (i + 1)
+        start = i * base
+        my_list = list_1[start:end]
+        row = " & \\ ".join(my_list)
+        list_2.append(row)
+
+    rows = r"\\ \hline ".join(list_2)
+    array = r'''{\footnotesize $\begin{tabular}{|c|c|c|c|}
+    \hline %s \\ \hline \end{tabular}$ }''' % rows
+
+    if difficulty == 1:
+        n = random.choice([0, no_colours - 1])
+    else:
+        n = random.randint(0, no_colours - 1)
+
+    if n + 1 == 1 or n + 1 == no_colours:
+        ordinal = ''
+    elif ceil(no_colours / 2) < n + 1 < no_colours:
+        ordinal = mq.ordinal(no_colours - n)
+    else:
+        ordinal = mq.ordinal(n + 1)
+
+    if n + 1 > ceil(no_colours / 2):
+        order = 'least'
+    else:
+        order = 'most'
+
+    data.sort(key=lambda x: x[1], reverse=True)
+
+    gender = random.choice([['male', 'his', 'He'], ['female', 'her', 'She']])
+    name = names.get_first_name(gender=gender[0])
+    question = f"{name} asks {gender[1]} friends what their favourite dog " \
+               f"breeds are. {gender[2]} records their responses in a table." \
+               f" What is the {ordinal} {order} occurring response? \n\n" \
+               r"\begin{center} %s \end{center}" % array
+    answer = data[n][0]
+    return [question, answer]
+
+
+def st_33(difficulty):
+    """Are the values in a sequence increasing or decreasing. Chrys."""
+    upper = 5 + 2 ** difficulty
+    no_flowers = [3, 4, 5][difficulty - 1]
+    weights = (3 - difficulty, difficulty - 1,
+               difficulty, difficulty, difficulty)
+    frac_base = random.choices([2, 3, 4, 5, 10], weights=weights, k=1)[0]
+
+    flowers = ["Poppies", "Lilies", "Orchids", "Roses", "Iris", "Snapdragon",
+               "Carnations", "Chrysanthemums", "Dahlias", "Tulips"]
+    flowers = random.sample(flowers, k=no_flowers)
+
+    data = [["Type", "Frequency"]]
+    freq = []
+    while len(freq) < no_flowers:
+        values = random.choices(range(1, upper), k=no_flowers)
+        if sum(values) % frac_base == 0:
+            freq = values
+    result = sum(freq) // frac_base
+
+    for i in range(no_flowers):
+        data.append([flowers[i], str(freq[i])])
+    table = mq.draw_table(data)
+    frac = mq.latex_frac(1, frac_base)
+
+    colour = random.choice(["pink", "red", "yellow", "white", "blue"])
+    name = names.get_first_name()
+    question = f"{name} picks some flowers to make a bouquet. The different " \
+               f"flowers used are presented in a frequency table. \n {table}" \
+               f"\n If {mq.dollar(frac)} of the flowers are {colour}, how " \
+               f"many {colour} flowers are there in total?"
+    answer = str(result)
+    return [question, answer]
+
+
+def st_34(difficulty):
+    """Identify trend from line graph. Multiple Choice. Chrys."""
+    n = random.randint(0, 4 * difficulty)
+    types = ["Stays the same", "Rises steadily", "Falls steadily",
+             "Rises more and more quickly", "Falls faster and faster",
+             "Stays the same then falls quickly",
+             "Stays the same then rises quickly",
+             "Rises then falls quickly", "Falls then rises quickly",
+             "Rises steadily then stays the same then rises quickly",
+             "Falls steadily then stays the same then falls quickly",
+             "Falls steadily then stays the same then rises quickly",
+             "Rises steadily then stays the same then falls quickly"
+             ]
+    function = [
+        ["1"], ["x"], ["-x"], ["x^2"], ["-x^2"], ["1", "-x^2 + 2"],
+        ["1", "x^2"], ["x", "2-x^2"], ["-x", "-2+x^2"], ["x", "1", "x^2 - 3"],
+        ["-x", "-1", "-x^2+3"], ["-x", "-1", "x^2-5"], ["x", "1", "5-x^2"]
+    ][n]
+
+    x_max = len(function)
+    add_plot = ""
+    for i in range(len(function)):
+        if i == 0:
+            smoothness = "solid"
+        else:
+            smoothness = "smooth"
+        add_plot += r"""
+                \addplot[domain = %s:%s, samples = 5, %s, thick, black,] {%s};
+        """ % (i, i + 1, smoothness, function[i])
+
+    graph = r"""
+    \begin{tikzpicture}
+    \begin{axis}[xmin=0, xmax=%s+0.1, scale=0.8, axis y line*=left,
+      axis x line*=bottom, xlabel={Time (t)}, ylabel={Temperature},
+      xlabel style={font=\small, anchor=south west},
+      ylabel style={font=\small, xshift=20, yshift=-30},
+      xticklabels={}, yticklabels={}, tick style={draw=none}, 
+      ]
+        %s
+    \end{axis}
+    \end{tikzpicture}
+    """ % (x_max, add_plot)
+
+    answer = types[n]
+    choices = [types[n]]
+    types.remove(types[n])
+    choices.extend(random.sample(types, k=3))
+    types.append(answer)
+
+    question = f"What option best describes how the temperature on the " \
+               f"graph is changing over time? \n {graph} \n {answer}"
+    return mq.multiple_choice(question, choices, answer, onepar=False)
+
+
+def st_35(difficulty):
+    """What line graph matches the trend. Multiple Choice. Chrys."""
+    k = [2, 4, 4][difficulty - 1]
+    upper = [7, 7, 13][difficulty - 1]
+
+    n = random.sample(range(0, upper), k=k)
+    types = ["staying the same", "rising steadily", "falling steadily",
+             "rising more and more quickly", "falling faster and faster",
+             "staying the same then falling quickly",
+             "staying the same then rising quickly",
+             "rising then falling quickly", "falling then rising quickly",
+             "rising steadily then staying the same then rising quickly",
+             "falling steadily then staying the same then falling quickly",
+             "falling steadily then staying the same then rising quickly",
+             "rising steadily then staying the same then falling quickly"
+             ]
+    function = [
+        ["1"], ["x"], ["-x"], ["x^2"], ["-x^2"], ["1", "-x^2 + 2"],
+        ["1", "x^2"], ["x", "2-x^2"], ["-x", "-2+x^2"], ["x", "1", "x^2 - 3"],
+        ["-x", "-1", "-x^2+3"], ["-x", "-1", "x^2-5"], ["x", "1", "5-x^2"]
+    ]
+    choices = []
+    for j in n:
+        x_max = len(function[j])
+        add_plot = ""
+        for i in range(len(function[j])):
+            if i == 0:
+                smoothness = "solid"
+            else:
+                smoothness = "smooth"
+            add_plot += r"""
+                \addplot[domain = %s:%s, samples = 5, %s, thick, black,] {%s};
+            """ % (i, i + 1, smoothness, function[j][i])
+        graph = r"""
+        \begin{tikzpicture}
+        \begin{axis}[xmin=0, xmax=%s+0.1, scale=0.3, axis y line*=left,
+          axis x line*=bottom, xlabel={Time (t)}, ylabel={Speed},
+          xlabel style={font=\tiny, anchor=south west},
+          ylabel style={font=\tiny, yshift=-30},
+          xticklabels={}, yticklabels={}, tick style={draw=none}, 
+          ]
+            %s
+        \end{axis}
+        \end{tikzpicture}
+        """ % (x_max, add_plot)
+        choices.append(graph)
+    answer = choices[0]
+    question = f"Which of these graphs shows the speed {types[n[0]]} " \
+               "over time?"
+    return mq.multiple_choice(question, choices, answer)
+
+
+def me_41(difficulty):
+    """What is the temperature shown on the thermometer. Chrys."""
+    multiplier = [10, 5, 5][difficulty - 1]
+    lower = [0, 0, 1][difficulty - 1]
+    upper = [10, 20, 19][difficulty - 1]
+    step = [1, 1, 2][difficulty - 1]
+    show_half_increments = [False, True, True][difficulty - 1]
+
+    temp = multiplier * random.randrange(lower, upper, step)
+    thermometer = mq.draw_thermometer(temp, scale=0.6, text_size="tiny",
+                                      show_Celsius=True, horizontal=True,
+                                      half_increments=show_half_increments)
+    question = f"What temperature is showing on the thermometer? \n" \
+               r"\begin{center} %s \end{center}" % thermometer
+    answer = f"{temp}\\textdegree C"
+    return [question, answer]
+
+
+def me_42(difficulty):
+    """Thermometer question. Choose the thermometer that matches the
+    corresponding temperature. Multiple Choice. Chrys"""
+    multiplier = [10, 5, 5][difficulty - 1]
+    upper = [11, 21, 21][difficulty - 1]
+
+    k = 2 if difficulty < 3 else 3
+    temps = random.sample(range(0, upper), k=k)
+    temps = [multiplier * j for j in temps]
+
+    width = [1.3, 1.3, 1][difficulty - 1]
+    half_increments = [False, True, True][difficulty - 1]
+
+    choices = []
+    for i in range(len(temps)):
+        thermometer = mq.draw_thermometer(temps[i], text_size="tiny",
+                                          scale=0.4, length=1.7, width=width,
+                                          half_increments=half_increments)
+        choices.append(thermometer)
+
+    question = "Which thermometer is showing the temperature " \
+               f"{temps[0]}\\textdegree C?"
+    answer = choices[0]
+    return mq.multiple_choice(question, choices, answer, onepar=False)
+
+
+def me_43(difficulty):
+    """Thermometer question. Choose the thermometer with the nth highest
+    reading. Multiple Choice. Chrys."""
+    no_values = 3
+    multiplier = [10, 5, 5][difficulty - 1]
+
+    if difficulty == 1:
+        limits = [0, 11]
+    else:
+        lower = [5, 3][difficulty - 2]
+        upper = [16, 18][difficulty - 2]
+        deviation = [5, 3][difficulty - 2]
+        mid = random.randint(lower, upper)
+        limits = [mid - deviation, mid + deviation]
+
+    temps = random.sample(range(limits[0], limits[1]), k=no_values)
+    temps = [multiplier * j for j in temps]
+    half_increments = [False, True, True][difficulty - 1]
+
+    choices = []
+    values = []
+    for i in range(len(temps)):
+        thermometer = mq.draw_thermometer(temps[i], text_size="tiny",
+                                          scale=0.4, length=1.2, width=0.9,
+                                          horizontal=False,
+                                          half_increments=half_increments)
+        choices.append(thermometer)
+        values.append([temps[i], thermometer])
+
+    values.sort(key=lambda x: x[1])
+
+    n = random.choice([0, 2]) if difficulty == 1 else random.randint(0, 2)
+    ordinal = mq.ordinal(n + 1) if n == 1 else ""
+    order = "lowest" if n == 2 else "highest"
+
+    question = f"Which thermometer is showing the {ordinal} {order} " \
+               "temperature?"
+    answer = choices[n]
+    return mq.multiple_choice(question, choices, answer, onepar=True)
+
+
+def me_44(difficulty):
+    """Time elapsed question. Who got there first. Chrys."""
+    hour_start = random.randint(6, 19)
+    bounds = random.choice([[0, 30], [30, 60]])
+    lower = [0, 0, bounds[0]][difficulty - 1]
+    upper = [7, 59, bounds[1]][difficulty - 1]
+    multiplier = [5, 1, 1][difficulty - 1]
+    minute_start = random.sample(range(lower, upper), k=2)
+    minute_start = [multiplier * i for i in minute_start]
+
+    a = random.randint(30, 120)
+    delta_range = [[3, 25], [a - 15, a + 16], [a - 7, a + 8]][difficulty - 1]
+
+    while True:
+        time_elapsed = random.sample(range(delta_range[0], delta_range[1]), 2)
+        check = [minute_start[0] + time_elapsed[0],
+                 minute_start[1] + time_elapsed[1]]
+        if check[0] != check[1]:
+            break
+
+    values = []
+    for i in range(2):
+        t_0 = datetime(year=2021, month=6, day=20,
+                       hour=hour_start, minute=minute_start[i])
+        t_1 = (t_0 + timedelta(minutes=time_elapsed[i])).strftime("%H:%M")
+        values.append([t_0.strftime("%H:%M"), t_1,
+                       time_elapsed[i], names.get_first_name()])
+
+    question = f"{values[0][3]} and {values[1][3]} are both travelling to a " \
+               f"party. {values[0][3]} will at {values[0][0]} and travel " \
+               f"for {values[0][2]} minutes to get to the party. On the " \
+               f"other hand {values[1][3]} will leave at {values[1][0]} and " \
+               f"travel for {values[1][2]} minutes. " \
+               f"Who will arrive at the party first?"
+    values.sort(key=lambda t: t[1])
+    answer = values[0][3]
+    return [question, answer]
+
+
+def pd_2(difficulty):
+    """Identify coordinate position of a shape on a grid. Chrys."""
+    no_shapes = difficulty
+    colour = ["black", "blue", "green", "yellow", "red"]
+    random.shuffle(colour)
+
+    circle = r'''node[circle, minimum size=1cm, scale=0.33, 
+                      draw=black, fill=%s] (c) {};''' % colour[0]
+    star = r'''node[star,star points=5, star point ratio=3, draw=black, 
+                    fill=%s, minimum size=0.5cm, scale=0.4] (s) {}
+                    ''' % colour[1]
+
+    shapes = [[circle, "circle", colour[0]], [star, "star", colour[1]]]
+    upper = 6 if difficulty == 3 else 5
+    for i in range(3, upper):
+        name = ["triangle", "square", "pentagon"]
+        reg_poly = r'''node[regular polygon, regular polygon sides=%s, 
+                            minimum size=1cm, scale=0.4, draw=black, 
+                            fill=%s, rotate=0]  (S) {}''' % (i, colour[i - 1])
+        shapes.append([reg_poly, name[i - 3], colour[i - 1]])
+    nodes = random.sample(shapes, k=no_shapes)
+
+    coordinates = []
+    while len(coordinates) < no_shapes:
+        values = []
+        for i in range(no_shapes):
+            coords = (random.randint(1, 9), random.randint(1, 9))
+            if coords not in values:
+                values.append(coords)
+        if len(values) == no_shapes:
+            coordinates = values
+
+    grid = r"""
+    \begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[scale = 1,
+    ytick={0,1,...,10}, ymin = 0, ymax = 10,
+    xtick={0,1,...,10}, xmin = 0, xmax = 10,
+    xlabel={x}, ylabel={y}, 
+    x label style={font=\small, yshift=1ex}, 
+    y label style={font=\small, yshift=-3ex},
+    width = 6cm, height = 6cm,
+    tick label style={font=\footnotesize},
+    xmajorgrids=true, ymajorgrids=true]"""
+    for j in range(no_shapes):
+        grid += r"\draw (axis cs:%s,%s) %s;" % (coordinates[j][0],
+                                                coordinates[j][1], nodes[j][0])
+    grid += r" \end{axis} \end{tikzpicture} \end{center}"
+
+    n = random.randint(0, no_shapes - 1)
+    question = f"On what coordinates do we find the {nodes[n][2]} " \
+               f"{nodes[n][1]}? \n {grid}"
+    answer = f"{coordinates[n]}"
+    return [question, answer]
+
+
+def pd_3(difficulty):
+    """Identify which shape is on a given coordinate on a grid. Chrys."""
+    no_shapes = difficulty + 1
+    colour = ["black", "blue", "green", "yellow", "red"]
+    random.shuffle(colour)
+
+    circle = r'''node[circle, minimum size=1cm, scale=0.33, 
+                      draw=black, fill=%s] (c) {};''' % colour[0]
+    star = r'''node[star,star points=5, star point ratio=3, draw=black, 
+                    fill=%s, minimum size=0.5cm, scale=0.4] (s) {}
+                    ''' % colour[1]
+
+    shapes = [[circle, "circle", colour[0]], [star, "star", colour[1]]]
+    upper = 6 if difficulty == 3 else 5
+    for i in range(3, upper):
+        name = ["triangle", "square", "pentagon"]
+        reg_poly = r'''node[regular polygon, regular polygon sides=%s, 
+                            minimum size=1cm, scale=0.4, draw=black, 
+                            fill=%s, rotate=0]  (S) {}''' % (i, colour[i - 1])
+        shapes.append([reg_poly, name[i - 3], colour[i - 1]])
+    nodes = random.sample(shapes, k=no_shapes)
+
+    coordinates = []
+    while len(coordinates) < no_shapes:
+        values = []
+        for i in range(no_shapes):
+            coords = (random.randint(1,9), random.randint(1,9))
+            if coords not in values:
+                values.append(coords)
+        if len(values) == no_shapes:
+            coordinates = values
+
+    grid = r"""
+    \begin{tikzpicture}
+    \begin{axis}[scale = 1,
+    ytick={0,1,...,10}, ymin = 0, ymax = 10,
+    xtick={0,1,...,10}, xmin = 0, xmax = 10,
+    xlabel={x}, ylabel={y}, 
+    x label style={font=\small, yshift=1ex}, 
+    y label style={font=\small, yshift=-3ex},
+    width = 6cm, height = 6cm,
+    tick label style={font=\footnotesize},
+    xmajorgrids=true, ymajorgrids=true]"""
+    for j in range(no_shapes):
+        grid += r"\draw (axis cs:%s,%s) %s;" % (coordinates[j][0],
+                                                coordinates[j][1], nodes[j][0])
+    grid += r" \end{axis} \end{tikzpicture}"
+
+    n = random.randint(0, no_shapes - 1)
+    question = f"What shape do we find on the coordinates {coordinates[n]}?" \
+               f"\n {grid}"
+    choices = [nodes[i][1].capitalize() for i in range(no_shapes)]
+    answer = choices[n]
+    return mq.multiple_choice(question, choices, answer)
+
+
+def pd_4(difficulty):
+    """Identify how far away. Chrys."""
+    no_shapes = difficulty + 1
+    colour = ["black", "blue", "green", "yellow", "red", "lightgray"]
+    random.shuffle(colour)
+
+    circle = r'''node[circle, minimum size=1cm, scale=0.33, 
+                      draw=black, fill=%s] (c) {};''' % colour[0]
+    star = r'''node[star,star points=5, star point ratio=3, draw=black, 
+                    fill=%s, minimum size=0.5cm, scale=0.4] (s) {}
+                    ''' % colour[1]
+
+    shapes = [[circle, "circle"], [star, "star"]]
+    upper = 6 if difficulty == 3 else 5
+    for i in range(3, upper):
+        name = ["triangle", "square", "pentagon"]
+        reg_poly = r'''node[regular polygon, regular polygon sides=%s, 
+                            minimum size=1cm, scale=0.4, draw=black, 
+                            fill=%s, rotate=0]  (S) {}''' % (i, colour[i - 1])
+        shapes.append([reg_poly, name[i - 3]])
+    nodes = random.sample(shapes, k=no_shapes)
+
+    coordinates = []
+    k = random.randint(0, 1)
+    a = random.sample(range(1, 9), k=no_shapes-1)
+    b = random.sample(range(1, 10), k=2)
+    for i in range(2):
+        coordinates.append((a[0], b[i]) if k == 0 else (b[i], a[0]))
+    if no_shapes > 2:
+        for j in range(1, no_shapes-1):
+            c = random.randint(1, 9)
+            coordinates.append((a[j], c) if k == 0 else (c, a[j]))
+
+    grid = r"""
+    \begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[scale = 1,
+    ytick={0,1,...,10}, ymin = 0, ymax = 10,
+    xtick={0,1,...,10}, xmin = 0, xmax = 10,
+    xlabel={x}, ylabel={y}, 
+    x label style={font=\small, yshift=1ex}, 
+    y label style={font=\small, yshift=-3ex},
+    width = 6cm, height = 6cm,
+    tick label style={font=\footnotesize},
+    xmajorgrids=true, ymajorgrids=true]"""
+    for j in range(no_shapes):
+        grid += r"\draw (axis cs:%s,%s) %s;" % (coordinates[j][0],
+                                                coordinates[j][1], nodes[j][0])
+    grid += r" \end{axis} \end{tikzpicture} \end{center}"
+
+    question = f"How many units is the distance from the {nodes[0][1]} to " \
+               f"the {nodes[1][1]}? \n {grid}"
+    answer = str(abs(b[1] - b[0]))
+    return [question, answer]
+
+#todo add marvosym and bbding package
