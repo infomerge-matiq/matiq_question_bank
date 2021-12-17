@@ -5105,7 +5105,7 @@ def st_19(difficulty):
     data = []
     k = random.randint(0, 1)
     col_1 = [["North", "East", "South", "West", "Central"],
-             ["Ice Valley", "Eastfield", "Stellar City",
+             ["Ice Valley", "Editfield", "Stellar City",
               "Metro Town", "Mountain North"]][k]
     title = [["Region", "Number of Hotels"], ["Town", "Number of Houses"]][k]
     data.append(title)
@@ -6210,7 +6210,7 @@ def me_41(difficulty):
 
     temp = multiplier * random.randrange(lower, upper, step)
     thermometer = mq.draw_thermometer(temp, scale=0.6, text_size="tiny",
-                                      show_Celsius=True, horizontal=True,
+                                      show_celsius=True, horizontal=True,
                                       half_increments=show_half_increments)
     question = f"What temperature is showing on the thermometer? \n" \
                r"\begin{center} %s \end{center}" % thermometer
@@ -6267,8 +6267,8 @@ def me_43(difficulty):
     values = []
     for i in range(len(temps)):
         thermometer = mq.draw_thermometer(temps[i], text_size="tiny",
-                                          scale=0.4, length=1.2, width=0.9,
-                                          horizontal=False,
+                                          scale=0.5, length=1.5, width=1,
+                                          horizontal=True,
                                           half_increments=half_increments)
         choices.append(thermometer)
         values.append([temps[i], thermometer])
@@ -6282,7 +6282,7 @@ def me_43(difficulty):
     question = f"Which thermometer is showing the {ordinal} {order} " \
                "temperature?"
     answer = choices[n]
-    return mq.multiple_choice(question, choices, answer, onepar=True)
+    return mq.multiple_choice(question, choices, answer, onepar=False)
 
 
 def me_44(difficulty):
@@ -6381,7 +6381,7 @@ def pd_2(difficulty):
 
 
 def pd_3(difficulty):
-    """Identify which shape is on a given coordinate on a grid. Chrys."""
+    """Identify which shape is on given coordinates on a grid. Chrys."""
     no_shapes = difficulty + 1
     colour = ["black", "blue", "green", "yellow", "red"]
     random.shuffle(colour)
@@ -6406,7 +6406,7 @@ def pd_3(difficulty):
     while len(coordinates) < no_shapes:
         values = []
         for i in range(no_shapes):
-            coords = (random.randint(1,9), random.randint(1,9))
+            coords = (random.randint(1, 9), random.randint(1, 9))
             if coords not in values:
                 values.append(coords)
         if len(values) == no_shapes:
@@ -6491,4 +6491,766 @@ def pd_4(difficulty):
     answer = str(abs(b[1] - b[0]))
     return [question, answer]
 
-#todo add marvosym and bbding package
+
+def pd_5(difficulty):
+    """find how far away two places are on a grid, and use key to convert
+    distance from grids to distance measurement. Chrys."""
+    no_places = [2, 3, 3][difficulty - 1]
+    places = mq.random_place_symbols(n=no_places)
+
+    coordinates = []
+    k = random.randint(0, 1)
+    a = random.sample(range(1, 9), k=no_places-1)
+    b = []
+    while len(b) < 2:
+        coord = random.sample(range(1, 10), k=2)
+        if abs(coord[1] - coord[0]) > difficulty:
+            b = coord
+    for i in range(2):
+        coordinates.append((a[0], b[i]) if k == 0 else (b[i], a[0]))
+    if no_places > 2:
+        for j in range(1, no_places-1):
+            c = random.randint(1, 9)
+            coordinates.append((a[j], c) if k == 0 else (c, a[j]))
+
+    grid = r"""
+    \begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[scale=1, ytick={0,1,...,10}, xtick={0,1,...,10}, 
+    ymin = 0, ymax = 10, xmin = 0, xmax = 10, width = 6cm, height = 6cm, 
+    x label style={font=\small, yshift=1ex}, 
+    y label style={font=\small, yshift=-3ex},
+    xlabel={x}, ylabel={y}, tick label style={font=\footnotesize},
+    xmajorgrids=true, ymajorgrids=true]
+    """
+    for j in range(no_places):
+        grid += r"""\draw (axis cs:%s,%s) 
+        node[regular polygon, regular polygon sides=4, scale=0.8] (s) {%s};""" \
+                % (coordinates[j][0], coordinates[j][1], places[j][1])
+    grid += r" \end{axis} \end{tikzpicture} \end{center}"
+
+    key_2 = r"""{\tabcolsep=3pt \tiny$ \begin{tabular}[c!]{l|%sl} 
+    \multicolumn{1}{l}{\textbf{Key:}} \\[1ex]
+    """ % (r"|c||c" if difficulty > 1 else "c")
+    for i in range(0, no_places):
+        key_2 += r"\resizebox{1.5em}{1.1em}{%s} = %s & " \
+                 % (places[i][1], places[i][0])
+    key_2 += r"\end{tabular}$}"
+
+    n = random.randint(0, 1)
+    unit = random.choice([["miles", "kilometers"], ["meters", "yards"]][n])
+    upper = [5 * difficulty, 3 * difficulty][n]
+    multiplier = [1, [100, 50, 50][difficulty - 1]][n]
+    conversion = multiplier * random.randint(difficulty, upper)
+    result = abs(b[1] - b[0]) * conversion
+    name = names.get_first_name()
+    question = f"{name} is travelling from the {places[0][0]} to the " \
+               f"{places[1][0]}. If each grid line stands for " \
+               f"\\makebox{{{conversion} {unit}}}, how far did " \
+               f"{name} travel? \n {grid} \n {key_2}"
+    answer = f"{result} {unit}"
+    return [question, answer]
+
+
+def pd_6(difficulty):
+    """Identify x or y coordinate of an object on a grid. Chrys."""
+    no_shapes = difficulty + 1
+    weights = (3 - difficulty, 4 - difficulty, difficulty, difficulty)
+    increments = random.choices([1, 2, 5, 10], weights=weights, k=1)[0]
+    colour = ["black", "blue", "green", "yellow", "red"]
+    random.shuffle(colour)
+
+    circle = r'''node[circle, minimum size=1cm, scale=0.33, 
+                      draw=black, fill=%s] (c) {};''' % colour[0]
+    star = r'''node[star,star points=5, star point ratio=3, draw=black, 
+                    fill=%s, minimum size=0.5cm, scale=0.4] (s) {}
+                    ''' % colour[1]
+
+    shapes = [[circle, "circle", colour[0]], [star, "star", colour[1]]]
+    upper = 6 if difficulty == 3 else 5
+    for i in range(3, upper):
+        name = ["triangle", "square", "pentagon"]
+        reg_poly = r'''node[regular polygon, regular polygon sides=%s, 
+                            minimum size=1cm, scale=0.4, draw=black, 
+                            fill=%s, rotate=0]  (S) {}''' % (i, colour[i - 1])
+        shapes.append([reg_poly, name[i - 3], colour[i - 1]])
+    nodes = random.sample(shapes, k=no_shapes)
+
+    coordinates = []
+    while len(coordinates) < no_shapes:
+        values = []
+        for i in range(no_shapes):
+            coords = (random.randint(1, 9), random.randint(1, 9))
+            if coords not in values:
+                values.append(coords)
+        if len(values) == no_shapes:
+            coordinates = values
+    coordinates = [(increments * i[0], increments * i[1]) for i in coordinates]
+    grid = r"""
+    \begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[scale = 1,
+    ytick={0,%s,...,%s*10}, ymin = 0, ymax = 10*%s,
+    xtick={0,%s,...,%s*10}, xmin = 0, xmax = 10*%s,
+    xlabel={x}, ylabel={y}, 
+    x label style={font=\small, yshift=1ex}, 
+    y label style={font=\small, yshift=-3ex},
+    width = 6cm, height = 6cm,
+    tick label style={font=\footnotesize},
+    xmajorgrids=true, ymajorgrids=true]
+    """ % (increments, increments, increments,
+           increments, increments, increments)
+    for j in range(no_shapes):
+        grid += r"\draw (axis cs:%s,%s) %s;" % (coordinates[j][0],
+                                                coordinates[j][1], nodes[j][0])
+    grid += r" \end{axis} \end{tikzpicture} \end{center}"
+
+    n = random.randint(0, 1)
+    k = random.randint(0, len(nodes) - 1)
+    question = f"What is the {['x','y'][n]}-coordinate of the {nodes[n][2]} " \
+               f"{nodes[n][1]}? \n {grid}"
+    answer = f"{coordinates[k][n]}"
+    return [question, answer]
+
+
+def pd_7(difficulty):
+    """Use compass points and conversion of distance units to find destination
+    of travel on a grid. Chrys."""
+    no_places = [3, 6, 6][difficulty - 1]
+    places = mq.random_place_symbols(n=no_places)
+
+    coord = []
+    x = random.sample(range(1, 10), k=no_places)
+    y = random.sample(range(1, 10), k=no_places)
+    for i in range(no_places):
+        coord.append((x[i], y[i]))
+
+    grid = r"""
+    \begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[scale=1, ytick={0,1,...,10}, xtick={0,1,...,10}, 
+    ymin = 0, ymax = 10, xmin = 0, xmax = 10, width = 6cm, height = 6cm, 
+    x label style={font=\small, yshift=1ex}, 
+    y label style={font=\small, yshift=-3ex},
+    xlabel={x}, ylabel={y}, tick label style={font=\footnotesize},
+    xmajorgrids=true, ymajorgrids=true]
+    """
+    for j in range(no_places):
+        grid += r"""\draw (axis cs:%s,%s) 
+        node[regular polygon, regular polygon sides=4, scale=0.8] (s) {%s};"""\
+                % (coord[j][0], coord[j][1], places[j][1])
+    grid += r" \end{axis} \end{tikzpicture} \end{center}"
+
+    my_list = []
+    rows = []
+    for i in range(no_places):
+        my_list.append(r"\resizebox{1.5em}{1.1em}{%s} = %s"
+                       % (places[i][1], places[i][0]))
+    for i in range(0, len(my_list), 3):
+        rows.append(' & '.join(my_list[i:i+3]))
+    rows = r' \\ '.join(rows) if len(rows) > 1 else rows[0]
+    key_2 = r"""{\tabcolsep=3pt \tiny$ \begin{tabular}[c!]{l||l||l} 
+    \multicolumn{1}{l}{\textbf{Key:}} \\[1ex] %s \\ \end{tabular}$}""" % rows
+
+    k = random.sample(range(0, len(coord)), k=2)
+    x_units = coord[k[1]][0] - coord[k[0]][0]
+    y_units = coord[k[1]][1] - coord[k[0]][1]
+
+    if x_units > 0:
+        x_dir = "west"
+    elif x_units == 0:
+        x_dir = ""
+    else:
+        x_dir = "east"
+
+    if y_units > 0:
+        y_dir = "south"
+    elif y_units == 0:
+        y_dir = ""
+    else:
+        y_dir = "north"
+
+    n = random.randint(0, 1)
+    unit = random.choice([["miles", "kilometres"], ["metres", "yards"]][n])
+    multiplier = [[1, 2, 5][difficulty - 1], [100, 50, 50][difficulty - 1]][n]
+
+    travel = [f"{abs(multiplier * x_units)} {unit} {x_dir}",
+              f"{abs(multiplier * y_units)} {unit} {y_dir}"]
+    if y_dir == "":
+        travel.remove(travel[1])
+    if x_dir == "":
+        travel.remove(travel[0])
+    random.shuffle(travel)
+    if len(travel) > 1:
+        travel = " and ".join(str(i) for i in travel)
+    else:
+        travel = travel[0]
+    gender = random.choice([['male', 'He'], ['female', 'She']])
+    name = names.get_first_name(gender=gender[0])
+    question = f"{name} is at the {places[k[1]][0]}. {gender[1]} travels " \
+               f"{travel}. Where did {name} end up travelling to? \n\n " \
+               f" \\makebox{{Note: 1 grid line = {multiplier} {unit}}} \n" \
+               f"{grid} \n {key_2}"
+    answer = f"{places[k[0]][0]}"
+    return [question, answer]
+
+
+def pd_8(difficulty):
+    """Determine how long it would take to travel between places on a grid when
+     given the time taken per grid line. Chrys."""
+    no_places = [3, 6, 6][difficulty - 1]
+    places = mq.random_place_symbols(n=no_places, text_size="large")
+
+    x_0 = random.sample(range(1, 9), k=2)
+    y_0 = random.sample(range(1, 9), k=2)
+    coord = [(x_0[0], y_0[1]), (x_0[0], y_0[0]), (x_0[1], y_0[0])]
+    while len(coord) < no_places:
+        coordinates = []
+        for i in range(no_places - 3):
+            x = random.randint(1, 9)
+            y = random.randint(1, 9)
+            if (x, y) not in coord and (x, y) not in coordinates:
+                coordinates.append((x, y))
+        if len(coordinates) == no_places - 3:
+            coord.extend(coordinates)
+
+    grid = r"""
+    \begin{center} 
+    \begin{tikzpicture}
+    \begin{axis}[scale=1, ytick={0,1,...,10}, xtick={0,1,...,10}, 
+    ymin = 0, ymax = 10, xmin = 0, xmax = 10, width = 6cm, height = 6cm, 
+    x label style={font=\small, yshift=1ex}, 
+    y label style={font=\small, yshift=-3ex},
+    xlabel={x}, ylabel={y}, tick label style={font=\footnotesize},
+    xmajorgrids=true, ymajorgrids=true]
+    """
+    for j in range(no_places):
+        grid += r"""\draw (axis cs:%s,%s) 
+        node[regular polygon, regular polygon sides=4, scale=0.8] (s) {%s};"""\
+                % (coord[j][0], coord[j][1], places[j][1])
+    grid += r" \end{axis} \end{tikzpicture} \end{center}"
+
+    my_list = []
+    rows = []
+    for i in range(no_places):
+        my_list.append(r"\resizebox{1.5em}{1.1em}{%s} = %s"
+                       % (places[i][1], places[i][0]))
+    for i in range(0, len(my_list), 3):
+        rows.append(' & '.join(my_list[i:i+3]))
+    rows = r' \\ '.join(rows) if len(rows) > 1 else rows[0]
+    key_2 = r"""{\tabcolsep=3pt \tiny$ \begin{tabular}[c!]{l||l||l} 
+    \multicolumn{1}{l}{\textbf{Key:}} \\[1ex] %s \\ \end{tabular}$}""" % rows
+
+    t = random.randint(2 * difficulty, 5 * difficulty)
+    result = t * (abs(y_0[1] - y_0[0]) + abs(x_0[1] - x_0[0]))
+
+    n = [0, 2]
+    random.shuffle(n)
+    transport = random.choice(["walk", "cycle"])
+    name = names.get_first_name()
+
+    question = f"It takes {t} minutes for {name} to {transport} each block " \
+               f"on the grid. How many minutes would it take {name} to " \
+               f"{transport} from the {places[n[0]][0]} to the " \
+               f"{places[1][0]} and then to the {places[n[1]][0]}? \n\n " \
+               f"{grid} \n\n {key_2}"
+    answer = f"{result} minutes"
+    return [question, answer]
+
+
+def pd_9(difficulty):
+    """Find distance to finishing point after given compass and distance
+    directions from starting points on a grid. Chrys."""
+    no_places = 3 * difficulty
+    places = mq.random_place_symbols(n=no_places, text_size="large")
+    start = ()
+    coord = []
+    delta = []
+    while len(coord) < 1:
+        x_0 = random.randint(3, 7)
+        y_0 = x_0 if difficulty == 1 else random.randint(3, 7)
+        x_1, y_1 = random.randint(1, 9), random.randint(1, 9)
+        d_x, d_y = (x_1 - x_0), (y_1 - y_0)
+        if abs(d_x) > difficulty and abs(d_y) > difficulty and d_x != d_y:
+            coord.append((x_1, y_1))
+            start = (x_0, y_0)
+            delta = [[d_x, "x", y_0, y_1], [d_y, "y", x_0, x_1]]
+
+    while len(coord) < no_places:
+        coordinates = []
+        for i in range(no_places - 1):
+            x_y = (random.randint(1, 9), random.randint(1, 9))
+            if x_y != start and x_y not in coordinates and x_y not in coord:
+                coordinates.append(x_y)
+        if len(coordinates) == no_places - 1:
+            coord.extend(coordinates)
+
+    grid = r"""
+    \begin{center} 
+    \begin{tikzpicture}
+    \begin{axis}[scale=1, ytick={0,1,...,10}, xtick={0,1,...,10}, 
+    ymin = 0, ymax = 10, xmin = 0, xmax = 10, width = 6cm, height = 6cm, 
+    x label style={font=\small, yshift=1ex}, 
+    y label style={font=\small, yshift=-3ex},
+    xlabel={x}, ylabel={y}, tick label style={font=\footnotesize},
+    xmajorgrids=true, ymajorgrids=true]
+    """
+    for j in range(no_places):
+        grid += r"""\draw (axis cs:%s,%s) 
+        node[regular polygon, regular polygon sides=4, scale=0.8] (s) {%s};"""\
+                % (coord[j][0], coord[j][1], places[j][1])
+    grid += r" \end{axis} \end{tikzpicture} \end{center}"
+
+    my_list = []
+    rows = []
+    for i in range(no_places):
+        my_list.append(r"\resizebox{1.5em}{1.1em}{%s} = %s"
+                       % (places[i][1], places[i][0]))
+    for i in range(0, len(my_list), 3):
+        rows.append(' & '.join(my_list[i:i+3]))
+    rows = r' \\ '.join(rows) if len(rows) > 1 else rows[0]
+    key = r"""{\tabcolsep=3pt \tiny$ \begin{tabular}[c!]{l||l||l} 
+    \multicolumn{1}{l}{\textbf{Key:}} \\[1ex] %s \\ \end{tabular}$}""" % rows
+
+    directions = []
+    delta.sort(key=lambda x: abs(x[0]))
+    if delta[0][1] == "x":
+        dir_1 = "east" if delta[0][0] > 0 else "west"
+    else:
+        dir_1 = "north" if delta[0][0] > 0 else "south"
+    directions.append([abs(delta[0][0]), dir_1])
+
+    distance = 0
+    while len(directions) < 2:
+        end = random.randint(1, 9)
+        if end != delta[0][2] and end != delta[0][3]:
+            delta_end = end - delta[0][2]
+            if delta[0][1] == "x":
+                dir_2 = "north" if delta_end > 0 else "south"
+            else:
+                dir_2 = "east" if delta_end > 0 else "west"
+            directions.append([abs(delta_end), dir_2])
+            distance = abs(end - delta[0][3])
+
+    n = random.randint(0, 1)
+    unit = random.choice([["miles", "kilometres"], ["metres", "yards"]][n])
+    upper = [2 * difficulty, difficulty][n]
+    multiplier = [1, [100, 100, 50][difficulty - 1]][n]
+    conversion = multiplier * random.randint(difficulty, upper)
+    result = distance * conversion
+
+    gender = random.choice([['male', 'he'], ['female', 'she']])
+    name = names.get_first_name(gender=gender[0])
+    random.shuffle(directions)
+    for i in range(2):
+        directions[i][0] = directions[i][0] * conversion
+    question = f"{name} is travelling to the {places[0][0]}. Starting from " \
+               f"{start},  {gender[1]} travels {directions[0][0]} {unit} " \
+               f"{directions[0][1]} and then {directions[1][0]} {unit} " \
+               f"{directions[1][1]}. If each grid line represents " \
+               f"{conversion} {unit}, how far is {name} from the " \
+               f"{places[0][0]}? \n\n {grid} \n\n {key}"
+    answer = f"{result} {unit}"
+    return [question, answer]
+
+
+def pd_10(difficulty):
+    """Determine direction needed to travel to get to final point after
+    following compass directions on coordinate grid. Multiple Choice. Chrys."""
+    no_places = 3 * difficulty
+    places = mq.random_place_symbols(n=no_places, text_size="large")
+    start = ()
+    coord = []
+    delta = []
+    while len(coord) < 1:
+        x_0 = random.randint(1, 9)
+        y_0 = x_0 if difficulty == 1 else random.randint(1, 9)
+        x_1, y_1 = random.randint(3, 7), random.randint(3, 7)
+        d_x, d_y = (x_1 - x_0), (y_1 - y_0)
+        if abs(d_x) > difficulty and abs(d_y) > difficulty and d_x != d_y:
+            coord.append((x_1, y_1))
+            start = (x_0, y_0)
+            delta = [[d_x, "x", y_0, y_1], [d_y, "y", x_0, x_1]]
+
+    while len(coord) < no_places:
+        coordinates = []
+        for i in range(no_places - 1):
+            x_y = (random.randint(1, 9), random.randint(1, 9))
+            if x_y != start and x_y not in coordinates and x_y not in coord:
+                coordinates.append(x_y)
+        if len(coordinates) == no_places - 1:
+            coord.extend(coordinates)
+
+    grid = r"""
+    \begin{center} 
+    \begin{tikzpicture}
+    \begin{axis}[scale=1, ytick={0,1,...,10}, xtick={0,1,...,10}, 
+    ymin = 0, ymax = 10, xmin = 0, xmax = 10, width = 6cm, height = 6cm, 
+    x label style={font=\small, yshift=1ex}, 
+    y label style={font=\small, yshift=-3ex},
+    xlabel={x}, ylabel={y}, tick label style={font=\footnotesize},
+    xmajorgrids=true, ymajorgrids=true]
+    """
+    for j in range(no_places):
+        grid += r"""\draw (axis cs:%s,%s) 
+        node[regular polygon, regular polygon sides=4, scale=0.8] (s) {%s};"""\
+                % (coord[j][0], coord[j][1], places[j][1])
+    grid += r" \end{axis} \end{tikzpicture} \end{center}"
+
+    my_list = []
+    rows = []
+    for i in range(no_places):
+        my_list.append(r"\resizebox{1.5em}{1.1em}{%s} = %s"
+                       % (places[i][1], places[i][0]))
+    for i in range(0, len(my_list), 3):
+        rows.append(' & '.join(my_list[i:i+3]))
+    rows = r' \\ '.join(rows) if len(rows) > 1 else rows[0]
+    key = r"""{\tabcolsep=3pt \tiny$ \begin{tabular}[c!]{l||l||l} 
+    \multicolumn{1}{l}{\textbf{Key:}} \\[1ex] %s \\ \end{tabular}$}""" % rows
+
+    directions = []
+    delta.sort(key=lambda x: abs(x[0]))
+    x_end = 0
+    y_end = 0
+    if delta[0][1] == "x":
+        dir_1 = "east" if delta[0][0] > 0 else "west"
+        x_end = coord[0][0]
+    else:
+        dir_1 = "north" if delta[0][0] > 0 else "south"
+        y_end = coord[0][1]
+    directions.append([abs(delta[0][0]), dir_1])
+
+    while len(directions) < 2:
+        end = random.randint(1, 9)
+        if end != delta[0][2] and end != delta[0][3]:
+            delta_end = end - delta[0][2]
+            if delta[0][1] == "x":
+                dir_2 = "north" if delta_end > 0 else "south"
+                y_end = end
+            else:
+                dir_2 = "east" if delta_end > 0 else "west"
+                x_end = end
+            directions.append([abs(delta_end), dir_2])
+    values = [[coord[0][0] - x_end, "x"], [coord[0][1] - y_end, "y"]]
+    values.sort(key=lambda x: abs(x[0]), reverse=True)
+    if values[0][1] == "x":
+        result = "East" if values[0][0] > 0 else "West"
+    else:
+        result = "North" if values[0][0] > 0 else "South"
+    choices = ["North", "East", "South", "West"]
+
+    gender = random.choice([['male', 'he'], ['female', 'she']])
+    name = names.get_first_name(gender=gender[0])
+    random.shuffle(directions)
+    question = f"{name} is travelling to the {places[0][0]}. Starting from " \
+               f"{start}, {gender[1]} travels {directions[0][0]} blocks " \
+               f"{directions[0][1]} and then {directions[1][0]} blocks " \
+               f"{directions[1][1]}. Which direction does {name} have to " \
+               f"travel to get to the {places[0][0]}? \n\n {key} \n {grid}"
+    answer = result
+    return mq.multiple_choice(question, choices, answer, reorder=False)
+
+
+def pd_11(difficulty):
+    """Find final coordinates after multiple compass directions are given.
+    Conversion of grid lines to distance also need to be computed. Chrys."""
+    no_coords = [2, 3, 3][difficulty - 1]
+    x_0 = random.randint(3, 7)
+    y_0 = x_0 if difficulty == 1 else random.randint(3, 7)
+    coord = [(x_0, y_0)]
+    symbols = [r"{\Huge \Gentsroom}", r"{\Huge \Ladiesroom}"]
+    gender = random.choice([["male", symbols[0], "He", "his"],
+                            ["female", symbols[1], "She", "her"]])
+    name = names.get_first_name(gender=gender[0])
+    grid = r"""
+    \begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[scale=1, ytick={0,1,...,10}, xtick={0,1,...,10}, 
+    ymin = 0, ymax = 10, xmin = 0, xmax = 10, width = 6cm, height = 6cm, 
+    x label style={font=\small, yshift=1ex}, 
+    y label style={font=\small, yshift=-3ex},
+    xlabel={x}, ylabel={y}, tick label style={font=\footnotesize},
+    xmajorgrids=true, ymajorgrids=true]
+    \draw (axis cs:%s,%s) 
+    node[regular polygon, regular polygon sides=4, scale=0.8] (s) {%s};
+    \end{axis} 
+    \end{tikzpicture} 
+    \end{center}
+    """ % (coord[0][0], coord[0][1], gender[1])
+
+    while len(coord) < no_coords:
+        coordinates = []
+        x_1 = random.randint(1, 9)
+        y_1 = random.randint(1, 9)
+        if x_1 != x_0 and y_1 != y_0:
+            coordinates.append((x_1, y_1))
+        if no_coords > 2:
+            n = [random.randint(0, 1), random.randint(0, 1), 2][difficulty - 1]
+            x_2 = x_1 if n == 0 else random.randint(1, 9)
+            y_2 = y_1 if n == 1 else random.randint(1, 9)
+            if difficulty > 2:
+                if (x_2, y_2) not in coord and x_2 != x_1 and y_2 != y_1:
+                    coordinates.append((x_2, y_2))
+            else:
+                if (x_2, y_2) not in coord and (x_2, y_2) not in coordinates:
+                    coordinates.append((x_2, y_2))
+        if len(coordinates) == no_coords - 1:
+            coord.extend(coordinates)
+    k = random.randint(0, 1)
+    unit = random.choice([["miles", "kilometres"], ["metres", "yards"]][k])
+    multiplier = [random.randint(2, 3 * difficulty),
+                  [100, 50, 25][difficulty - 1]][k]
+
+    deltas = []
+    travel = []
+    for i in range(1, len(coord)):
+        delta_x = coord[i][0] - coord[i - 1][0]
+        delta_y = coord[i][1] - coord[i - 1][1]
+        deltas.append([delta_x, delta_y])
+    for i in deltas:
+        x_dir = "east" if i[0] > 0 else ("" if i[0] == 0 else "west")
+        y_dir = "north" if i[1] > 0 else ("" if i[1] == 0 else "south")
+        directions = [[abs(i[0]), x_dir], [abs(i[1]), y_dir]]
+        for j in directions:
+            if j[0] == 0:
+                directions.remove(j)
+        my_list = []
+        for m in directions:
+            my_list.append(f"{abs(m[0] * multiplier)} {unit} {m[1]}")
+        random.shuffle(my_list)
+        my_list = " and ".join(my_list) if len(my_list) > 1 else my_list[0]
+        travel.append(my_list)
+
+    transport = random.choice([["cycle", "drive"], ["walk", "run"]][k])
+    travel = f". {gender[2]} then {transport}s a further ".join(travel) \
+        if len(travel) > 1 else travel[0]
+
+    question = f"{name} is at the coordinates {coord[0]}. {gender[2]} " \
+               f"decides to {transport} {travel}. If each grid line " \
+               f"represents {multiplier} {unit}, what are {name}'s final " \
+               f"coordinates? \n\n {grid} \n\n " \
+               r"Final Coordinates = (\makebox[1.5em]{\hrulefill}, " \
+               r"\makebox[1.5em]{\hrulefill})"
+    answer = f"{coord[no_coords - 1]}"
+    return [question, answer]
+
+
+def pd_12(difficulty):
+    """Determine how many items are on the same axis line on a grid. Chrys."""
+    no_places = 3 * difficulty
+    no_on_same = random.randint(1, 2 * difficulty)
+    places = mq.random_place_symbols(n=no_places, text_size="large")
+
+    coords = []
+    n = random.randint(0, 1)
+    coord_1 = random.randint(1, 9)
+    coord_2 = random.sample(range(1, 10), k=no_on_same)
+    for i in range(no_on_same):
+        coords.append((coord_1, coord_2[i]) if n == 0
+                      else (coord_2[i], coord_1))
+    axis_values = [j for j in range(1, 10)]
+    axis_values.remove(coord_1)
+    sample_size = no_places - no_on_same
+    while len(coords) < no_places:
+        coordinates = []
+        x = random.choices([axis_values, range(1, 10)][n], k=sample_size)
+        y = random.choices([range(1, 10), axis_values][n], k=sample_size)
+        for i in range(sample_size):
+            if (x[i], y[i]) not in coordinates and (x[i], y[i]) not in coords:
+                coordinates.append((x[i], y[i]))
+        if len(coordinates) == sample_size:
+            coords.extend(coordinates)
+
+    grid = r"""
+    \begin{center} 
+    \begin{tikzpicture}
+    \begin{axis}[scale=1, ytick={0,1,...,10}, xtick={0,1,...,10}, 
+    ymin = 0, ymax = 10, xmin = 0, xmax = 10, width = 6cm, height = 6cm, 
+    x label style={font=\small, yshift=1ex}, 
+    y label style={font=\small, yshift=-3ex},
+    xlabel={x}, ylabel={y}, tick label style={font=\footnotesize},
+    xmajorgrids=true, ymajorgrids=true]
+    """
+    for j in range(no_places):
+        grid += r"""\draw (axis cs:%s,%s) 
+        node[regular polygon, regular polygon sides=4, scale=0.8] (s) {%s};"""\
+                % (coords[j][0], coords[j][1], places[j][1])
+    grid += r" \end{axis} \end{tikzpicture} \end{center}"
+
+    my_list = []
+    rows = []
+    for i in range(no_places):
+        my_list.append(r"\resizebox{1.5em}{1.1em}{%s} = %s"
+                       % (places[i][1], places[i][0]))
+    for i in range(0, len(my_list), 3):
+        rows.append(' & '.join(my_list[i:i+3]))
+    rows = r' \\ '.join(rows) if len(rows) > 1 else rows[0]
+    key_2 = r"""{\tabcolsep=3pt \tiny$ \begin{tabular}[c!]{l||l||l} 
+    \multicolumn{1}{l}{\textbf{Key:}} \\[1ex] %s \\ \end{tabular}$}""" % rows
+
+    question = r"How many buildings are on the " \
+               r"\makebox{%s-coordinate %s?}" % (["x", "y"][n], coord_1) \
+               + f" \n\n {grid} \n\n {key_2}"
+    answer = f"{no_on_same}"
+    return [question, answer]
+
+
+def st_36(difficulty):
+    """Identify number of shapes in a given in set or in the intersection of
+    sets using a Venn diagram. Chrys."""
+    colours = ["orange", "blue", "green", "yellow"]
+    shapes = ["Squares", "Circles", "Triangles"]
+    n = random.randint(0, len(colours) - 1)
+    k = random.randint(0, len(shapes) - 1)
+    label = [colours[n].capitalize(), shapes[k]]
+
+    shape_range = [i for i in range(len(shapes))]
+    shape_range.remove(k)
+    colour_range = [i for i in range(len(colours))]
+    colour_range.remove(n)
+    set_a = []
+    set_b = []
+    a_n_b = []
+
+    amount = random.choices(range(difficulty, 5 + difficulty), k=2)
+    amount.append(random.randint(1, 5))
+    for i in range(amount[0]):
+        rotate = random.choice([0, 90, random.choice(range(300, 330)), 270])
+        sh = random.choice(shape_range)
+        shape_1 = [mq.draw_square(1, colours[n], colours[n], rotate),
+                   mq.draw_circle(1, colours[n], colours[n]),
+                   mq.draw_triangle(0.5, colours[n], colours[n], rotate)
+                   ][sh]
+        set_a.append(shape_1)
+
+    for i in range(amount[1]):
+        col = random.choice(colour_range)
+        rotate = random.choice([90, 180,  random.choice(range(120, 150)), 270])
+        shape_2 = [mq.draw_square(1, colours[col], colours[col], rotate),
+                   mq.draw_circle(1, colours[col], colours[col]),
+                   mq.draw_triangle(0.5, colours[col], colours[col], rotate)
+                   ][k]
+        set_b.append(shape_2)
+    for i in range(amount[2]):
+        rotate = random.choice([90, 50, 270])
+        shape_3 = [mq.draw_square(1, colours[n], colours[n], rotate),
+                   mq.draw_circle(1, colours[n], colours[n]),
+                   mq.draw_triangle(0.5, colours[n], colours[n], rotate)
+                   ][k]
+        a_n_b.append(shape_3)
+
+    graph = mq.venn_diagram(labels=label, set_a=set_a, set_b=set_b,
+                            intersect=a_n_b)
+
+    choice = random.choice([[colours[n], amount[0]],
+                            [f"{colours[n]} {shapes[k]}", 0],
+                            [shapes[k], amount[1]]])
+    question = f"How many of the shapes are {choice[0]}? \n\n" \
+               r"\begin{center} %s \end{center}" % graph
+    answer = str(choice[1] + amount[2])
+    return [question, answer]
+
+
+def st_37(difficulty):
+    """Choose where shape fits in venn diagram. Chrys."""
+    colours = ["orange", "blue", "green", "yellow"]
+    shapes = ["Square", "Circle", "Triangle"]
+    n = random.randint(0, len(colours) - 1)
+    k = random.randint(0, len(shapes) - 1)
+    label = [colours[n].capitalize(), shapes[k]]
+
+    shape_range = [i for i in range(len(shapes))]
+    shape_range.remove(k)
+    colour_range = [i for i in range(len(colours))]
+    colour_range.remove(n)
+    set_a = []
+    set_b = []
+    a_n_b = []
+
+    amount = random.choices(range(4 - difficulty, 8 - difficulty), k=2)
+    amount.append(random.randint(1, 5))
+    for i in range(amount[0]):
+        rotate = random.choice([0, 90, random.choice(range(300, 330)), 270])
+        sh_1 = random.choice(shape_range)
+        shape_1 = [mq.draw_square(1, colours[n], colours[n], rotate),
+                   mq.draw_circle(1, colours[n], colours[n]),
+                   mq.draw_triangle(0.5, colours[n], colours[n], rotate)
+                   ][sh_1]
+        set_a.append(shape_1)
+
+    for i in range(amount[1]):
+        col = random.choice(colour_range)
+        rotate = random.choice([90, 180,  random.choice(range(120, 150)), 270])
+        shape_2 = [mq.draw_square(1, colours[col], colours[col], rotate),
+                   mq.draw_circle(1, colours[col], colours[col]),
+                   mq.draw_triangle(0.5, colours[col], colours[col], rotate)
+                   ][k]
+        set_b.append(shape_2)
+    for i in range(amount[2]):
+        rotate = random.choice([90, 50, 270])
+        shape_3 = [mq.draw_square(1, colours[n], colours[n], rotate),
+                   mq.draw_circle(1, colours[n], colours[n]),
+                   mq.draw_triangle(0.5, colours[n], colours[n], rotate)
+                   ][k]
+        a_n_b.append(shape_3)
+    weights = [0, 0, 1][difficulty - 1]
+    sets = random.choices(
+        [
+            [set_a, set_b, a_n_b], [None, None, None],
+            [random.choice((None, set_a)),
+             random.choice((None, set_b)),
+             random.choice((None, a_n_b))]
+        ], weights=(2, weights, difficulty - 1), k=1)[0]
+    graph = mq.venn_diagram(labels=label, set_a=sets[0], set_b=sets[1],
+                            intersect=sets[2])
+    upper = [2, 3, 3][difficulty - 1]
+    m = random.randint(0, upper)
+    choices = [label[0],
+               label[1],
+               f"Both {label[0].lower()} and {label[1].lower()}"]
+    if upper > 2:
+        choices .append(f"Neither {label[0].lower()} nor {label[1].lower()}")
+    sides = [3, 4, 5, 6, 7, 8]
+    sides.remove(3 if k == 2 else (4 if k == 0 else 8))
+    sides = random.choice(sides)
+    col_choice = random.choice(colour_range)
+    m_2 = 1 if k == 1 else (4 if k == 0 else 3)
+    m_3 = [colours[n], colours[col_choice], colours[n], colours[col_choice]][m]
+
+    sh__1 = mq.draw_circle(1, m_3, m_3) if m_2 == 1 \
+        else mq.draw_regular_polygon(m_2, 1, m_3)
+    sh__2 = mq.draw_regular_polygon(sides=sides, size=1, colour=m_3)
+    shape_choice = [sh_2, sh__1, sh__1, sh__2][m]
+
+    question = f"Where does this shape go in the venn diagram {shape_choice}?"\
+               "\n\n" + r"\begin{center} %s \end{center}" % graph
+    answer = choices[m]
+    return mq.multiple_choice(question, choices, answer,
+                              onepar=False, reorder=False)
+
+
+def me_45(difficulty):
+    """Find Perimeter of square/rectangle. Chrys"""
+    unit = random.choice([["", ""], ["cm", "centimetres"], ["m", "metres"]])
+    height = random.randint(2 ** difficulty, 10 * difficulty)
+    width = random.randint(2 ** difficulty, 10 * difficulty)
+    square_rectangle = r"""node[rectangle, draw=black, fill=white, rotate=0,
+    minimum width=%scm, minimum height=2cm]""" % random.choice([2, 4])
+    if difficulty == 3:
+        labels = ""
+    else:
+        labels = r"""\node[right] (n) at (S.east) {%s}; 
+        \node[below] (n) at (S.south) {%s};""" % (str(height) + unit[0],
+                                                  str(width) + unit[0])
+    model = r"""\begin{tikzpicture}
+    \draw (0,0) %s (S) {};
+    \node[above] (n) at (S.north) {%s};
+    \node[left] (n) at (S.west) {%s};
+    %s
+    \end{tikzpicture}""" % (square_rectangle, str(height) + unit[0],
+                            str(width) + unit[0], labels)
+    question = "What is the perimeter of the shape? "
+    question += "\n" if unit[0] == "" else f"Give your answer in {unit[1]}. \n"
+    question += r"\begin{center} %s \end{center}" % model
+    answer = ""
+    return [question, answer]
