@@ -8,6 +8,7 @@ import matiq as mq
 import names
 from num2words import num2words
 import roman
+import numpy
 
 
 def as_1(difficulty):
@@ -2816,6 +2817,7 @@ def me_26(difficulty):
     return [question, answer]
 
 
+#todo error in question below
 def me_27(difficulty):
     """Worded question, find distance travelled over a period of time by
     firstly working out distance travelled per minute. Chrys."""
@@ -7171,11 +7173,11 @@ def st_37(difficulty):
     amount.append(random.randint(1, 5))
     for i in range(amount[0]):
         rotate = random.choice([0, 90, random.choice(range(300, 330)), 270])
-        sh_1 = random.choice(shape_range)
+        sh1 = random.choice(shape_range)
         shape_1 = [mq.draw_square(1, colours[n], colours[n], rotate),
                    mq.draw_circle(1, colours[n], colours[n]),
                    mq.draw_triangle(0.5, colours[n], colours[n], rotate)
-                   ][sh_1]
+                   ][sh1]
         set_a.append(shape_1)
 
     for i in range(amount[1]):
@@ -7232,10 +7234,13 @@ def st_37(difficulty):
 def me_45(difficulty):
     """Find Perimeter of square/rectangle. Chrys"""
     unit = random.choice([["", ""], ["cm", "centimetres"], ["m", "metres"]])
-    height = random.randint(2 ** difficulty, 10 * difficulty)
-    width = random.randint(2 ** difficulty, 10 * difficulty)
+    n = random.randint(0, 1)
+    lengths = random.sample(range(2 ** difficulty, 10 * difficulty + 1), k=2)
+    lengths.sort()
+    height = lengths[0]
+    width = height if n == 0 else lengths[1]
     square_rectangle = r"""node[rectangle, draw=black, fill=white, rotate=0,
-    minimum width=%scm, minimum height=2cm]""" % random.choice([2, 4])
+    minimum width=%scm, minimum height=2cm]""" % [2, 4][n]
     if difficulty == 3:
         labels = ""
     else:
@@ -7247,10 +7252,1090 @@ def me_45(difficulty):
     \node[above] (n) at (S.north) {%s};
     \node[left] (n) at (S.west) {%s};
     %s
-    \end{tikzpicture}""" % (square_rectangle, str(height) + unit[0],
-                            str(width) + unit[0], labels)
+    \end{tikzpicture}""" % (square_rectangle, str(width) + unit[0],
+                            str(height) + unit[0], labels)
     question = "What is the perimeter of the shape? "
     question += "\n" if unit[0] == "" else f"Give your answer in {unit[1]}. \n"
     question += r"\begin{center} %s \end{center}" % model
-    answer = ""
+    answer = str(2 * (width + height)) + unit[0]
     return [question, answer]
+
+
+def me_46(difficulty):
+    """Match perimeter to shape. Multiple Choice. Chrys."""
+    unit = random.choice(["", "cm", "m", " yards", " inches"])
+    no_choices = 3
+    n = random.choices([0, 1], k=no_choices)
+
+    values = []
+    while len(values) < no_choices:
+        check = []
+        for i in range(no_choices):
+            k = n[i]
+            lengths = random.sample(range(2 ** difficulty,
+                                          10 * difficulty + 1), k=2)
+            lengths.sort()
+            width = lengths[0] if k == 0 else lengths[1]
+            perimeter = 2 * (lengths[0] + width)
+            if (lengths[0], width) not in values and perimeter not in check:
+                values.append((lengths[0], width))
+                check.append(perimeter)
+    if difficulty == 3:
+        values = [(round(i[0] * 0.1, 1), round(i[1] * 0.1, 1)) for i in values]
+    choices = []
+    for j in range(no_choices):
+        square_rectangle = r"""node[rectangle, draw=black, fill=white, 
+        rotate=0, minimum width=%scm, minimum height=1cm]""" % [1, 2][n[j]]
+        if difficulty == 3:
+            labels = ""
+        else:
+            labels = r"""\node[right, font=\small] (n) at (S.east) {%s}; 
+            \node[below, font=\small] (n) at (S.south) {%s};
+            """ % (str(values[j][0]) + unit, str(values[j][1]) + unit)
+        model = r"""\begin{tikzpicture}
+        \draw (0,0) %s (S) {};
+        \node[above, font=\small] (n) at (S.north) {%s};
+        \node[left, font=\small] (n) at (S.west) {%s};
+        %s
+        \end{tikzpicture}""" % (square_rectangle, str(values[j][1]) + unit,
+                                str(values[j][0]) + unit, labels)
+        choices.append(model)
+
+    result = 2 * (values[0][0] + values[0][1])
+    question = f"which of these has a perimeter of " \
+               f"\\makebox{{{result}{unit}}}? "
+
+    answer = choices[0]
+    return mq.multiple_choice(question, choices, answer, onepar=False)
+
+
+def me_47(difficulty):
+    """Worded Perimeter question. Chrys."""
+    n = random.randint(0, 1)
+    rectangle = ["rectangle", "rectangular", "rectangular"][difficulty - 1]
+    k = random.randint(0, 2)
+    units = ["centimetres", "inches", random.choice(["metres", "feet"])][k]
+    lower = [10, 20, 10][k]
+    upper = [100, 50, 40][k]
+    lengths = random.sample(range(lower, upper), k=2)
+    if difficulty == 3:
+        lengths = [round(i + random.randint(1, 9) * 0.1, 1) for i in lengths]
+    lengths.sort(reverse=True)
+    item_1 = [
+        ["photograph", "tray", "poster"],
+        ["window", "whiteboard", "painting", "table", "blackboard"],
+        ["playground", "garden", "sports hall", "car park"],
+    ][k]
+    item_2 = [
+        ["photograph", "tray", "poster"],
+        ["window", "television", "whiteboard", "painting", "table"],
+        ["swimming pool", "playground", "garden", "football pitch",
+         "volleyball court", "car park"]
+    ][k]
+    item = "" if difficulty == 1 else random.choice([item_1, item_2][n])
+
+    question = [
+        f"Each side of a square {item} is {lengths[0]} {units} long. ",
+        f"A {rectangle} {item} is {lengths[0]} {units} long "
+        f"and {lengths[1]} {units} wide. "
+    ][n]
+    result = [4 * lengths[0], 2 * (lengths[0] + lengths[1])][n]
+    result = round(result, 1)
+    result = round(result) if result % 1 == 0 else result
+    question += f"What is the perimeter?"
+    answer = f"{result} {units}"
+    return [question, answer]
+
+
+def sh_17(difficulty):
+    """Guess what type of quadrilateral. Multiple Choice. Chrys"""
+    size = 3
+    rectangle = r"\tikz \draw (0,0) rectangle (3cm,1.5cm);"
+    parallelogram = r"""\tikz \draw (0,0) -- (%f,0) -- (%f, 1) -- 
+    (0.75,1) -- (0,0);""" % (size - 0.75, size)
+    trapezium = r"""\tikz \node[draw, trapezium, minimum size=%scm]
+    at (0,0) {};""" % round(size*0.5, 1)
+    rhombus = r"""\tikz \node[diamond, draw, minimum width=3cm, 
+    minimum height=1.5cm] (d) at (0,0) {};"""
+
+    quads = {
+        'rectangle': rectangle,
+        'square':  mq.draw_regular_polygon(4, size-0.5),
+        'parallelogram': parallelogram,
+        'rhombus': rhombus,
+        'trapezium': trapezium
+    }
+
+    choices = ['rectangle', 'square', 'parallelogram', 'trapezium']
+    if difficulty > 1:
+        choices.append('rhombus')
+    weights = [(1, 1, 1, 1), (1, 1, 2, 2, 1), (.5, 0, 3, 3, 3)][difficulty - 1]
+    choice = random.choices(choices, weights=weights, k=1)[0]
+
+    question = "What type of quadrilateral is this? \n\n " \
+               r"\begin{center} %s \end{center} " % quads[choice]
+    choices = [i.title() for i in choices]
+    answer = choice.title()
+    return mq.multiple_choice(question, choices, answer, onepar=False)
+
+
+def sh_18(difficulty):
+    """Guess what type of triangle. Multiple Choice. Chrys"""
+    equilateral = mq.draw_regular_polygon(sides=3, size=4)
+    isosceles = mq.draw_triangle(size=3*2.36, draw='black', fill='white')
+    scalene = r"\tikz \draw (0,0) -- (5,0) -- (4,2) -- (0,0);"
+    triangles = {'equilateral': equilateral,
+                 'isosceles': isosceles,
+                 'scalene': scalene}
+
+    choices = ['equilateral', 'isosceles', 'scalene']
+    weights = (2, difficulty, difficulty)
+    choice = random.choices(choices, weights=weights, k=1)[0]
+
+    question = "What type of triangle is this? \n\n " \
+               r"\begin{center} %s \end{center} " % triangles[choice]
+    choices = [i.title() for i in choices]
+    answer = choice.title()
+    return mq.multiple_choice(question, choices, answer, onepar=False)
+
+
+def sh_19(difficulty):
+    """Choose which shape matches the given triangle/quadrilateral type.
+    Multiple Choice. Chrys"""
+    size = 2
+    equilateral = mq.draw_regular_polygon(sides=3, size=4/3 * size)
+    isosceles = mq.draw_triangle(size=size * 2.36, draw='black', fill='white')
+    scalene = r"\tikz \draw[scale=%s] (0,0) -- (5,0) -- (1,2) -- (0,0);" \
+              % (size/3)
+    size = 3
+    rectangle = r"\tikz \draw[scale=%s/3] (0,0) rectangle (3cm,1.5cm);" % size
+    parallelogram = r"""\tikz \draw[scale=%s] (0,0) -- (%f,0) -- (%f, 1) -- 
+    (0.75,1) -- (0,0);""" % (size / 3, size - 0.75, size)
+    trapezium = r"""\tikz \node[draw, trapezium, minimum size=1.5cm, 
+    scale=%s] at (0,0) {};""" % (size / 3 - 0.2)
+    rhombus = r"""\tikz \node[diamond, draw, minimum width=3cm, 
+    minimum height=1.5cm, scale=%s] (d) at (0,0) {};""" % (size / 3)
+    square = mq.draw_regular_polygon(4, size-0.5)
+
+    shapes = {
+        rectangle: 'rectangle',
+        square: 'square',
+        parallelogram: 'parallelogram',
+        rhombus: 'rhombus',
+        trapezium: 'trapezium',
+        equilateral: 'an Equilateral',
+        isosceles: 'an Isosceles',
+        scalene: 'a Scalene'
+    }
+    n = random.randint(0, 1)
+    quad_weight = [1/difficulty, 1, difficulty, difficulty - 1, difficulty]
+    quad_weight = [i/sum(quad_weight) for i in quad_weight]
+    quad_choice = numpy.random.choice(
+        [rectangle, square, parallelogram, rhombus, trapezium],
+        size=3,
+        replace=False,
+        p=quad_weight
+    )
+    quad_choice = list(quad_choice)
+    choices = [
+        [equilateral, isosceles, scalene],
+        quad_choice
+    ][n]
+    weights = [(2, difficulty, difficulty), (1, 1, 1)][n]
+    choice = random.choices(choices, weights=weights, k=1)[0]
+
+    question = f"Which of these "
+    question += [f"is {shapes[choice]} Triangle? \n\n ",
+                 f"equilaterals is a {shapes[choice]}? \n\n"][n]
+    answer = choice
+    return mq.multiple_choice(question, choices, answer, onepar=False)
+
+
+def me_48(difficulty):
+    """Find missing length of shape. Chrys"""
+    size = 2
+    isosceles = r'''
+    node[isosceles triangle, minimum size=%scm, rotate=90, draw,fill=white]
+    ''' % size
+    trapezium = r"""node[draw, trapezium, minimum size=1.5cm, scale=%s]""" \
+                % (size / 2)
+    rectangle = r"""node[rectangle, draw=black, fill=white, rotate=0, 
+    minimum width=%scm, minimum height=%scm]""" % (size + 1, (size + 1) * 0.5)
+
+    n = random.randint(0, 2)
+    values = random.sample(range(2 ** difficulty, 20 * difficulty), k=3)
+    values.sort()
+    units = random.choice(["", "cm", "m", "mm", " inches", " feet"])
+    if n == 0:
+        lengths = [values[0], values[1], values[1]]
+        labels = [
+            r"\node[below, font=\small] (n) at (S.west) {%s%s};"
+            % (lengths[0], units),
+            r"\node[above left, font=\small] (n) at (S.north east) {%s%s};"
+            % (lengths[1], units),
+            r"\node[above right, font=\small] (n) at (S.south east) {%s%s};"
+            % (lengths[2], units),
+        ]
+    elif n == 1:
+        lengths = [values[2], values[0], values[1], values[1]]
+        labels = [
+            r"\node[below, font=\small] (n) at (S.south) {%s%s};"
+            % (lengths[0], units),
+            r"\node[above, font=\small] (n) at (S.north) {%s%s};"
+            % (lengths[1], units),
+            r"\node[left, font=\small] (n) at (S.west) {%s%s};"
+            % (lengths[2], units),
+            r"\node[right, font=\small] (n) at (S.east) {%s%s};"
+            % (lengths[3], units)
+        ]
+    else:
+        lengths = [values[0], values[0], values[2], values[2]]
+        labels = [
+            r"\node[below, font=\small] (n) at (S.south) {%s%s};"
+            % (lengths[0], units),
+            r"\node[above, font=\small] (n) at (S.north) {%s%s};"
+            % (lengths[1], units),
+            r"\node[left, font=\small] (n) at (S.west) {%s%s};"
+            % (lengths[2], units),
+            r"\node[right, font=\small] (n) at (S.east) {%s%s};"
+            % (lengths[3], units)
+        ]
+    perimeter = sum(lengths)
+
+    if difficulty == 3:
+        m = random.randint(0, 1)
+        if m == 0:
+            k = random.randint(0, len(labels) - 1)
+            labels.remove(labels[k])
+            result = lengths[k]
+        else:
+            k = random.randint(0, [0, 0, 1][n])
+            for i in range(2):
+                labels.remove(labels[len(labels) - 1]) if k == 0 \
+                    else labels.remove(labels[0])
+            result = [lengths[len(lengths) - 1], lengths[0]][k]
+
+    else:
+        k = random.randint(0, len(labels) - 1)
+        result = lengths[k]
+        labels.remove(labels[k])
+        m = 0
+
+    nodes = ' '.join(labels)
+    shape = [isosceles, trapezium, rectangle][n]
+    model = r"""
+    \begin{center} 
+    \begin{tikzpicture}
+    \draw (0,0) %s (S) {};
+    %s
+    \end{tikzpicture}
+    \end{center}
+    """ % (shape, nodes)
+    question = f"The perimeter of the shape is {perimeter}{units}. "
+    if m == 1:
+        question += "If both of the missing lengths are equal in size, "
+    question += f"{['What', 'what'][m]} is the value of {['', 'one of'][m]} " \
+                f"the missing length{['', 's'][m]}? \n\n {model}"
+    answer = f"{result}{units}"
+    return [question, answer]
+
+
+def me_49(difficulty):
+    """Find area of square/ rectangle when given height and width. Chrys"""
+    size = 2
+    n = random.randint(0, 1)
+    lengths = random.sample(range(2 * difficulty, 7 + 2 * difficulty), k=2)
+    lengths.sort()
+    lengths[0] = lengths[1] if n == 1 else lengths[0]
+
+    k = random.randint(0, 4)
+    units = [ "cm", "m", "mm", " inches", " units"][k]
+    rectangle_square = r"""node[rectangle, draw=black, fill=white, rotate=0, 
+    minimum width=%scm, minimum height=%scm]
+    """ % (size + 1, [(size + 1) * 0.5, size + 1][n])
+    nodes = [
+        r"\node[above, font=\small] (n) at (S.north) {%s%s};"
+        % (lengths[1], units),
+        r"\node[left, font=\small] (n) at (S.west) {%s%s};"
+        % (lengths[0], units)
+    ]
+    if difficulty == 3 and n == 1:
+        nodes.remove(nodes[0])
+    model = r"""
+    \begin{center} 
+    \begin{tikzpicture}
+    \draw (0,0) %s (S) {};
+    %s
+    \end{tikzpicture}
+    \end{center}
+    """ % (rectangle_square, ' '.join(nodes))
+    question = f"Find the area of the {['rectangle', 'square'][n]}. " \
+               f"\n\n {model} \n\n"
+    question += "$Area=Height \\times Width$" if difficulty == 1 else ""
+    area = lengths[0] * lengths[1]
+    answer = f"{area}"
+    answer += f" ${units}^2$" if k > 2 else f"${units}^2$"
+    return [question, answer]
+
+
+def me_50(difficulty):
+    """Choose correct representation of area. Multiple Choice. Chrys"""
+    size = 2
+    n = random.randint(0, 1)
+    lower, upper = 2 * difficulty, 7 + 2 * difficulty
+    lengths = random.choices(range(lower, upper), k=2)
+    square = mq.draw_square(size=1, draw='black', fill='white')
+
+    rows = []
+    r = 'r' * lengths[0]
+    for i in range(lengths[1]):
+        row = [square * lengths[0]]
+        row = ' & '.join(row)
+        rows.append(row)
+    array = r' \\ '.join(rows)
+
+    shape = r'''
+    \begin{center}
+    {\arraycolsep=0pt \def\arraystretch{0} \LARGE 
+    $\begin{array}{%s} 
+    %s 
+    \end{array}$} 
+    \end{center}
+    ''' % (r, array)
+    my_list = []
+    no_choices = 4
+    while len(my_list) < no_choices:
+        add = random.sample([-1, 0, 1], k=2)
+        check = [lengths, [lengths[0] + add[0], lengths[1] + add[1]]]
+        for i in range(no_choices - 2):
+            values = random.sample(range(lower, upper), k=2)
+            if values not in check and values != [lengths[1], lengths[0]]:
+                check.append([values[0], values[1]])
+        if len(check) == no_choices:
+            my_list = check
+    choices = []
+    for i in range(len(my_list)):
+        txt = '$\\times$'.join([str(my_list[i][0]), str(my_list[i][1])])
+        choices.append(txt)
+
+    question = f"The shape is made of unit squares. Which of these " \
+               f"multiplications represent the area of the shape? \n\n {shape}"
+    answer = choices[0]
+    return mq.multiple_choice(question, choices, answer)
+
+
+def me_51(difficulty):
+    """Find missing length using area. Chrys."""
+    size = 2
+    lengths = random.sample(range(2 * difficulty, 7 + 2 * difficulty), k=2)
+    lengths.sort()
+    area = lengths[0] * lengths[1]
+
+    k = random.randint(0, 4)
+    units = [ "cm", "m", "mm", " inches", " units"][k]
+    rectangle = r"""node[rectangle, draw=black, fill=white, rotate=0, 
+    minimum width=%scm, minimum height=%scm]
+    """ % (size + 1, (size + 1) * 0.5)
+
+    n = random.randint(0, 1)
+    result = lengths[n]
+    lengths[n] = r"\makebox[3ex]{\hrulefill}"
+    model = r"""
+    \begin{center} \begin{tikzpicture}
+    \draw (0,0) %s (S) {};
+    \node[left, font=\small] (n) at (S.west) {%s%s};
+    \node[above, font=\small] (n) at (S.north) {%s%s};
+    \node[font=\small] (a) at (S.center) {$Area = $ %s%s};
+    \end{tikzpicture} \end{center}
+    """ % (rectangle, lengths[0], units, lengths[1], units, area,
+           f" ${units}^2$" if k > 2 else f"${units}^2$")
+
+    question = f"Use the area to find the missing length of the rectangle." \
+               f"\n\n {model} \n\n"
+    if difficulty == 1:
+        question += "Note: $Area = Height \\times Width$"
+    answer = f"{result}{units}"
+    return [question, answer]
+
+
+def me_52(difficulty):
+    """Worded Find area of square/ rectangle when given height and width.
+    Chrys"""
+    lengths = random.sample(range(2 * difficulty, 7 + 2 * difficulty), k=2)
+    lengths.sort()
+    n = random.choices([0, 1], weights=(difficulty, 3), k=1)[0]
+    lengths[0] = lengths[1] if n == 1 else lengths[0]
+    shape = ["rectangle", "square"][n]
+    area = lengths[0] * lengths[1]
+
+    k = random.randint(0, 4)
+    units = ["centimetres", "metres", "millimetres", " inches", " units"][k]
+
+    question = f"If the area of a {shape} is {area} square {units} and "
+    question += [f"the height of the {shape} is {lengths[0]} {units}, ",
+                 "all the sides have the same lengths, "
+                 ][n]
+    question += [f"what is the width of the {shape}?",
+                 "what is the length of one of the sides?"
+                 ][n]
+    answer = f"{lengths[1]} {units}"
+    return [question, answer]
+
+
+def me_53(difficulty):
+    """Find area of rectilinear shape made out of squares. Chrys."""
+    colour = random.choice(['red', 'green', 'blue!60', 'teal', 'orange'])
+    square = mq.draw_square(size=1, draw='black', fill=colour)
+
+    no_rows = [random.choices([1, 2], (1, 3), k=1)[0], 4, 5][difficulty - 1]
+    max_per_row = [6, 4, 4][difficulty - 1]
+    lower = [2 if no_rows == 2 else 3, 1, 1][difficulty - 1]
+    values = random.choices(range(lower, max_per_row + 1), k=no_rows)
+    random.shuffle(values)
+
+    l_r = random.choice(['r', 'l']) * max_per_row
+    rows = []
+    for i in values:
+        row = [square * i]
+        if len(row) < max_per_row:
+            phantom = [(max_per_row - len(row)) * (r'\phantom{%s}' % square)]
+            row = row + phantom
+        row = ' & '.join(row)
+        rows.append(row)
+    array = r' \\ '.join(rows)
+
+    shape = r'''
+    \begin{center}
+    {\arraycolsep=0pt \def\arraystretch{0} \LARGE 
+    $\begin{array}{%s} 
+    %s 
+    \end{array}$} 
+    \end{center}
+    ''' % (l_r, array)
+
+    unit = random.choice(["centimetre", "metre", "millimetre", "inch", "unit"])
+    question = "If each square in the shape has an area of one square " \
+               f"{unit}, what is the area of the shape? \n\n {shape}"
+    units = unit + "es" if unit == "inch" else unit + "s"
+    answer = f"{sum(values)} square {units}"
+    return [question, answer]
+
+
+def me_54(difficulty):
+    """Choose which rectilinear shape has a given area. Chrys."""
+    colour = random.sample(['red', 'green', 'blue!60', 'teal', 'orange'], k=3)
+    no_rows = difficulty + 2
+    max_per_row = 5
+    no_shapes = 3
+
+    choices = []
+    areas = []
+
+    while len(choices) < no_shapes:
+        check_1 = []
+        check_2 = []
+        for k in range(no_shapes):
+            square = mq.draw_square(size=1, draw='black', fill=colour[k])
+            values = random.choices(range(1, max_per_row + 1), k=no_rows)
+            l_r = random.choice(['r', 'l']) * max_per_row
+            rows = []
+            for i in values:
+                row = [square * i]
+                if len(row) < max_per_row:
+                    phantom = [
+                        (max_per_row - len(row)) * (r'\phantom{%s}' % square)
+                    ]
+                    row = row + phantom
+                row = ' & '.join(row)
+                rows.append(row)
+            array = r' \\ '.join(rows)
+
+            shape = r'''
+            {\arraycolsep=0pt \def\arraystretch{0} \LARGE 
+            $\begin{array}{%s} 
+             %s 
+            \end{array}$}
+            ''' % (l_r, array)
+            if sum(values) not in check_2:
+                check_1.append(shape)
+                check_2.append(sum(values))
+        if len(check_1) == no_shapes and len(check_2) == no_shapes:
+            choices = check_1
+            areas = check_2
+
+    n = random.randint(0, len(choices) - 1)
+    unit = random.choice(["centimetre", "metre", "millimetre", "inch", "unit"])
+    units = unit + "es" if unit == "inch" else unit + "s"
+    question = f"If each square has an area of one square {unit}, which of " \
+               f"these shapes has an area of {areas[n]} square {units}?"
+    answer = choices[n]
+    return mq.multiple_choice(question, choices, answer, onepar=False)
+
+
+def me_55(difficulty):
+    """Match rectilinear shapes that have the same area. Multiple Choice.
+     Chrys."""
+    colour = random.sample(['red', 'green', 'blue!60', 'teal', 'orange'], k=4)
+    no_rows = difficulty + 2
+    max_per_row = 5
+    no_choices = 3
+
+    choices = []
+    values = []
+    while len(values) < no_choices + 1:
+        check_1 = []
+        areas = []
+        for i in range(no_choices):
+            shape_values = random.choices(range(1, max_per_row + 1), k=no_rows)
+            if sum(shape_values) not in areas:
+                check_1.append(shape_values)
+                areas.append(sum(shape_values))
+
+        shape_1_values = random.choices(range(1, max_per_row + 1), k=no_rows)
+        if sum(shape_1_values) == areas[0] and shape_1_values not in check_1:
+            check_1.append(shape_1_values)
+        if len(check_1) == no_choices + 1 and len(areas) == no_choices:
+            values = check_1
+
+    for k in range(len(values)):
+        square = mq.draw_square(size=0.5, draw='black', fill=colour[k])
+        l_r = random.choice(['r', 'l']) * max_per_row
+        rows = []
+
+        for i in values[k]:
+            row = [square * i]
+            if len(row) < max_per_row:
+                phantom = [
+                    (max_per_row - len(row)) * (r'\phantom{%s}' % square)
+                ]
+                row = row + phantom
+            row = ' & '.join(row)
+            rows.append(row)
+        array = r' \\ '.join(rows)
+        shape = r'''
+        {\arraycolsep=0pt \def\arraystretch{0} \LARGE 
+        $\begin{array}{%s} 
+         %s 
+        \end{array}$}
+        ''' % (l_r, array)
+        choices.append(shape)
+
+    shape_1 = choices[len(choices) - 1]
+    choices.remove(choices[len(choices) - 1])
+    question = f"Choose the shape with the same area as the one below. \n\n " \
+               r"\begin{center} %s \end{center}" % shape_1 + "\n\n\n"
+    answer = choices[0]
+    return mq.multiple_choice(question, choices, answer, onepar=False)
+
+
+def me_56(difficulty):
+    """Find perimeter of rectilinear shape made out of squares. Chrys."""
+    colour = random.choice(['red', 'green', 'blue!60', 'teal', 'orange'])
+    square = mq.draw_square(size=0.5, draw='black', fill=colour)
+
+    no_rows = random.randint(difficulty + 1, difficulty + 2)
+    max_per_row = random.randint(3 + difficulty, 7)
+    lower = 2 if no_rows == 2 else [3, 1, 1][difficulty - 1]
+    values = random.choices(range(lower, max_per_row + 1), k=no_rows)
+
+    random.shuffle(values)
+
+    l_r = random.choice(['r', 'l']) * max_per_row
+    rows = []
+    for i in values:
+        row = [square * i]
+        if len(row) < max_per_row:
+            phantom = [(max_per_row - len(row)) * (r'\phantom{%s}' % square)]
+            row = row + phantom
+        row = ' & '.join(row)
+        rows.append(row)
+    array = r' \\ '.join(rows)
+
+    shape = r'''
+    \begin{center}
+    {\arraycolsep=0pt \def\arraystretch{0} \LARGE 
+    $\begin{array}{%s} 
+    %s 
+    \end{array}$} 
+    \end{center}
+    ''' % (l_r, array)
+
+    perimeter = no_rows * 2 + values[0] + values[len(values) - 1]
+    for i in range(1, len(values)):
+        perimeter = perimeter + abs(values[i] - values[i - 1])
+
+    multiplier = random.randint(1, [1, 2, 2][difficulty - 1])
+    result = perimeter * multiplier
+
+    unit = random.choice(["centimetre", "metre", "millimetre", "inch", "unit"])
+    units = unit + "es" if unit == "inch" else unit + "s"
+
+    question = f"The shape is made up of squares. Each square is made up " \
+               f"of equal sides of length {multiplier} " \
+               f"{unit if multiplier == 1 else units}. What is the perimeter" \
+               f" of the shape? \n\n {shape}"
+    answer = f"{result} {units}"
+    return [question, answer]
+
+
+def me_58(difficulty):
+    """Choose the rectilinear shape, made up of squares, that match a given
+    perimeter. Multiple Choice. Chrys."""
+    no_choices = 3
+    colour = random.sample(['red', 'green', 'blue!60', 'teal', 'orange'],
+                           k=no_choices)
+    shape_values = []
+    perimeters = []
+    row_boundaries = []
+    while len(shape_values) < no_choices:
+        check_1 = []
+        check_2 = []
+        max_row_list = []
+        for j in range(no_choices):
+            no_rows = random.randint(difficulty, difficulty + 1)
+            max_per_row = random.randint(3 + difficulty, 7)
+            lower = 2 if no_rows == 2 else [3, 1, 1][difficulty - 1]
+
+            values = random.choices(range(lower, max_per_row + 1), k=no_rows)
+            shape_perim = no_rows * 2 + values[0] + values[len(values) - 1]
+            for i in range(1, len(values)):
+                shape_perim = shape_perim + abs(values[i] - values[i - 1])
+            if values not in check_1 and shape_perim not in check_2:
+                check_1.append(values)
+                check_2.append(shape_perim)
+                max_row_list.append(max_per_row)
+        if len(check_1) == no_choices and len(check_2) == no_choices:
+            shape_values = check_1
+            perimeters = check_2
+            row_boundaries = max_row_list
+
+    choices = []
+    for k in range(len(shape_values)):
+        square = mq.draw_square(size=0.5, draw='black', fill=colour[k])
+        max_per_row = row_boundaries[k]
+        l_r = random.choice(['r', 'l']) * max_per_row
+        rows = []
+        for i in shape_values[k]:
+            row = [square * i]
+            if len(row) < max_per_row:
+                phantom = [
+                    (max_per_row - len(row)) * (r'\phantom{%s}' % square)
+                ]
+                row = row + phantom
+            row = ' & '.join(row)
+            rows.append(row)
+        array = r' \\ '.join(rows)
+
+        shape = r'''
+        {\arraycolsep=0pt \def\arraystretch{0} \LARGE 
+        $\begin{array}{%s} 
+        %s 
+        \end{array}$} 
+        ''' % (l_r, array)
+        choices.append(shape)
+
+    multiplier = random.randint(1, [1, 2, 3][difficulty - 1])
+    perimeters = [i * multiplier for i in perimeters]
+    unit = random.choice(["centimetre", "metre", "millimetre", "inch", "unit"])
+    units = unit + "es" if unit == "inch" else unit + "s"
+    question = f"Each shape is made up of square with equal sides of length " \
+               f"{multiplier} {unit if multiplier == 1 else units}. " \
+               f"Which shape has a perimeter of {perimeters[0]} {units}."
+    answer = choices[0]
+    return mq.multiple_choice(question, choices, answer, onepar=False)
+
+
+def me_59(difficulty):
+    """Match two rectilinear shapes made of squares which have the same
+    perimeter. Multiple Choice. Chrys"""
+    """Find area of rectilinear shape made out of squares. Chrys."""
+    no_choices = 3
+    colour = ['red', 'green', 'blue!60', 'orange']
+    random.shuffle(colour)
+    shape_values = []
+    while len(shape_values) < no_choices:
+        check_1 = []
+        check_2 = []
+        max_row_list = []
+        for j in range(no_choices):
+            no_rows = random.randint(difficulty, difficulty + 1)
+            max_per_row = random.randint(3 + difficulty, 7)
+            lower = 2 if no_rows == 2 else [3, 1, 1][difficulty - 1]
+
+            values = random.choices(range(lower, max_per_row + 1), k=no_rows)
+            shape_perim = no_rows * 2 + values[0] + values[len(values) - 1]
+            for i in range(1, len(values)):
+                shape_perim = shape_perim + abs(values[i] - values[i - 1])
+            if values not in check_1 and shape_perim not in check_2:
+                check_1.append(values)
+                check_2.append(shape_perim)
+                max_row_list.append(max_per_row)
+
+        no_rows = random.randint(difficulty, difficulty + 1)
+        max_per_row = random.randint(3 + difficulty, 7)
+        lower = 2 if no_rows == 2 else [3, 1, 1][difficulty - 1]
+        shape_1_values = random.choices(range(lower, max_per_row + 1),
+                                        k=no_rows)
+        shape_1_perim = no_rows * 2 + shape_1_values[0] \
+                        + shape_1_values[len(shape_1_values) - 1]
+        for i in range(1, len(shape_1_values)):
+            shape_1_perim = shape_1_perim \
+                            + abs(shape_1_values[i] - shape_1_values[i - 1])
+        if shape_1_perim == check_2[0] and shape_1_values not in check_1:
+            check_1.append(shape_1_values)
+        if len(check_1) == no_choices + 1 and len(check_2) == no_choices:
+            shape_values = check_1
+
+    choices = []
+    for i in range(len(shape_values)):
+        shape = mq.draw_rectilinear_shape(shape_values[i], colour[i])
+        choices.append(shape)
+    shape_1 = choices[len(choices) - 1]
+    choices.remove(choices[len(choices) - 1])
+
+    multiplier = [1, 1, random.randint(1, 2)][difficulty - 1]
+    shape_1_colour = 'blue' if colour[no_choices] == 'blue!60' \
+        else colour[no_choices]
+    unit = random.choice(["centimetre", "metre", "millimetre", "inch", "unit"])
+    units = unit + "es" if unit == "inch" else unit + "s"
+    question = f"The shapes are made up of squares of equal sides of length " \
+               f"{multiplier} {unit if multiplier == 1 else units}. " \
+               f"Choose the shape with the same perimeter as the " \
+               f"{shape_1_colour} shape. \n\n " \
+               f"\\begin{{center}} {shape_1} \\end{{center}}"
+    answer = choices[0]
+    return mq.multiple_choice(question, choices, answer, onepar=False)
+
+
+def md_30(difficulty):
+    """Use distributive property to find answer to a multiplication. Chrys."""
+    a = random.randint(3, 9)
+    b = random.randint(11, 10 + 3 * difficulty)
+    ones_multiplier = b - 10
+    box = r"\makebox[2em]{\hrulefill}"
+    question = f"Using the answers of the multiplications \n\n" \
+               f"\\begin{{center}}" \
+               f"${a} \\times {ones_multiplier}$ \n\n" \
+               f"${a} \\times 10$" \
+               f"\\end{{center}}\n\n" \
+               f"and use the distributive property of " \
+               f"multiplication, find the answer to: \n\n" \
+               f"\\begin{{center}} ${a} \\times {b} = {box}$ \\end{{center}}"
+    answer = str(a * b)
+    return [question, answer]
+
+
+def pv_17(difficulty):
+    """Choose sign that completes the roman numeral inequality. Chrys."""
+    nums = random.sample(range(3, difficulty * 50), k=2)
+    choices = ["$<$", "$>$"]
+    result = choices[0] if nums[0] < nums[1] else choices[1]
+    nums = [roman.toRoman(i) for i in nums]
+    space = r'\hspace{1ex}'
+    question = "Choose the sign that completes the inequality. \n\n" \
+               f"\\begin{{center}} {nums[0]} {space} ? {space} {nums[1]}" \
+               "\\end{center}"
+    answer = result
+    return mq.multiple_choice(question, choices, answer, reorder=False)
+
+
+def pv_18(difficulty):
+    """Choose sign that completes inequality. comparing roman numeral to
+    digits. Multiple Choice. Chrys."""
+    lower = 5 + 50 * (difficulty - 1)
+    upper = difficulty * 50
+    a = random.randint(lower, upper)
+    b = random.choices([a, random.randint(lower, upper)],
+                       weights=(1, 4), k=1)[0]
+    nums = [a, b]
+    choices = ["$<$", "$=$", "$>$"]
+    result = choices[0] if nums[0] < nums[1] \
+        else (choices[1] if nums[0] == nums[1] else choices[2])
+    n = random.randint(0, 1)
+    nums[n] = roman.toRoman(nums[n])
+    space = r'\hspace{1ex}'
+    question = "Choose the sign that completes the inequality. \n\n" \
+               f"\\begin{{center}} {nums[0]} {space} ? {space} {nums[1]}" \
+               "\\end{center}"
+    answer = result
+    return mq.multiple_choice(question, choices, answer, reorder=False)
+
+
+def pv_19(difficulty):
+    """Choose which number/roman numeral is smaller or larger or equal to
+    a given one. Multiple Choice. Chrys."""
+    a =  random.randint(41 + 50 * (difficulty - 1), 80 * (difficulty + 1))
+    boundary = 50 - 10 * difficulty
+    nums = random.sample(range(a - boundary, a + boundary), k=6)
+    nums.sort()
+
+    n = random.choices([0, 1, 2], weights=(6, 6, 1), k=1)[0]
+    k = 0 if n == 2 else random.randint(0, 1)
+    size = ["smaller", "larger", "the same as"][n]
+    is_not = ["is", "is NOT"][k]
+
+    if n == 2:
+        a = nums[random.randint(0, len(nums) - 1)]
+        result = a
+    else:
+        a = nums[1] if (n + k) % 2 == 0 else nums[len(nums) - 2]
+        nums.remove(a)
+        result = nums[0] if (n + k) % 2 == 0 else nums[len(nums) - 1]
+
+    choices = nums
+    m = random.randint(0, 1)
+    if m == 0:
+        choices = [roman.toRoman(i) for i in choices]
+    else:
+        a = roman.toRoman(a)
+    numerals = ["roman numerals", "numbers"][m]
+    question = f"Which of these {numerals} {is_not} {size} {a}?"
+    answer = roman.toRoman(result) if m == 0 else result
+    return mq.multiple_choice(question, choices, answer)
+
+
+def me_60(difficulty):
+    """Choose which rectilinear shape has the nth largest area.
+    Multiple choice.Chrys."""
+    colour = random.sample(['red', 'green', 'blue!60', 'teal', 'orange'], k=3)
+    no_rows = difficulty + 2
+    max_per_row = 5
+    no_choices = 3
+
+    values = []
+    while len(values) < 3:
+        shapes = []
+        areas = []
+        for i in range(no_choices):
+            row_values = random.choices(range(1, max_per_row + 1), k=no_rows)
+            if sum(row_values) not in areas:
+                shapes.append(row_values)
+                areas.append(sum(row_values))
+        if len(shapes) == no_choices and len(areas) == no_choices:
+            for i in range(len(areas)):
+                values.append([shapes[i], areas[i]])
+
+    values.sort(key=lambda x: x[1])
+    choices = [mq.draw_rectilinear_shape(values[i][0], colour[i])
+               for i in range(len(values))]
+    n = random.randint(0, 2)
+    order = "largest" if n == 2 else "smallest"
+    ordinal = mq.ordinal(n + 1) if n == 1 else ""
+    question = f"The shapes are made of unit squares. Which of these " \
+               f"shapes has the {ordinal} {order} area."
+    answer = choices[n]
+    return mq.multiple_choice(question, choices, answer, onepar=False)
+
+
+def me_61(difficulty):
+    """Choose rectilinear shape with nth largest perimeter.
+     Multiple Choice. Chrys."""
+    colour = random.sample(['red', 'green', 'blue!60', 'teal', 'orange'], k=3)
+    no_rows = difficulty + 2
+    max_per_row = 5
+    no_choices = 3
+
+    values = []
+    while len(values) < 3:
+        shapes = []
+        perimeters = []
+        for i in range(no_choices):
+            row_values = random.choices(range(1, max_per_row + 1), k=no_rows)
+            shape_perim = no_rows * 2 \
+                          + row_values[0] \
+                          + row_values[len(values) - 1]
+            for i in range(1, len(values)):
+                shape_perim = shape_perim \
+                              + abs(row_values[i] - row_values[i - 1])
+            if shape_perim not in perimeters:
+                shapes.append(row_values)
+                perimeters.append(shape_perim)
+
+        if len(shapes) == no_choices and len(perimeters) == no_choices:
+            for i in range(len(perimeters)):
+                values.append([shapes[i], perimeters[i]])
+
+    values.sort(key=lambda x: x[1])
+    choices = [mq.draw_rectilinear_shape(values[i][0], colour[i])
+               for i in range(len(values))]
+    n = random.randint(0, 2)
+    order = "largest" if n == 2 else "smallest"
+    ordinal = mq.ordinal(n + 1) if n == 1 else ""
+    question = f"The shapes are made of unit squares with equal sides. " \
+               f"Which of these shapes has the {ordinal} {order} perimeter."
+    answer = choices[n]
+    return mq.multiple_choice(question, choices, answer, onepar=False)
+
+
+def sh_20(difficulty):
+    """How many lines of symmetry does the shape have. Chrys."""
+    colour = random.choice(['red', 'green', 'blue!60', 'teal', 'orange'])
+    values = [
+        [[5,1,5,1,5], 1],
+        [[4, 1, 1, 4], 1]
+    ]
+    reg_poly_values = [[3, 3], [4, 4], [5, 5], [6, 6]]
+
+    shapes = [[mq.draw_triangle(4, "black", colour), 1]]
+    weights = [1]
+    for i in range(len(values)):
+        rectilinear = mq.draw_rectilinear_shape(values[i][0], colour=colour)
+        shapes.append([rectilinear, values[i][1]])
+        weights.append(1)
+    for i in range(difficulty + 1):
+        reg_poly = r'''
+        \begin{tikzpicture} 
+        \node[regular polygon, regular polygon sides=%s, minimum size=%scm, 
+        draw=black, fill=%s] at (0, 0) {}; 
+        \end{tikzpicture}''' % (reg_poly_values[i][0], 3, colour)
+        shapes.append([reg_poly, reg_poly_values[i][1]])
+        weights.append(1 + 0.5 * (difficulty - 1))
+
+    random.shuffle(shapes)
+    choice = random.choices(shapes, weights=weights, k=1)[0]
+    question = f"How many lines of symmetry does the shape have? \n\n" \
+               f"\\begin{{center}} {choice[0]} \\end{{center}}"
+    answer = str(choice[1])
+    return [question, answer]
+
+
+def sh_21(difficulty):
+    """Choose which shape has a given number of lines of symmetry.
+    Multiple Choice. Chrys."""
+    colour = ['red', 'green', 'blue!60', 'teal',
+              'orange', 'magenta', 'yellow!70']
+    random.shuffle(colour)
+    values = [
+        [[5, 1, 5, 1, 5], 1],
+        [[4, 1, 1, 4], 1]
+    ]
+    shapes = [[mq.draw_triangle(5, "black", colour[0]), 1]]
+    for i in range(len(values)):
+        rectilinear = mq.draw_rectilinear_shape(values[i][0],
+                                                colour=colour[i + 1])
+        shapes.append([rectilinear, values[i][1]])
+    for i in range(3, difficulty + 4):
+        reg_poly = r'''
+        \begin{tikzpicture} 
+        \node[regular polygon, regular polygon sides=%s, minimum size=%scm, 
+        draw=black, fill=%s] at (0, 0) {}; 
+        \end{tikzpicture}''' % (i, 3, colour[i])
+        shapes.append([reg_poly, i])
+
+    choices = []
+    lines_of_sym = 0
+    while len(choices) < 3:
+        sample = random.sample(shapes, k=3)
+        if sample[0][1] != sample[1][1] and sample[0][1] != sample[2][1]:
+            choices = [sample[i][0] for i in range(len(sample))]
+            lines_of_sym = sample[0][1]
+
+    question = f"Which of these shapes have {lines_of_sym} lines of " \
+               f"symmetry? \n\n"
+    answer = choices[0]
+    return mq.multiple_choice(question, choices, answer, onepar=False)
+
+
+def sh_22(difficulty):
+    """Which shape has the nth most/least amount of lines of symmetry.
+    Multiple Choice. Chrys."""
+    colour = ['red', 'green', 'blue!60', 'teal',
+              'orange', 'magenta', 'yellow!70']
+    random.shuffle(colour)
+    values = [
+        [[5, 1, 5, 1, 5], 1],
+        [[4, 1, 1, 4], 1]
+    ]
+    shapes = [[mq.draw_triangle(5, "black", colour[0]), 1]]
+    for i in range(len(values)):
+        rectilinear = mq.draw_rectilinear_shape(values[i][0],
+                                                colour=colour[i + 1])
+        shapes.append([rectilinear, values[i][1]])
+    for i in range(3, difficulty + 4):
+        reg_poly = r'''
+        \begin{tikzpicture} 
+        \node[regular polygon, regular polygon sides=%s, minimum size=%scm, 
+        draw=black, fill=%s] at (0, 0) {}; 
+        \end{tikzpicture}''' % (i, 3, colour[i])
+        shapes.append([reg_poly, i])
+
+    choices = []
+    while len(choices) < 3:
+        sample = random.sample(shapes, k=3)
+        if sample[0][1] != sample[1][1] and sample[0][1] != sample[2][1] \
+                and sample[1][1] != sample[2][1]:
+            choices = sample
+    choices.sort(key=lambda x: x[1])
+    choices = [choices[i][0] for i in range(len(choices))]
+
+    n = random.randint(0, len(choices) - 1)
+    ordinal = "" if n == 0 or n == len(choices) - 1 else mq.ordinal(n + 1)
+    order = ["fewest", random.choice(["highest", "fewest"]), "highest"][n]
+
+    question = f"Which of these shapes has the {ordinal} {order} number of" \
+               f" lines of symmetry? \n\n"
+    answer = choices[n]
+    return mq.multiple_choice(question, choices, answer, onepar=False)
+
+
+def sh_23(difficulty):
+    """Choose which shape is symmetrical. Multiple Choice. Chrys."""
+    not_symm = []
+    for i in range(2):
+        shape_1 = mq.draw_random_shape(polygon=False,
+                                       curves=random.choice([difficulty, 1]),
+                                       sides=4)
+        not_symm.append(shape_1)
+    colour = "white"
+    values = [
+        [[5, 1, 5, 1, 5], 1],
+        [[4, 1, 1, 4], 1]
+    ]
+    symmetrical = [mq.draw_triangle(5, "black", colour)]
+    for i in range(len(values)):
+        rectilinear = mq.draw_rectilinear_shape(values[i][0],
+                                                colour=colour)
+        symmetrical.append(rectilinear)
+    for i in range(3, difficulty + 4):
+        reg_poly = r'''
+        \begin{tikzpicture} 
+        \node[regular polygon, regular polygon sides=%s, minimum size=%scm, 
+        draw=black, fill=%s] at (0, 0) {}; 
+        \end{tikzpicture}''' % (i, 3, colour)
+        symmetrical.append(reg_poly)
+
+    n = random.randint(0, 1)
+    is_not = ["", "NOT"][n]
+    choices = [random.choice([symmetrical, not_symm][n])] \
+              + random.sample([not_symm, symmetrical][n], k=2)
+    question = f"Which of these shapes is {is_not} symmetrical"
+    answer = choices[0]
+    return mq.multiple_choice(question, choices, answer, onepar=False)
+
+
+def sh_24(difficulty):
+    """Identify 3d shape. Multiple Choice. Chrys."""
+    colour = random.choice(["blue", "red", "magenta",
+                            "orange", "yellow", "green"])
+    shapes = [
+        ["Cube", mq.draw_cuboid(colour=colour)],
+        ["Sphere", mq.draw_sphere(colour=colour, scale=1.3)],
+        ["Cylinder", mq.draw_cylinder(colour)],
+        ["Pyramid", mq.draw_square_based_pyramid(colour)],
+    ]
+    if difficulty > 1:
+        cone = ["Cone", mq.draw_cone(colour)]
+        shapes.append(cone)
+    if difficulty > 2:
+        additional_sh = [["Prism", mq.draw_prism(colour, scale=0.8)],
+                         ["Cuboid", mq.draw_cuboid(colour, 0.9, 4)]]
+        shapes.extend(additional_sh)
+
+    choices = random.sample(shapes, k=2 + difficulty)
+    sh_1 = choices[0][1]
+    answer = choices[0][0]
+    choices = [i[0] for i in choices]
+
+    question = f"What shape is this? \n\n" \
+               r"\begin{center} %s \end{center}" % sh_1
+    return mq.multiple_choice(question, choices, answer)
