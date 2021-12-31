@@ -22,13 +22,13 @@ def as_1(difficulty):
     \underline{+ \ %s } \\ 
     \underline{\phantom{+ \ %s}}
     \end{array}$} \\ \\ \vspace{1.2ex}''' % (b, a, a)
-    answer = mq.dollar(b+a)
+    answer = mq.dollar(b + a)
     return [question, answer]
 
 
 def as_10(difficulty):
     """Subtraction patterns. Chrys."""
-    nums = random.sample(range(2*difficulty, 5*difficulty), k=2)
+    nums = random.sample(range(2 * difficulty, 5 * difficulty), k=2)
     sums = sum(nums)
 
     question = "Fill in the missing values.\n\n"
@@ -67,12 +67,12 @@ def as_11(difficulty):
     nums = [a, b, a + b]
     n = random.randint(0, 1)
     d = random.randint(1, len(str(nums[n])))
-    answer = f"{int(str(nums[n])[d-1]): g}"
+    answer = f"{int(str(nums[n])[d - 1]): g}"
     nums[n] = r'''
     %s \hspace{0.05em} 
     \fboxsep0pt\fbox{\rule{1.05ex}{0pt}\rule{0pt}{0.75em}}
     \hspace{ 0.05em} %s 
-    ''' % (str(nums[n])[:d-1], str(nums[n])[d:])
+    ''' % (str(nums[n])[:d - 1], str(nums[n])[d:])
     values = [
         str(nums[n]) + "",
         str(nums[(n + 1) % 2]) + "\\hspace{0.09em}",
@@ -124,7 +124,7 @@ def as_13(difficulty):
     lower = 200 + 1000 * (difficulty - 1)
     upper = 1000 + 4000 * (difficulty - 1)
     x_1 = random.randint(lower, upper)
-    x_2 = random.randint(round(lower * 1/2), round(x_1 * 2/3))
+    x_2 = random.randint(round(lower * 1 / 2), round(x_1 * 2 / 3))
     name = random.choice([["Cosmos Space Agency", "rockets", "uses"],
                           ["Car dealership", "cars", "sells"],
                           ["delivery company", "packages", "delivers"],
@@ -212,7 +212,7 @@ def as_17(difficulty):
 
     numbers = [start]
     for i in range(1, 5):
-        num = numbers[i-1] + step_1 + (step_increase * i)
+        num = numbers[i - 1] + step_1 + (step_increase * i)
         numbers.append(num)
 
     n = random.randint(0, 1)
@@ -221,7 +221,7 @@ def as_17(difficulty):
 
     numbers = [str(j) for j in numbers]
     answer = numbers[len(numbers) - 1]
-    numbers[len(numbers)-1] = "\\fillin[][1em]"
+    numbers[len(numbers) - 1] = "\\fillin[][1em]"
 
     sequence = ",\\ ".join(numbers)
     question = "Find the next number in the sequence. \n\n \\begin{center}" \
@@ -239,7 +239,7 @@ def as_18(difficulty):
 
     title = ["$+$"]
     for i in range(3):
-        title.append(r"\textbf{%s}" % nums[i+3])
+        title.append(r"\textbf{%s}" % nums[i + 3])
 
     data = [title]
     for j in range(3):
@@ -342,8 +342,8 @@ def as_2(difficulty):
               [sums + nums[0], nums[0], sums + nums[1], nums[1]],  # 2 x minus
               [plus_minus[j][0],
                plus_minus[j][1],
-               plus_minus[(j+1) % 2][0],
-               plus_minus[(j+1) % 2][1]]
+               plus_minus[(j + 1) % 2][0],
+               plus_minus[(j + 1) % 2][1]]
               ][n]
     sign = [['$+$', '$+$'],
             ['$-$', '$-$'],
@@ -361,8 +361,8 @@ def as_2(difficulty):
 
 def as_3(difficulty):
     """Addition and subtraction using words. Chrys."""
-    lower = 250 * (difficulty-1) + 50
-    upper = 400 * (difficulty-1) + 100
+    lower = 250 * (difficulty - 1) + 50
+    upper = 400 * (difficulty - 1) + 100
     num = random.sample(range(lower, upper), k=2)
     n = random.randint(0, 1)
     values = [[num[0], num[1], num[0] + num[1]],
@@ -415,14 +415,14 @@ def as_5(difficulty):
     k = random.randint(0, 1)
     n = random.randint(0, 1)
     no_1 = [[random.randint(1, 9), random.randint(10, 99)][n],
-            random.randint(50 * difficulty, 100*difficulty)
+            random.randint(50 * difficulty, 100 * difficulty)
             ][k]
     no_3 = [random.randint(100 * difficulty, 250 * difficulty),
-            random.randint(2*difficulty, 9*difficulty)
+            random.randint(2 * difficulty, 9 * difficulty)
             ][k]
 
-    no_2 = [[random.randint(50 * difficulty, 100*difficulty),
-             random.randint(10, 60*difficulty)
+    no_2 = [[random.randint(50 * difficulty, 100 * difficulty),
+             random.randint(10, 60 * difficulty)
              ][n],
             no_1 + no_3 + random.randint(100 * difficulty, 200 * difficulty)
             ][k]
@@ -433,7 +433,7 @@ def as_5(difficulty):
     \underline{ %s \ %s} \\ \underline{\phantom{%s \ %s}}
     \end{array}$} \\ \\
     \vspace{1.2ex}
-    ''' % (no_2,  op, no_1, op, no_3, op, no_3)
+    ''' % (no_2, op, no_1, op, no_3, op, no_3)
     answer = [mq.dollar(no_1 + no_2 + no_3), mq.dollar(no_2 - no_3 - no_1)][k]
     return [question, answer]
 
@@ -514,10 +514,10 @@ def as_8(difficulty):
     """Worded addition question. Chrys."""
     lower = 100 + (200 * (difficulty - 1))
     upper = 300 + (200 * (difficulty - 1))
-    nums = [random.randint(round((lower+upper)/2), upper)]
+    nums = [random.randint(round((lower + upper) / 2), upper)]
     for k in range(0, 2):
-        nums.append(random.randint(round(lower/(2**k)),
-                                   round((nums[k]+lower)/(2**(k+1)))
+        nums.append(random.randint(round(lower / (2 ** k)),
+                                   round((nums[k] + lower) / (2 ** (k + 1)))
                                    ))
     question = f"In a town, {nums[0]} people travel by bus each day. " \
                f"Another {nums[1]} travel by train and {nums[2]} cycle. " \
@@ -639,7 +639,7 @@ def fr_11(difficulty):
     choice_1 = random.choice([lower, upper])
     choices.append(f"${mq.latex_frac(choice_1, n * k)}$")
 
-    my_list = [m/n, lower / n * k, upper / n * k]
+    my_list = [m / n, lower / n * k, upper / n * k]
     while len(choices) < 5:
         b_2 = random.randint(2, 11 + difficulty)
         a_2 = random.randint(1, b_2 - 1)
@@ -689,7 +689,7 @@ def fr_13(difficulty):
     for i in range(m):
         shaded_boxes += r'& \tikz \draw [fill=%s] (0,0) rectangle ' \
                         r'(%sem, %sem);' % (colour, size[0], size[1])
-    for j in range(n-m):
+    for j in range(n - m):
         white_boxes += r'& \tikz \draw [fill=white] (0,0) rectangle ' \
                        r'(%sem, %sem);' % (size[0], size[1])
     for k in range(n):
@@ -787,7 +787,7 @@ def fr_15(difficulty):
         shapes = shapes_1
     else:
         columns = ceil(b / 2)
-        shapes_1 = '&'.join(map(str, [order[i] for i in range(columns-1)]))
+        shapes_1 = '&'.join(map(str, [order[i] for i in range(columns - 1)]))
         shapes_2 = \
             '&'.join(map(str, [order[i] for i in range(columns, len(order))]))
         shapes = shapes_1 + "\\\\" + shapes_2
@@ -799,8 +799,7 @@ def fr_15(difficulty):
     {\arraycolsep=2pt\LARGE$\begin{array}{%s} %s \end{array}$} 
     \end{center}
     ''' % (r, shapes)
-    question = f"What fraction of the shapes are {shape_names}? " \
-
+    question = f"What fraction of the shapes are {shape_names}? "
     if mq.gcd([a_1, a_2, a_3][k], b) != 1 and difficulty > 1:
         question += f"Simplify your answer where possible."
         answer = f"${mq.latex_frac_simplify([a_1, a_2, a_3][k], b)}$"
@@ -984,7 +983,7 @@ def fr_21(difficulty):
         f"{name_1} is given some {item} for the weekend. "
         f"{pronoun[0]} spends {fracs[0]} of the money on Saturday "
         f"and spends {fracs[1]} of the money on Sunday. "
-        ][n]
+    ][n]
 
     k = random.randint(0, 1)
     question += [
@@ -1092,7 +1091,7 @@ def fr_24(difficulty):
 
 def fr_25(difficulty):
     """Identifying fraction lengths on number line. Multiple choice. Chrys."""
-    b = random.sample(range(3 + difficulty, 8 + 2 ** (difficulty-1)), k=2)
+    b = random.sample(range(3 + difficulty, 8 + 2 ** (difficulty - 1)), k=2)
     a = random.sample(range(1, b[0] - 1), k=2)
     length = 6
     values = [a[0] / b[0], a[1] / b[0]]
@@ -1108,7 +1107,7 @@ def fr_25(difficulty):
 
     while len(choices) < 3:
         c = random.randint(1, b[1] - 1)
-        if c/b[1] not in values:
+        if c / b[1] not in values:
             start = random.randint(0, b[1] - c)
             line = r''' 
             \draw[line width = 2pt, color=red] (%s,0) -- (%s,0);
@@ -1117,7 +1116,7 @@ def fr_25(difficulty):
                            f"\\vspace{{2em}}")
 
     question = "Which number line has a coloured segment of length " \
-               f"${mq.latex_frac(a[0],b[0])}$?"
+               f"${mq.latex_frac(a[0], b[0])}$?"
     answer = choices[0]
     return mq.multiple_choice(question, choices, answer, onepar=False)
 
@@ -1149,7 +1148,7 @@ def fr_27(difficulty):
     b = round(random.uniform(1, limit), 1)
     c = round(random.uniform(round(a + b) + 1, 10), difficulty - 1)
     question = r"\pounds%s $-$ \pounds%s $-$ \pounds%s = ?" \
-               % (f'{c:.2f}',  f'{b:.2f}', f'{a:.2f}')
+               % (f'{c:.2f}', f'{b:.2f}', f'{a:.2f}')
     result = c - b - a
     answer = r"\pounds" + f"{result:.2f}"
     return [question, answer]
@@ -1170,10 +1169,12 @@ def fr_28(difficulty):
     name = [names.get_first_name(gender='male'),
             names.get_first_name(gender='female')][n]
     pronoun = ['He', 'She'][n]
-    question = f"{name} has " + r"\pounds" + f"{start_value:.2f} in pocket " \
-               f"money. {pronoun} decides to buy {item}. Afterwards, " \
-               f"{pronoun.lower()} has " + r"\pounds" + f"{end_value:.2f} " \
-               f"left over. How much did {name} spend in total?"
+    question = f"{name} has \\pounds{start_value:.2f} in pocket money. " \
+               f"{pronoun} decides to buy {item}. Afterwards, " \
+               f"{pronoun.lower()} has " \
+               + r"\pounds" \
+               + f"{end_value:.2f} " \
+               + f"left over. How much did {name} spend in total?"
     result = start_value - end_value
     answer = r"\pounds" + f"{result:.2f}"
     return [question, answer]
@@ -1333,7 +1334,7 @@ def fr_32(difficulty):
 
     numbers = [str(j) for j in numbers]
 
-    k = random.randint(0, len(numbers)-1)
+    k = random.randint(0, len(numbers) - 1)
     answer = numbers[k]
     numbers[k] = "\\fillin[][1em]"
 
@@ -1479,7 +1480,7 @@ def fr_9(difficulty):
 
 def md_1(difficulty):
     """Multiplication of 2 or 3 digit numbers with one digit number. Chrys."""
-    a = random.randint(20 + (difficulty-1) * (difficulty * 150 - 200),
+    a = random.randint(20 + (difficulty - 1) * (difficulty * 150 - 200),
                        100 + (difficulty - 1) * (difficulty * 50 + 300))
     b = random.randint(3, 9)
     question = r'''
@@ -1533,7 +1534,7 @@ def md_12(difficulty):
     question = f"{name[0]} has {str(a)} {name[1]}. " \
                f"Each {name[2]} has {str(b)} {name[3]}. " \
                f"How many {name[3]} are there in total?"
-    answer = mq.dollar(a*b)
+    answer = mq.dollar(a * b)
     return [question, answer]
 
 
@@ -1550,7 +1551,7 @@ def md_13(difficulty):
         values = a * multipliers[k]
         if n == 0:
             values = values + random.randint(1, a - 1)
-        choices. append(str(values))
+        choices.append(str(values))
 
     answer = a * multipliers[5]
     if n == 1:
@@ -1834,8 +1835,7 @@ def md_23(difficulty):
     ][k]
 
     question = f"A {choices[0]} has {n} {choices[1]}. " \
-               f"Each {choices[2]} can {choices[3]} {m} {choices[4]}. " \
-
+               f"Each {choices[2]} can {choices[3]} {m} {choices[4]}. "
     question += [
         "How many tables will be needed to hold all the guests?",
         "How many rows of seats will be needed to hold all the attendees?",
@@ -1945,7 +1945,7 @@ def md_27(difficulty):
 
     title = ["$\\times$"]
     for i in range(3):
-        title.append(r"\textbf{%s}" % nums[i+3])
+        title.append(r"\textbf{%s}" % nums[i + 3])
 
     data = [title]
     for j in range(3):
@@ -2008,7 +2008,7 @@ def md_28(difficulty):
 def md_3(difficulty):
     """Multiplication of two numbers. Chrys."""
     x = random.randint(3, 12)
-    y = random.randint(4*difficulty, 12*difficulty)
+    y = random.randint(4 * difficulty, 12 * difficulty)
     question = mq.dollar(x) + " $\\times$ " + mq.dollar(y) + " $=$ ?"
     answer = mq.dollar(x * y)
     return [question, answer]
@@ -2018,7 +2018,7 @@ def md_4(difficulty):
     """
     Find the missing value, multiplication worded in groups of numbers. Chrys.
     """
-    x = random.randint(2, 5+difficulty)
+    x = random.randint(2, 5 + difficulty)
     y = random.randint(x, 6 * difficulty)
     values = [mq.dollar(x), mq.dollar(y), mq.dollar(x * y)]
 
@@ -2053,7 +2053,7 @@ def md_6(difficulty):
     """
     Multiplication of 1 digit and two digit number using area as model. Chrys.
     """
-    x = random.randint(1 + difficulty, 7+difficulty)
+    x = random.randint(1 + difficulty, 7 + difficulty)
     y = 10 * random.randint(difficulty, 9) + random.randint(1, 9)
 
     if difficulty == 3:
@@ -2121,7 +2121,7 @@ def md_8(difficulty):
     choices = [a, b]
 
     while len(choices) < 4:
-        rand = random.randint(2, round(0.5*num))
+        rand = random.randint(2, round(0.5 * num))
         if rand not in factor and rand not in choices:
             choices.append(str(rand))
     random.shuffle(choices)
@@ -2161,8 +2161,8 @@ def me_1(difficulty):
     x = round(random.uniform(0.1 * y0, 2 * y0 / 3), d_p)
     question = f"{names.get_first_name(gender='female')} has " \
                r"\pounds" + f"{y0:.2f} in pocket money. She spends " \
-               r"\pounds" + f"{x:.2f}. " \
-               f"How much money does she have left over?"
+                            r"\pounds" \
+               + f"{x:.2f}. How much money does she have left over?"
     answer = r"\pounds" + f"{round(y0 - x, 2):.2f}"
     return [question, answer]
 
@@ -2176,7 +2176,7 @@ def me_10(difficulty):
     else:
         time_in = [
             random.randint(0, 23),
-            (20 - 5 * difficulty) * random.randint(0, 1 + 2*difficulty)
+            (20 - 5 * difficulty) * random.randint(0, 1 + 2 * difficulty)
         ]
 
     time_24hr = datetime(year=2021, month=6, day=20,
@@ -2223,7 +2223,7 @@ def me_10(difficulty):
 def me_11(difficulty):
     """ Converting analogue clock to digital times or worded time. Chrys."""
     hour = random.randint(0, 11)
-    minute = ((20-5*difficulty)*random.randint(0, 11)) % 60
+    minute = ((20 - 5 * difficulty) * random.randint(0, 11)) % 60
     choice = random.choice([
         ['In 12 hour format', time(hour, minute).strftime("%H:%M")],
         ['Using words', mq.time_to_words(hour % 12, minute)]
@@ -2264,7 +2264,7 @@ def me_12(difficulty):
         else:
             difference = -1
         choice1 = mq.analogue_clock((hour + difference) % 12, minute[0], False)
-        choice2 = mq.analogue_clock(minute[0] / 5, (5*hour) % 60, False)
+        choice2 = mq.analogue_clock(minute[0] / 5, (5 * hour) % 60, False)
         choice3 = mq.analogue_clock(
             hour, (minute[0] + 5 * random.randint(1, 11)) % 60, center=False)
     else:
@@ -2273,9 +2273,9 @@ def me_12(difficulty):
                    f"\n {mq.analogue_clock(hour, minute[0])}"
         for j in range(1):
             choice4 = time(hour,
-                           (minute[0] + 5*sample[j]) % 60).strftime("%I:%M")
+                           (minute[0] + 5 * sample[j]) % 60).strftime("%I:%M")
             choices.append(choice4)
-        choice2 = time(round(minute[0] / 5), (5*hour) % 60).strftime("%I:%M")
+        choice2 = time(round(minute[0] / 5), (5 * hour) % 60).strftime("%I:%M")
         choice3 = time(
             hour + 1,
             (minute[0] + 5 * sample[3]) % 60).strftime("%I:%M")
@@ -2294,7 +2294,7 @@ def me_12(difficulty):
 def me_13(difficulty):
     """Draw on clock to get time. Chrys."""
     hour = random.randint(0, 11)
-    minute = ((20-5*difficulty) * random.randint(0, 11)) % 60
+    minute = ((20 - 5 * difficulty) * random.randint(0, 11)) % 60
     time_in = random.choice([
         time(hour, minute).strftime("%H:%M"),
         mq.time_to_words(hour % 12, minute)
@@ -2319,18 +2319,18 @@ def me_13(difficulty):
 def me_14(difficulty):
     """Elapsed time question using analogue clock. Chrys. """
     hour_in = random.randint(0, 11)
-    minute_in = ((20-5*difficulty) * random.randint(0, 11)) % 60
+    minute_in = ((20 - 5 * difficulty) * random.randint(0, 11)) % 60
 
     if difficulty == 3:
         time_elapsed = random.choice([5 * random.randint(4, 12),
                                       random.randint(10, 30)])
     else:
-        time_elapsed = (10/difficulty)*random.randint(2*difficulty,
-                                                      7*difficulty-2)
+        time_elapsed = (10 / difficulty) * random.randint(2 * difficulty,
+                                                          7 * difficulty - 2)
 
     result = datetime(year=2021, month=6, day=20,
                       hour=hour_in, minute=minute_in) \
-        + timedelta(minutes=time_elapsed)
+             + timedelta(minutes=time_elapsed)
 
     time_elapsed_format = random.choice([num2words(time_elapsed),
                                          int(time_elapsed)])
@@ -2339,7 +2339,7 @@ def me_14(difficulty):
         [
             "using words",
             mq.time_to_words(
-                int(hour_in + floor((minute_in + time_elapsed)/60)) % 12,
+                int(hour_in + floor((minute_in + time_elapsed) / 60)) % 12,
                 int((minute_in + time_elapsed) % 60))
         ]
     ])
@@ -2396,15 +2396,15 @@ def me_16(difficulty):
                  r"\pounds" + f"{total:.2f}"
                  ]
     question = f"Write down {num_words[n]} " \
-               f"{[' using numbers',' using words'][n]}."
+               f"{[' using numbers', ' using words'][n]}."
     answer = num_words[(n + 1) % 2]
     return [question, answer]
 
 
 def me_17(difficulty):
     """Money question: sum of change in coins. Chrys."""
-    nums = random.choices(range(1, 3), k=2+difficulty)
-    choices = random.sample(range(0, 9), k=2+difficulty)
+    nums = random.choices(range(1, 3), k=2 + difficulty)
+    choices = random.sample(range(0, 9), k=2 + difficulty)
     choices = sorted(choices)
     my_list = [
         [10, ' ten pound note'],
@@ -2470,7 +2470,7 @@ def me_18(difficulty):
                 k = a
                 m = b
 
-    rand = random.randint(1,  5 * (difficulty - 1))
+    rand = random.randint(1, 5 * (difficulty - 1))
     num = random.choices([1, rand], weights=(5, difficulty - 1), k=1)[0]
     unit_in = str(prefixes[k][:1] + unit[:1])
     unit_out = str(prefixes[m][:1] + unit[:1])
@@ -2555,7 +2555,7 @@ def me_2(difficulty):
         time(h, m).strftime("%I:%M %p")
     ]
     question = f"Convert {t[n]} into {['12', '24'][n]} hour format."
-    answer = t[(n+1) % 2]
+    answer = t[(n + 1) % 2]
     return [question, answer]
 
 
@@ -2735,7 +2735,7 @@ def me_23(difficulty):
     else:
         values.sort(key=lambda x: x[1], reverse=True)
 
-    question = f"Which of these is the {['smallest' ,'largest'][k]}?"
+    question = f"Which of these is the {['smallest', 'largest'][k]}?"
     answer = values[0][0]
     return mq.multiple_choice(question, choices, answer)
 
@@ -2789,11 +2789,11 @@ def me_25(difficulty):
     question = f"There are {quantity} {items[0]} in a stack. " \
                f"Each {items[1]} is {thickness}{unit[k]} thick. " \
                f"How high is the stack in {unit_format}?"
-    result = mq.convert_measurement(quantity * thickness, unit[k], unit[k+1])
+    result = mq.convert_measurement(quantity * thickness, unit[k], unit[k + 1])
     result = round(result, 2)
     if result % 1 == 0:
         result = round(result)
-    answer = f"{result}{unit[k+1]}"
+    answer = f"{result}{unit[k + 1]}"
     return [question, answer]
 
 
@@ -2817,7 +2817,6 @@ def me_26(difficulty):
     return [question, answer]
 
 
-#todo error in question below
 def me_27(difficulty):
     """Worded question, find distance travelled over a period of time by
     firstly working out distance travelled per minute. Chrys."""
@@ -2935,11 +2934,11 @@ def me_29(difficulty):
 def me_3(difficulty):
     """How many minutes is between two 24hr times t1 and t2? Chrys."""
     if difficulty == 1:
-        h1, m1 = random.randint(1, 11), 5*random.randint(0, 4)
-        h2, m2 = h1, m1+15+5*random.randint(0, 4)
+        h1, m1 = random.randint(1, 11), 5 * random.randint(0, 4)
+        h2, m2 = h1, m1 + 15 + 5 * random.randint(0, 4)
     elif difficulty == 2:
         h1, m1 = random.randint(1, 23), random.randint(1, 19)
-        h2, m2 = h1, random.randint(m1+17, 59)
+        h2, m2 = h1, random.randint(m1 + 17, 59)
     else:
         h1, m1 = random.randint(1, 22), random.randint(10, 58)
         choice = random.choice([
@@ -2955,7 +2954,7 @@ def me_3(difficulty):
                + time(h1, m1).strftime("%H:%M") \
                + " do we have to wait until it is " \
                + time(h2, m2).strftime("%H:%M") + "?"
-    answer = str(int(abs((d2-d1).total_seconds())/60)) + " minutes"
+    answer = str(int(abs((d2 - d1).total_seconds()) / 60)) + " minutes"
     return [question, answer]
 
 
@@ -3064,7 +3063,7 @@ def me_32(difficulty):
     name = names.get_first_name()
     question = f"{name} buys {quantity} {item}s for " \
                r"\pounds" + f"{start_value:.2f}. " \
-               f"How much does one {item} cost?"
+                            f"How much does one {item} cost?"
     answer = r"\pounds" + f"{result:.2f}"
     return [question, answer]
 
@@ -3084,8 +3083,8 @@ def me_33(difficulty):
             convert = round(convert)
         values.append([convert, units[i], nums[i]])
 
-    convert_2 = mq.convert_measurement(nums[0], units[n-1], units[n])
-    values.append([nums[0], units[n-1], convert_2])
+    convert_2 = mq.convert_measurement(nums[0], units[n - 1], units[n])
+    values.append([nums[0], units[n - 1], convert_2])
     sequence_1 = ', '.join(
         [str(values[i][0]) + values[i][1] for i in range(len(values))]
     )
@@ -3197,7 +3196,8 @@ def me_36(difficulty):
 
     limit = lower - 1
     difference = [0, random.randint(-limit, limit)][k]
-    b = random.choices([a + difference, a * 10], weights=(7, difficulty-1))[0]
+    b = random.choices([a + difference, a * 10], weights=(7, difficulty - 1))[
+        0]
     b = round(b / 1000, difficulty) * 1000
     b_convert = round(mq.convert_measurement(b, unit[0], unit[1]), difficulty)
     if b_convert % 1 == 0:
@@ -3425,8 +3425,8 @@ def me_8(difficulty):
         [time1, minutes_add]
     ])
     choices = []
-    mins_sample_1 = random.sample(range(min_out-20, min_out-1), k=3)
-    mins_sample_2 = random.sample(range(min_out+1, min_out-20+30), k=3)
+    mins_sample_1 = random.sample(range(min_out - 20, min_out - 1), k=3)
+    mins_sample_2 = random.sample(range(min_out + 1, min_out - 20 + 30), k=3)
     for i in range(3):
         m_2 = random.choice([mins_sample_1[i], mins_sample_2[i]])
         choice2 = random.choice([time(hour_out, m_2 % 60).strftime("%H:%M"),
@@ -3457,7 +3457,8 @@ def me_9(difficulty):
         min_start = (20 - 5 * difficulty) * random.randint(0, 11)
         time_elapsed = random.randint(15, 45)
     else:
-        min_start = (15 - 5 * difficulty) * random.randint(0, 5*difficulty - 1)
+        min_start = (15 - 5 * difficulty) * random.randint(0,
+                                                           5 * difficulty - 1)
         time_elapsed = 5 * random.randint(3, 3 + 3 * difficulty)
 
     start_time = datetime(year=2021, month=6, day=20, hour=hour_start,
@@ -3554,7 +3555,7 @@ def pv_1(difficulty):
 
 def pv_10(difficulty):
     """Pick the sign to complete the inequality. Chrys."""
-    lower = 10 ** (difficulty-1)
+    lower = 10 ** (difficulty - 1)
     upper = 5 * 10 ** difficulty
     a = random.randint(lower, upper)
     b = random.randint(lower, upper)
@@ -3573,7 +3574,7 @@ def pv_10(difficulty):
 
 def pv_11(difficulty):
     """Inequalities which include addition and subtraction. Chrys."""
-    upper = 2**(3+difficulty)
+    upper = 2 ** (3 + difficulty)
     numbers = random.sample(range(2, upper), 4)
     no_3 = random.randint(0, numbers[0])
 
@@ -3611,9 +3612,9 @@ def pv_13(difficulty):
     """
     Inequalities where student fills missing num to make statement true. Chrys.
     """
-    upper = 2**(4+difficulty)
+    upper = 2 ** (4 + difficulty)
     no_1 = random.randint(5, upper)
-    no_2 = random.randint(no_1 + 10, 2*upper)
+    no_2 = random.randint(no_1 + 10, 2 * upper)
     signs = [" $<$ ", " $=$ ", " $>$ "]
     sign = random.choice([" $<$ ", " $=$ ", " $>$ "])
     question = "Choose the number that makes this statement true. \n\n" \
@@ -3625,7 +3626,7 @@ def pv_13(difficulty):
                  ''' % (mq.dollar(no_1), sign, mq.dollar(no_2))
     less = random.sample(range(no_2 - no_1 + 1, no_2), k=4)
     more = random.sample(range(0, no_2 - no_1 - 1), k=4)
-    choices = [mq.dollar(less[0]), mq.dollar(more[0]), mq.dollar(no_2-no_1)]
+    choices = [mq.dollar(less[0]), mq.dollar(more[0]), mq.dollar(no_2 - no_1)]
 
     if sign == signs[0]:
         answer = choices[1]
@@ -3691,8 +3692,8 @@ def pv_2(difficulty):
     Choice of 3 questions involving the addition and subtraction of 1000.
     Chrys.
     """
-    lower = round(1000/difficulty)
-    upper = 8000+1000*difficulty
+    lower = round(1000 / difficulty)
+    upper = 8000 + 1000 * difficulty
     x = random.randint(lower, upper)
     if x < 1000:
         x = round(x, -2)
@@ -3740,7 +3741,7 @@ def pv_4(difficulty):
               "Thousands place",
               "Ten thousands place"
               ]
-    digits = random.sample(range(1, 9), 2+difficulty)
+    digits = random.sample(range(1, 9), 2 + difficulty)
     n = int(''.join(map(str, digits)))
     d = random.randint(1, len(str(n)))
     question = f"What place is the digit {int(str(n)[- d]):g} " \
@@ -3749,7 +3750,7 @@ def pv_4(difficulty):
     for i in range(0, len(str(n))):
         choice1 = places[i]
         choices.append(choice1)
-    answer = choices[d-1]
+    answer = choices[d - 1]
     return mq.multiple_choice(question, choices, answer,
                               onepar=False, reorder=False)
 
@@ -3759,8 +3760,8 @@ def pv_5(difficulty):
     places = ["ones", "tens", "hundreds", "thousands", "ten thousands"]
     n = random.randint(10 ** (difficulty + 1), 10 ** (difficulty + 2))
     d = random.randint(1 + round(difficulty / 3), len(str(n)))
-    question = f"In the number {mq.dollar(n)}, " \
-               f"what is the value of the digit in the {places[d-1]} position?"
+    question = f"In the number {mq.dollar(n)}, what is the value of the " \
+               f"digit in the {places[d - 1]} position?"
     answer = mq.dollar({int(str(n)[- d])})
     return [question, answer]
 
@@ -3771,7 +3772,7 @@ def pv_6(difficulty):
     k = random.randint(0, 1)
     size = ["smallest", "largest"]
 
-    n = random.randint(1, limit-1)
+    n = random.randint(1, limit - 1)
     if n == 1:
         order = ''
     else:
@@ -3785,7 +3786,7 @@ def pv_6(difficulty):
         numbers.sort()
     else:
         numbers.sort(reverse=True)
-    answer = mq.dollar(numbers[n-1])
+    answer = mq.dollar(numbers[n - 1])
     return [question, answer]
 
 
@@ -3864,8 +3865,8 @@ def pv_8(difficulty):
 
 def pv_9(difficulty):
     """arranging integers in ascending or descending order. Chrys."""
-    lower = 10 - 10*difficulty
-    upper = 2 * 10 ** (difficulty+1)
+    lower = 10 - 10 * difficulty
+    upper = 2 * 10 ** (difficulty + 1)
     integers = random.sample(range(lower, upper), 6)
     integers.append(random.randint(lower, 0))
     n = random.randint(0, 1)
@@ -3914,7 +3915,7 @@ def sh_10(difficulty):
         sides_1 = random.randint(3, 4)
         poly.append(mq.draw_random_shape(polygon=True, sides=sides_1))
     if difficulty < 3:
-        b = random.sample(range(5, 10), k=(5-difficulty))
+        b = random.sample(range(5, 10), k=(5 - difficulty))
         for j in range(len(b)):
             poly.append(mq.draw_regular_polygon(b[j]))
     for m in range(4):
@@ -3932,8 +3933,8 @@ def sh_10(difficulty):
         if nums[3] != nums[2] and nums[2] != nums[1]:
             x = nums
     y = random.choice([[3, 3, 2], [1, 2, 3], [1, 4, 3], [3, 2, 3]])
-    x = [i/2 for i in x]
-    y = [j/2 for j in y]
+    x = [i / 2 for i in x]
+    y = [j / 2 for j in y]
     shape_1 = r"""\begin{tikzpicture} 
     \draw (0,0) -- (%s%s,0) %s (%s%s,%s%s) %s 
     (%s%s,%s%s) %s (%s%s, %s%s) %s cycle; \end{tikzpicture}
@@ -4212,10 +4213,10 @@ def sh_7(difficulty):
 
     rectangle = r"\tikz \draw (0,0) rectangle (1.5cm,1cm);"
     rhombus = r"\tikz \draw (0,0) -- (%f,0) -- (%f, 1) -- (0.5,1) -- (0,0);" \
-              % (size-0.5, size)
+              % (size - 0.5, size)
     shape_1 = r"""
     \tikz \draw (0,0) -- (%f,0) -- (%f, 0.5) -- (%f,1) -- (0,1) -- (0, 0);
-    """ % (size-0.5, size, size-0.5)
+    """ % (size - 0.5, size, size - 0.5)
 
     is_not = ["", "NOT"][n]
     k = [[1, 3], [3, 1]][n]
@@ -4249,10 +4250,10 @@ def sh_8(difficulty):
 
     rectangle = r"\tikz \draw (0,0) rectangle (1.5cm,1cm);"
     rhombus = r"\tikz \draw (0,0) -- (%f,0) -- (%f,0.9) -- (%f,0.9) -- (0,0);"\
-              % (size-0.4, size + 0.4, 0.8)
+              % (size - 0.4, size + 0.4, 0.8)
     shape_1 = r"""
     \tikz \draw (0,0) -- (%f,0) -- (%f, 0.5) -- (%f,1) -- (0,1) -- (0, 0);
-    """ % (size-0.6, size + 0.4, size-0.6)
+    """ % (size - 0.6, size + 0.4, size - 0.6)
     irregular_pent = r"""
     \tikz \draw (0.5,0) -- (%f,0) -- (%f,0.8) -- (%f, 1.5) -- (0, 0.8) -- 
     (0.5,0);""" % (size - 0.5, size, size * 0.5)
@@ -4261,7 +4262,7 @@ def sh_8(difficulty):
 
     regular = [mq.draw_square(size + 2, "black", "white", rotate=45)]
     non_reg = [
-        mq.draw_triangle(size=size+1, draw="black", fill="white"),
+        mq.draw_triangle(size=size + 1, draw="black", fill="white"),
         rhombus,
         irregular_pent,
         rectangle,
@@ -4428,7 +4429,7 @@ def st_11(difficulty):
          "month", f"plant the {least_most} trees"],
         ["coffee shop", "coffees they sold each day", "day",
          f"sell the {least_most} coffees"]
-        ][k]
+    ][k]
     question = f"A {items[0]} made a bar chart showing the number of " \
                f"{items[1]}. What {items[2]} did they {items[3]}? \n\n" \
                + bar_chart
@@ -4439,9 +4440,9 @@ def st_11(difficulty):
 def st_12(difficulty):
     """Bar chart, identify value of given entry on bar chart. Chrys."""
     data = []
-    upper = [10, 10, 20][difficulty-1]
-    power = [10, 10, 5][difficulty-1]
-    steps = [10, 20, 10][difficulty-1]
+    upper = [10, 10, 20][difficulty - 1]
+    power = [10, 10, 5][difficulty - 1]
+    steps = [10, 20, 10][difficulty - 1]
     name_bank = []
     for i in range(4):
         a = power * random.randint(1, upper)
@@ -4469,12 +4470,12 @@ def st_13(difficulty):
     left over using bar chart. Chrys.
     """
     data = []
-    upper = [7, 12, 14][difficulty-1]
-    power = [10, 5, 5][difficulty-1]
-    steps = [10, 5, 10][difficulty-1]
-    lower = [2, 4, 4][difficulty-1]
+    upper = [7, 12, 14][difficulty - 1]
+    power = [10, 5, 5][difficulty - 1]
+    steps = [10, 5, 10][difficulty - 1]
+    lower = [2, 4, 4][difficulty - 1]
     cities = ["York", "Glasgow", "Liverpool", "Cardiff"]
-    a = random.sample(range(lower, upper+1), k=4)
+    a = random.sample(range(lower, upper + 1), k=4)
     a = [power * i for i in a]
     for i in range(4):
         data.append([r'\scriptsize %s' % cities[i], a[i]])
@@ -4503,16 +4504,16 @@ def st_13(difficulty):
         choice = []
         s = "s"
         for i in n:
-            if i+1 in [1, 4]:
+            if i + 1 in [1, 4]:
                 order.append(option[i % 2])
                 choice.append("")
             else:
-                if i+1 < 3:
+                if i + 1 < 3:
                     choice.append(option[0])
                     order.append(mq.ordinal(i + 1))
                 else:
                     choice.append(option[1])
-                    order.append(mq.ordinal(4-i))
+                    order.append(mq.ordinal(4 - i))
         price = data[n[0]][1] + data[n[1]][1]
         choice = f"both the {order[0]} {choice[0]} and the " \
                  f"{order[1]} {choice[1]}"
@@ -4544,7 +4545,7 @@ def st_14(difficulty):
     today = datetime.today()
     for i in range(4):
         if n == 1:
-            day = today - timedelta(days=(i+1))
+            day = today - timedelta(days=(i + 1))
             title = day.strftime("%A")
         else:
             title = names.get_first_name()
@@ -4768,7 +4769,7 @@ def st_3(difficulty):
         ['amount of bicycles journeys made in'],
         ['the number of tourists visiting']
     ][n][0]
-    place = [['Town', 'towns'], ['City', 'cities']][round(difficulty/3)]
+    place = [['Town', 'towns'], ['City', 'cities']][round(difficulty / 3)]
 
     table = [[place[0], title]]
     for i in range(len(nums)):
@@ -4965,7 +4966,7 @@ def st_8(difficulty):
         [
             ["Mossy", "Gardens"], ["Castle", "Plaza"],
             ["Willows", "Grounds"], ["Forest", "Lake"]
-         ]
+        ]
     ][m]
     square = mq.draw_square(0.1, 'orange', 'orange', rotate=45)
 
@@ -5003,7 +5004,7 @@ def st_8(difficulty):
     key = r"\textbf{Key}: %s\textbf{ = %s %s}" \
           % (square, key_value, 'Visitors')
     table = mq.draw_table(data, centered=False)
-    question = f"A {item[0]} made a pictogram to show how many visitors"\
+    question = f"A {item[0]} made a pictogram to show how many visitors" \
                f" each {item[1]} received in an hour. Find the mean " \
                f"amount of visitors. \n {table} \n {key}"
     answer = mq.dollar(result)
@@ -5056,7 +5057,7 @@ def st_9(difficulty):
     key = r"\textbf{Key}: %s\textbf{ = %s %s}" \
           % (square, key_value, item[1].capitalize())
     table = mq.draw_table(data, centered=False)
-    question = f"A {item[0]} made a pictogram to show how many {item[1]}"\
+    question = f"A {item[0]} made a pictogram to show how many {item[1]}" \
                f" {item[2]}. Find the range " \
                f"of the data. \n {table} \n {key}"
     answer = mq.dollar(int(result))
@@ -5225,7 +5226,7 @@ def st_21(difficulty):
             if n[j] == 0:
                 ordinal.append("")
             else:
-                ordinal.append(mq.ordinal(n[j]+1))
+                ordinal.append(mq.ordinal(n[j] + 1))
 
     if difficulty == 1:
         question += f"What is the {ordinal[0]} {order[0]} popular {item}?"
@@ -5287,7 +5288,7 @@ def me_37(difficulty):
         if choice == 'shortest':
             answer = f"Train {values[0][0]}"
         else:
-            answer = f"Train {values[no_trains-1][0]}"
+            answer = f"Train {values[no_trains - 1][0]}"
     question += f"\n\n {table}"
     return [question, answer]
 
@@ -5319,7 +5320,7 @@ def me_38(difficulty):
     values = []
     for j in range(no_events):
         data.append([events[j], mq.minutes_to_time(start_time[j]),
-                    mq.minutes_to_time(end_time[j])])
+                     mq.minutes_to_time(end_time[j])])
         values.append([events[j], mq.minutes_to_time(start_time[j]),
                        mq.minutes_to_time(end_time[j])])
     table = mq.draw_table(data)
@@ -5344,7 +5345,8 @@ def me_39(difficulty):
     data = [['Class', 'Start', 'End']]
     n = random.randint(0, 1)
     col_1 = [['Tennis', 'Badminton', 'Gymnastics', 'Boxing'
-              'Squash', 'Spin', 'Dance', 'Rock Climbing', 'Yoga'],
+                                                   'Squash', 'Spin', 'Dance',
+              'Rock Climbing', 'Yoga'],
              ['Math', 'Physics', 'Chemistry', 'Biology', 'Computing', 'P.E.',
               'English', 'Psychology', 'Religion', 'Philosophy', 'Business']
              ][n]
@@ -5352,12 +5354,12 @@ def me_39(difficulty):
 
     start_0 = random.randint(420, 480)
     my_list = [start_0]
-    lengths = random.sample(range(20, 80), k=2*no_events - 1)
+    lengths = random.sample(range(20, 80), k=2 * no_events - 1)
     for i in range(2 * no_events - 1):
         my_list.append(my_list[i] + lengths[i])
     for j in range(0, len(my_list), 2):
         start.append(my_list[j])
-        end.append(my_list[j+1])
+        end.append(my_list[j + 1])
     for m in range(0, len(lengths), 2):
         durations.append(lengths[m])
     for k in range(1, len(lengths), 2):
@@ -5365,9 +5367,9 @@ def me_39(difficulty):
     values = []
     for q in range(no_events):
         data.append([col_1[q], mq.minutes_to_time(start[q]),
-                    mq.minutes_to_time(end[q])])
+                     mq.minutes_to_time(end[q])])
         values.append([col_1[q], mq.minutes_to_time(start[q]),
-                      mq.minutes_to_time(end[q])])
+                       mq.minutes_to_time(end[q])])
     table = mq.draw_table(data)
     choice_1 = random.randint(0, len(values) - 1 - difficulty)
     choice_2 = choice_1 + difficulty
@@ -5861,7 +5863,7 @@ def md_29(difficulty):
         result = nums[n]
         nums[n] = box
         question += r"""%s $\times$ %s $=$ %s \\ %s $\div$ %s $=$ %s""" \
-                    % (nums[0], nums[1], nums[2], nums[2],  nums[1], nums[0])
+                    % (nums[0], nums[1], nums[2], nums[2], nums[1], nums[0])
     else:
         a = random.randint(2, 5)
         nums.extend([nums[2] * a, a])
@@ -5932,7 +5934,7 @@ def st_30(difficulty):
 def st_31(difficulty):
     """Complete frequency chart using raw data. Chrys."""
     base = 4
-    no_values = base * (difficulty+1)
+    no_values = base * (difficulty + 1)
     no_colours = [3, 3, 4][difficulty - 1]
 
     freq = []
@@ -5990,7 +5992,7 @@ def st_31(difficulty):
 def st_32(difficulty):
     """Find nth most/least occuring frequency from raw data. Chrys."""
     base = 4
-    no_values = base * (difficulty+2)
+    no_values = base * (difficulty + 2)
     no_colours = [3, 4, 5][difficulty - 1]
 
     freq = []
@@ -6462,12 +6464,12 @@ def pd_4(difficulty):
 
     coordinates = []
     k = random.randint(0, 1)
-    a = random.sample(range(1, 9), k=no_shapes-1)
+    a = random.sample(range(1, 9), k=no_shapes - 1)
     b = random.sample(range(1, 10), k=2)
     for i in range(2):
         coordinates.append((a[0], b[i]) if k == 0 else (b[i], a[0]))
     if no_shapes > 2:
-        for j in range(1, no_shapes-1):
+        for j in range(1, no_shapes - 1):
             c = random.randint(1, 9)
             coordinates.append((a[j], c) if k == 0 else (c, a[j]))
 
@@ -6502,7 +6504,7 @@ def pd_5(difficulty):
 
     coordinates = []
     k = random.randint(0, 1)
-    a = random.sample(range(1, 9), k=no_places-1)
+    a = random.sample(range(1, 9), k=no_places - 1)
     b = []
     while len(b) < 2:
         coord = random.sample(range(1, 10), k=2)
@@ -6511,7 +6513,7 @@ def pd_5(difficulty):
     for i in range(2):
         coordinates.append((a[0], b[i]) if k == 0 else (b[i], a[0]))
     if no_places > 2:
-        for j in range(1, no_places-1):
+        for j in range(1, no_places - 1):
             c = random.randint(1, 9)
             coordinates.append((a[j], c) if k == 0 else (c, a[j]))
 
@@ -6609,7 +6611,7 @@ def pd_6(difficulty):
 
     n = random.randint(0, 1)
     k = random.randint(0, len(nodes) - 1)
-    question = f"What is the {['x','y'][n]}-coordinate of the {nodes[n][2]} " \
+    question = f"What is the {['x', 'y'][n]}-coordinate of the {nodes[n][2]} "\
                f"{nodes[n][1]}? \n {grid}"
     answer = f"{coordinates[k][n]}"
     return [question, answer]
@@ -6639,7 +6641,7 @@ def pd_7(difficulty):
     """
     for j in range(no_places):
         grid += r"""\draw (axis cs:%s,%s) 
-        node[regular polygon, regular polygon sides=4, scale=0.8] (s) {%s};"""\
+        node[regular polygon, regular polygon sides=4, scale=0.8] (s) {%s};""" \
                 % (coord[j][0], coord[j][1], places[j][1])
     grid += r" \end{axis} \end{tikzpicture} \end{center}"
 
@@ -6649,7 +6651,7 @@ def pd_7(difficulty):
         my_list.append(r"\resizebox{1.5em}{1.1em}{%s} = %s"
                        % (places[i][1], places[i][0]))
     for i in range(0, len(my_list), 3):
-        rows.append(' & '.join(my_list[i:i+3]))
+        rows.append(' & '.join(my_list[i:i + 3]))
     rows = r' \\ '.join(rows) if len(rows) > 1 else rows[0]
     key_2 = r"""{\tabcolsep=3pt \tiny$ \begin{tabular}[c!]{l||l||l} 
     \multicolumn{1}{l}{\textbf{Key:}} \\[1ex] %s \\ \end{tabular}$}""" % rows
@@ -6728,7 +6730,7 @@ def pd_8(difficulty):
     """
     for j in range(no_places):
         grid += r"""\draw (axis cs:%s,%s) 
-        node[regular polygon, regular polygon sides=4, scale=0.8] (s) {%s};"""\
+        node[regular polygon, regular polygon sides=4, scale=0.8] (s) {%s};""" \
                 % (coord[j][0], coord[j][1], places[j][1])
     grid += r" \end{axis} \end{tikzpicture} \end{center}"
 
@@ -6738,7 +6740,7 @@ def pd_8(difficulty):
         my_list.append(r"\resizebox{1.5em}{1.1em}{%s} = %s"
                        % (places[i][1], places[i][0]))
     for i in range(0, len(my_list), 3):
-        rows.append(' & '.join(my_list[i:i+3]))
+        rows.append(' & '.join(my_list[i:i + 3]))
     rows = r' \\ '.join(rows) if len(rows) > 1 else rows[0]
     key_2 = r"""{\tabcolsep=3pt \tiny$ \begin{tabular}[c!]{l||l||l} 
     \multicolumn{1}{l}{\textbf{Key:}} \\[1ex] %s \\ \end{tabular}$}""" % rows
@@ -6799,7 +6801,7 @@ def pd_9(difficulty):
     """
     for j in range(no_places):
         grid += r"""\draw (axis cs:%s,%s) 
-        node[regular polygon, regular polygon sides=4, scale=0.8] (s) {%s};"""\
+        node[regular polygon, regular polygon sides=4, scale=0.8] (s) {%s};""" \
                 % (coord[j][0], coord[j][1], places[j][1])
     grid += r" \end{axis} \end{tikzpicture} \end{center}"
 
@@ -6809,7 +6811,7 @@ def pd_9(difficulty):
         my_list.append(r"\resizebox{1.5em}{1.1em}{%s} = %s"
                        % (places[i][1], places[i][0]))
     for i in range(0, len(my_list), 3):
-        rows.append(' & '.join(my_list[i:i+3]))
+        rows.append(' & '.join(my_list[i:i + 3]))
     rows = r' \\ '.join(rows) if len(rows) > 1 else rows[0]
     key = r"""{\tabcolsep=3pt \tiny$ \begin{tabular}[c!]{l||l||l} 
     \multicolumn{1}{l}{\textbf{Key:}} \\[1ex] %s \\ \end{tabular}$}""" % rows
@@ -6895,7 +6897,7 @@ def pd_10(difficulty):
     """
     for j in range(no_places):
         grid += r"""\draw (axis cs:%s,%s) 
-        node[regular polygon, regular polygon sides=4, scale=0.8] (s) {%s};"""\
+        node[regular polygon, regular polygon sides=4, scale=0.8] (s) {%s};""" \
                 % (coord[j][0], coord[j][1], places[j][1])
     grid += r" \end{axis} \end{tikzpicture} \end{center}"
 
@@ -6905,7 +6907,7 @@ def pd_10(difficulty):
         my_list.append(r"\resizebox{1.5em}{1.1em}{%s} = %s"
                        % (places[i][1], places[i][0]))
     for i in range(0, len(my_list), 3):
-        rows.append(' & '.join(my_list[i:i+3]))
+        rows.append(' & '.join(my_list[i:i + 3]))
     rows = r' \\ '.join(rows) if len(rows) > 1 else rows[0]
     key = r"""{\tabcolsep=3pt \tiny$ \begin{tabular}[c!]{l||l||l} 
     \multicolumn{1}{l}{\textbf{Key:}} \\[1ex] %s \\ \end{tabular}$}""" % rows
@@ -7075,7 +7077,7 @@ def pd_12(difficulty):
     """
     for j in range(no_places):
         grid += r"""\draw (axis cs:%s,%s) 
-        node[regular polygon, regular polygon sides=4, scale=0.8] (s) {%s};"""\
+        node[regular polygon, regular polygon sides=4, scale=0.8] (s) {%s};""" \
                 % (coords[j][0], coords[j][1], places[j][1])
     grid += r" \end{axis} \end{tikzpicture} \end{center}"
 
@@ -7085,7 +7087,7 @@ def pd_12(difficulty):
         my_list.append(r"\resizebox{1.5em}{1.1em}{%s} = %s"
                        % (places[i][1], places[i][0]))
     for i in range(0, len(my_list), 3):
-        rows.append(' & '.join(my_list[i:i+3]))
+        rows.append(' & '.join(my_list[i:i + 3]))
     rows = r' \\ '.join(rows) if len(rows) > 1 else rows[0]
     key_2 = r"""{\tabcolsep=3pt \tiny$ \begin{tabular}[c!]{l||l||l} 
     \multicolumn{1}{l}{\textbf{Key:}} \\[1ex] %s \\ \end{tabular}$}""" % rows
@@ -7127,7 +7129,7 @@ def st_36(difficulty):
 
     for i in range(amount[1]):
         col = random.choice(colour_range)
-        rotate = random.choice([90, 180,  random.choice(range(120, 150)), 270])
+        rotate = random.choice([90, 180, random.choice(range(120, 150)), 270])
         shape_2 = [mq.draw_square(1, colours[col], colours[col], rotate),
                    mq.draw_circle(1, colours[col], colours[col]),
                    mq.draw_triangle(0.5, colours[col], colours[col], rotate)
@@ -7182,7 +7184,7 @@ def st_37(difficulty):
 
     for i in range(amount[1]):
         col = random.choice(colour_range)
-        rotate = random.choice([90, 180,  random.choice(range(120, 150)), 270])
+        rotate = random.choice([90, 180, random.choice(range(120, 150)), 270])
         shape_2 = [mq.draw_square(1, colours[col], colours[col], rotate),
                    mq.draw_circle(1, colours[col], colours[col]),
                    mq.draw_triangle(0.5, colours[col], colours[col], rotate)
@@ -7211,7 +7213,7 @@ def st_37(difficulty):
                label[1],
                f"Both {label[0].lower()} and {label[1].lower()}"]
     if upper > 2:
-        choices .append(f"Neither {label[0].lower()} nor {label[1].lower()}")
+        choices.append(f"Neither {label[0].lower()} nor {label[1].lower()}")
     sides = [3, 4, 5, 6, 7, 8]
     sides.remove(3 if k == 2 else (4 if k == 0 else 8))
     sides = random.choice(sides)
@@ -7354,13 +7356,13 @@ def sh_17(difficulty):
     parallelogram = r"""\tikz \draw (0,0) -- (%f,0) -- (%f, 1) -- 
     (0.75,1) -- (0,0);""" % (size - 0.75, size)
     trapezium = r"""\tikz \node[draw, trapezium, minimum size=%scm]
-    at (0,0) {};""" % round(size*0.5, 1)
+    at (0,0) {};""" % round(size * 0.5, 1)
     rhombus = r"""\tikz \node[diamond, draw, minimum width=3cm, 
     minimum height=1.5cm] (d) at (0,0) {};"""
 
     quads = {
         'rectangle': rectangle,
-        'square':  mq.draw_regular_polygon(4, size-0.5),
+        'square': mq.draw_regular_polygon(4, size - 0.5),
         'parallelogram': parallelogram,
         'rhombus': rhombus,
         'trapezium': trapezium
@@ -7382,7 +7384,7 @@ def sh_17(difficulty):
 def sh_18(difficulty):
     """Guess what type of triangle. Multiple Choice. Chrys"""
     equilateral = mq.draw_regular_polygon(sides=3, size=4)
-    isosceles = mq.draw_triangle(size=3*2.36, draw='black', fill='white')
+    isosceles = mq.draw_triangle(size=3 * 2.36, draw='black', fill='white')
     scalene = r"\tikz \draw (0,0) -- (5,0) -- (4,2) -- (0,0);"
     triangles = {'equilateral': equilateral,
                  'isosceles': isosceles,
@@ -7403,10 +7405,10 @@ def sh_19(difficulty):
     """Choose which shape matches the given triangle/quadrilateral type.
     Multiple Choice. Chrys"""
     size = 2
-    equilateral = mq.draw_regular_polygon(sides=3, size=4/3 * size)
+    equilateral = mq.draw_regular_polygon(sides=3, size=4 / 3 * size)
     isosceles = mq.draw_triangle(size=size * 2.36, draw='black', fill='white')
     scalene = r"\tikz \draw[scale=%s] (0,0) -- (5,0) -- (1,2) -- (0,0);" \
-              % (size/3)
+              % (size / 3)
     size = 3
     rectangle = r"\tikz \draw[scale=%s/3] (0,0) rectangle (3cm,1.5cm);" % size
     parallelogram = r"""\tikz \draw[scale=%s] (0,0) -- (%f,0) -- (%f, 1) -- 
@@ -7415,7 +7417,7 @@ def sh_19(difficulty):
     scale=%s] at (0,0) {};""" % (size / 3 - 0.2)
     rhombus = r"""\tikz \node[diamond, draw, minimum width=3cm, 
     minimum height=1.5cm, scale=%s] (d) at (0,0) {};""" % (size / 3)
-    square = mq.draw_regular_polygon(4, size-0.5)
+    square = mq.draw_regular_polygon(4, size - 0.5)
 
     shapes = {
         rectangle: 'rectangle',
@@ -7428,8 +7430,8 @@ def sh_19(difficulty):
         scalene: 'a Scalene'
     }
     n = random.randint(0, 1)
-    quad_weight = [1/difficulty, 1, difficulty, difficulty - 1, difficulty]
-    quad_weight = [i/sum(quad_weight) for i in quad_weight]
+    quad_weight = [1 / difficulty, 1, difficulty, difficulty - 1, difficulty]
+    quad_weight = [i / sum(quad_weight) for i in quad_weight]
     quad_choice = numpy.random.choice(
         [rectangle, square, parallelogram, rhombus, trapezium],
         size=3,
@@ -7549,7 +7551,7 @@ def me_49(difficulty):
     lengths[0] = lengths[1] if n == 1 else lengths[0]
 
     k = random.randint(0, 4)
-    units = [ "cm", "m", "mm", " inches", " units"][k]
+    units = ["cm", "m", "mm", " inches", " units"][k]
     rectangle_square = r"""node[rectangle, draw=black, fill=white, rotate=0, 
     minimum width=%scm, minimum height=%scm]
     """ % (size + 1, [(size + 1) * 0.5, size + 1][n])
@@ -7580,8 +7582,6 @@ def me_49(difficulty):
 
 def me_50(difficulty):
     """Choose correct representation of area. Multiple Choice. Chrys"""
-    size = 2
-    n = random.randint(0, 1)
     lower, upper = 2 * difficulty, 7 + 2 * difficulty
     lengths = random.choices(range(lower, upper), k=2)
     square = mq.draw_square(size=1, draw='black', fill='white')
@@ -7632,7 +7632,7 @@ def me_51(difficulty):
     area = lengths[0] * lengths[1]
 
     k = random.randint(0, 4)
-    units = [ "cm", "m", "mm", " inches", " units"][k]
+    units = ["cm", "m", "mm", " inches", " units"][k]
     rectangle = r"""node[rectangle, draw=black, fill=white, rotate=0, 
     minimum width=%scm, minimum height=%scm]
     """ % (size + 1, (size + 1) * 0.5)
@@ -8064,7 +8064,7 @@ def pv_18(difficulty):
 def pv_19(difficulty):
     """Choose which number/roman numeral is smaller or larger or equal to
     a given one. Multiple Choice. Chrys."""
-    a =  random.randint(41 + 50 * (difficulty - 1), 80 * (difficulty + 1))
+    a = random.randint(41 + 50 * (difficulty - 1), 80 * (difficulty + 1))
     boundary = 50 - 10 * difficulty
     nums = random.sample(range(a - boundary, a + boundary), k=6)
     nums.sort()
@@ -8141,12 +8141,11 @@ def me_61(difficulty):
         perimeters = []
         for i in range(no_choices):
             row_values = random.choices(range(1, max_per_row + 1), k=no_rows)
-            shape_perim = no_rows * 2 \
-                          + row_values[0] \
-                          + row_values[len(values) - 1]
-            for i in range(1, len(values)):
-                shape_perim = shape_perim \
-                              + abs(row_values[i] - row_values[i - 1])
+            shape_perim = no_rows * 2 + row_values[0] \
+                          + row_values[len(row_values) - 1]
+            for j in range(1, len(row_values)):
+                difference = abs(row_values[j] - row_values[j - 1])
+                shape_perim = shape_perim + difference
             if shape_perim not in perimeters:
                 shapes.append(row_values)
                 perimeters.append(shape_perim)
@@ -8171,7 +8170,7 @@ def sh_20(difficulty):
     """How many lines of symmetry does the shape have. Chrys."""
     colour = random.choice(['red', 'green', 'blue!60', 'teal', 'orange'])
     values = [
-        [[5,1,5,1,5], 1],
+        [[5, 1, 5, 1, 5], 1],
         [[4, 1, 1, 4], 1]
     ]
     reg_poly_values = [[3, 3], [4, 4], [5, 5], [6, 6]]
@@ -8331,11 +8330,203 @@ def sh_24(difficulty):
                          ["Cuboid", mq.draw_cuboid(colour, 0.9, 4)]]
         shapes.extend(additional_sh)
 
-    choices = random.sample(shapes, k=2 + difficulty)
-    sh_1 = choices[0][1]
+    choices = random.sample(shapes, k=1 + difficulty)
+    shape_1 = choices[0][1]
     answer = choices[0][0]
     choices = [i[0] for i in choices]
 
     question = f"What shape is this? \n\n" \
-               r"\begin{center} %s \end{center}" % sh_1
+               r"\begin{center} %s \end{center}" % shape_1
     return mq.multiple_choice(question, choices, answer)
+
+
+def sh_25(difficulty):
+    """Find number of vertices on a 3d shape. Chrys."""
+    colour = random.choice(["blue", "red", "magenta",
+                            "orange", "yellow", "green"])
+    shapes = [
+        ["Cube", mq.draw_cuboid(colour=colour), 8, 12, 6],
+        ["Prism", mq.draw_prism(colour, scale=0.8), 6, 9, 5],
+        ["Pyramid", mq.draw_square_based_pyramid(colour), 5, 8, 5],
+        ["Cuboid", mq.draw_cuboid(colour, 0.9, 4), 8, 12, 6]
+    ]
+    if difficulty > 1:
+        cone = ["Cone", mq.draw_cone(colour), 1, 1, 2]
+        shapes.append(cone)
+    if difficulty > 2:
+        additional_sh = [
+            ["Cylinder", mq.draw_cylinder(colour), 0, 2, 3],
+            ["Sphere", mq.draw_sphere(colour=colour, scale=1.3), 0, 0, 1]
+        ]
+        shapes.extend(additional_sh)
+
+    shape_1 = random.choice(shapes)
+
+    question = f"How many vertices does the shape have? \n\n" \
+               r"\begin{center} %s \end{center}" % shape_1[1]
+    answer = str(shape_1[2])
+    return [question, answer]
+
+
+def sh_26(difficulty):
+    """Find number of edges opn 3d-shape. Chrys."""
+    colour = random.choice(["blue", "red", "magenta",
+                            "orange", "yellow", "green"])
+    shapes = [
+        ["Cube", mq.draw_cuboid(colour=colour), 8, 12, 6],
+        ["Prism", mq.draw_prism(colour, scale=0.8), 6, 9, 5],
+        ["Pyramid", mq.draw_square_based_pyramid(colour), 5, 8, 5],
+        ["Cuboid", mq.draw_cuboid(colour, 0.9, 4), 8, 12, 6]
+    ]
+    if difficulty > 1:
+        cylinder = ["Cylinder", mq.draw_cylinder(colour), 0, 2, 3]
+        shapes.append(cylinder)
+    if difficulty > 2:
+        additional_sh = [
+            ["Cone", mq.draw_cone(colour), 1, 1, 2],
+            ["Sphere", mq.draw_sphere(colour=colour, scale=1.3), 0, 0, 1]
+        ]
+        shapes.extend(additional_sh)
+
+    shape_1 = random.choice(shapes)
+    question = f"How many edges does the shape have? \n\n" \
+               r"\begin{center} %s \end{center}" % shape_1[1]
+    answer = str(shape_1[3])
+    return [question, answer]
+
+
+def sh_27(difficulty):
+    """Find number of faces on 3d-shape. Chrys."""
+    colour = random.choice(["blue", "red", "magenta",
+                            "orange", "yellow", "green"])
+    shapes = [
+        ["Cube", mq.draw_cuboid(colour=colour), 8, 12, 6],
+        ["Prism", mq.draw_prism(colour, scale=0.8), 6, 9, 5],
+        ["Pyramid", mq.draw_square_based_pyramid(colour), 5, 8, 5],
+        ["Cuboid", mq.draw_cuboid(colour, 0.9, 4), 8, 12, 6]
+    ]
+    if difficulty > 1:
+        cone = ["Cone", mq.draw_cone(colour), 1, 1, 2]
+        shapes.append(cone)
+    if difficulty > 2:
+        additional_sh = [
+            ["Cylinder", mq.draw_cylinder(colour), 0, 2, 3],
+            ["Sphere", mq.draw_sphere(colour=colour, scale=1.3), 0, 0, 1]
+        ]
+        shapes.extend(additional_sh)
+
+    shape_1 = random.choice(shapes)
+    question = f"How many faces does the shape have? \n\n" \
+               r"\begin{center} %s \end{center}" % shape_1[1]
+    answer = str(shape_1[4])
+    return [question, answer]
+
+
+def sh_28(difficulty):
+    """What 3d-shape shape has most/least amount of a specified property.
+    Multiple Choice. Chrys."""
+    colour = ["blue", "red", "magenta", "orange", "yellow", "green", "blue"]
+    random.shuffle(colour)
+
+    shapes = [
+        ["Cube", mq.draw_cuboid(colour=colour[0]), 8, 12, 6],
+        ["Prism", mq.draw_prism(colour[1], scale=0.8), 6, 9, 5],
+        ["Pyramid", mq.draw_square_based_pyramid(colour[2]), 5, 8, 5],
+        ["Cuboid", mq.draw_cuboid(colour[3], 0.9, 4), 8, 12, 6],
+        ["Cone", mq.draw_cone(colour[4]), 1, 1, 2],
+    ]
+    if difficulty > 1:
+        cylinder = ["Cylinder", mq.draw_cylinder(colour[5], scale=0.6),
+                    0, 2, 3]
+        shapes.append(cylinder)
+    if difficulty > 2:
+        sphere = ["Sphere", mq.draw_sphere(colour=colour[6], scale=1.3),
+                  0, 0, 1]
+        shapes.append(sphere)
+
+    m = random.randint(0, 2)
+    properties = ["vertices", "edges", "faces"][m]
+    n = m + 2
+
+    choices = []
+    while len(choices) < 3:
+        a = random.sample(shapes, k=3)
+        if a[0][n] != a[1][n] and a[1][n] != a[2][n] and a[0][n] != a[2][n]:
+            choices = a
+    choices.sort(key=lambda x: x[n])
+    choices = [i[1] for i in choices]
+
+    k = random.randint(0, 1)
+    most_least = ["least", "most"][k]
+    answer = choices[0] if k == 0 else choices[len(choices) - 1]
+
+    question = f"Which of these shapes has the {most_least} amount of " \
+               f"{properties}? \n\n"
+    return mq.multiple_choice(question, choices, answer, onepar=False)
+
+
+def sh_29(difficulty):
+    """Does the 3d-shape contain a specific face e.g. triangle. 
+    Multiple choice. Chrys."""
+    colour = ["blue", "red", "magenta", "orange", "yellow", "green", "blue"]
+    random.shuffle(colour)
+
+    shapes = [
+        ["Cube", mq.draw_cuboid(colour=colour[0]), "square"],
+        ["Prism", mq.draw_prism(colour[1], scale=0.8),
+         "triangle", "rectangle"],
+        ["Pyramid", mq.draw_square_based_pyramid(colour[2]),
+         "square", "triangle"],
+        ["Cuboid", mq.draw_cuboid(colour[3], 0.9, 4), "square", "rectangle"],
+        ["Cone", mq.draw_cone(colour[4]), "circle"],
+    ]
+    if difficulty > 1:
+        cylinder = ["Cylinder", mq.draw_cylinder(colour[5], scale=0.6),
+                    "circle"]
+        shapes.append(cylinder)
+
+    shape_1 = random.choice(shapes)
+    face = random.choice(["square", "triangle", "circle"])
+    choices = ["Yes", "No"]
+
+    question = f"Does this shape have a {face} face? \n\n" \
+               f"\\begin{{center}} {shape_1[1]} \\end{{center}}"
+    answer = choices[0] if face in shape_1 else choices[1]
+    return mq.multiple_choice(question, choices, answer, reorder=False)
+
+
+def sh_30(difficulty):
+    """Which shape has a specific type of face. e.g. triangle face.
+    Multiple Choice. Chrys."""
+    colour = ["blue", "red", "magenta", "orange", "yellow", "green", "blue"]
+    random.shuffle(colour)
+
+    shapes = [
+        ["Cube", mq.draw_cuboid(colour=colour[0]), "square"],
+        ["Prism", mq.draw_prism(colour[1], scale=0.8),
+         "triangle", "rectangle"],
+        ["Pyramid", mq.draw_square_based_pyramid(colour[2]),
+         "square", "triangle"],
+        ["Cuboid", mq.draw_cuboid(colour[3], 0.9, 4), "square", "rectangle"],
+        ["Cone", mq.draw_cone(colour[4]), "circle"],
+    ]
+    if difficulty > 1:
+        cylinder = ["Cylinder", mq.draw_cylinder(colour[5], scale=0.6),
+                    "circle"]
+        shapes.append(cylinder)
+
+    n = [2, 2, 3][difficulty - 1]
+    choices = []
+    face = random.choice(["square", "triangle", "circle"])
+    while len(choices) < n:
+        sample = random.sample(shapes, k=n)
+        if n == 2 and face in sample[0] and face not in sample[1]:
+            choices = sample
+        if n == 3 and face in sample[0] and face not in sample[1] \
+                and face not in sample[2]:
+            choices = sample
+    choices = [i[1] for i in choices]
+
+    question = f"Which of these shapes has a {face} face? \n\n"
+    answer = choices[0]
+    return mq.multiple_choice(question, choices, answer, onepar=False)
